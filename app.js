@@ -554,9 +554,9 @@ $$('[data-calls]').forEach(buildCalls);
 /* ══════════ drills: fact or fiction ══════════ */
 var DRILLS = {
   leaders: { opts:['Fact', 'Fiction'], prog:'leaders', verb:'decided', items:[
-    { s:'Chancellor Diermeier was born in Berlin, Germany.', a:0, x:'Fact. He was born in Berlin and came to Vanderbilt as its chancellor in 2020.' },
+    { s:'Before Vanderbilt, Chancellor Diermeier was provost of the University of Chicago.', a:0, x:'Fact. He was provost and dean of the Harris School of Public Policy there, and a longtime professor at Stanford and Northwestern’s Kellogg School.' },
     { s:'Chancellor Diermeier is the first in his family to graduate from college.', a:0, x:'Fact. He is a first-generation college graduate, which is part of why access to an elite education matters so much to him.' },
-    { s:'Each vice chancellor runs a single academic department.', a:1, x:'Fiction. Vice chancellors lead large parts of the university, such as academic affairs, financial operations, and staff culture and belonging, and guide them toward the mission.' },
+    { s:'Each vice chancellor runs a single academic department.', a:1, x:'Fiction. Vice chancellors lead large parts of the university, from academic affairs and athletics to people, culture and belonging. See the whole team below.' },
     { s:'Under Chancellor Diermeier, Vanderbilt has passed $1 billion in research expenditures.', a:0, x:'Fact. It is one of the milestones of his tenure, along with a successful capital campaign and a reaffirmed commitment to free expression and civil discourse.' }
   ]}
 };

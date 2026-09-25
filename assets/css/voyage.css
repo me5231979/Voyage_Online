@@ -477,3 +477,26 @@ html.paged .page > section#welcome{ padding-top:clamp(12px,2.4vh,32px); padding-
 #history .tl-yr{ font-size:clamp(2.4rem,3vw + 1rem,4rem); }
 #history .tl-node .yr{ font-size:clamp(.9rem,.5vw + .7rem,1.15rem); }
 html.paged .page > section#history{ justify-content:flex-start; padding-top:clamp(12px,2.4vh,32px); }
+
+/* lesson 2: the Chancellor's bio and the leadership team */
+.v-bio{ color:var(--tx2); font-size:.95rem; line-height:1.5; max-width:46ch; }
+.v-person{ align-items:start; }
+.v-more{ margin-top:12px; border-top:1px solid var(--bd); padding-top:8px; }
+.v-more summary{ cursor:pointer; color:var(--link); font-size:.92rem; min-height:36px; display:inline-flex; align-items:center; }
+.v-bio-list{ list-style:none; display:grid; gap:6px; margin-top:6px; }
+.v-bio-list li{ color:var(--tx2); font-size:.9rem; line-height:1.5; padding-left:14px; position:relative; }
+.v-bio-list li::before{ content:''; position:absolute; left:0; top:.6em; width:6px; height:6px; border-radius:50%; background:var(--eyebrow); }
+.v-bio-list b{ color:var(--tx); font-weight:600; }
+.v-team{ margin-top:clamp(18px,3vh,32px); border-top:1px solid var(--bd); padding-top:clamp(14px,2.4vh,24px); }
+.v-team-head{ display:flex; align-items:center; justify-content:space-between; gap:12px 20px; flex-wrap:wrap; margin-bottom:12px; }
+.v-team-head .btn{ text-decoration:none; }
+.v-areas{ list-style:none; display:grid; grid-template-columns:repeat(6,1fr); gap:8px; }
+@media (max-width:1200px){ .v-areas{ grid-template-columns:repeat(4,1fr); } }
+@media (max-width:760px){ .v-areas{ grid-template-columns:1fr 1fr; } }
+@media (max-width:420px){ .v-areas{ grid-template-columns:1fr; } }
+.v-areas li{ display:flex; align-items:center; gap:10px; border:1px solid var(--bd); background:var(--card); border-radius:var(--r); padding:10px 12px; color:var(--tx); font-size:.9rem; line-height:1.3; }
+.v-areas svg{ flex:0 0 22px; width:22px; height:22px; fill:none; stroke:var(--eyebrow); stroke-width:1.7; stroke-linecap:round; stroke-linejoin:round; }
+.v-areas small{ display:block; color:var(--tx3); font-size:.76rem; margin-top:2px; }
+.v-areas li.you{ border-color:var(--eyebrow); background:var(--card2); }
+.v-areas li.you small{ color:var(--eyebrow); }
+html.paged .page > section#leaders{ justify-content:flex-start; }
