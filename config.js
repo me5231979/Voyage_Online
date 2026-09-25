@@ -21,7 +21,7 @@ window.VVO_CONFIG = {
   videos: {
     chancellor: { embed: 'https://player.vimeo.com/video/1230259772?h=75bcbbee9a&badge=0&autopause=0&player_id=0&app_id=58479', title: 'Welcome to Vanderbilt: a message from Chancellor Diermeier' },
     history:    { embed: 'https://player.vimeo.com/video/1230258345?h=edbcc5d465&badge=0&autopause=0&player_id=0&app_id=58479', title: 'Vanderbilt Voyage: our history' },
-    grow:       { src: '', captions: '' }    /* e.g. './assets/video/dare-to-grow.mp4', './assets/video/dare-to-grow.vtt' */
+    grow:       { embed: 'https://player.vimeo.com/video/1230276044?h=09923a6f21&badge=0&autopause=0&player_id=0&app_id=58479', title: 'Dare to Grow' }
   },
   /* where Exit goes; empty closes the tab (inside an LMS) or returns to the start */
   exitUrl: '',
