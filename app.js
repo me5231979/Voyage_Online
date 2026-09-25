@@ -167,7 +167,7 @@ function subBtn(k){ return NARR[k] ? '<button type="button" class="sub-listen" d
 document.addEventListener('click', function(e){
   var b = e.target.closest('[data-narr]'); if(b){ e.preventDefault(); narrSub(b.getAttribute('data-narr'), true); return; }
   /* clicking into an activity stops whatever is playing, so the audio never talks over the learner */
-  if(e.target.closest('.scn button[data-o], [data-drill] button, .kq button, .cp-opts button, .v-commits button, .v-tile button, .v-focus button')){ pauseVideos(); if(narr.playing) narrStop(); }
+  if(e.target.closest('.scn button[data-o], [data-drill] button, .kq button, .cp-opts button, .v-commits button, .v-tile button')){ pauseVideos(); if(narr.playing) narrStop(); }
 }, true);
 if(bbAuto) bbAuto.addEventListener('click', function(){
   narr.auto = !narr.auto; narr.on = narr.auto; set('auto', narr.auto ? '1' : '0'); narrUI();
@@ -353,7 +353,7 @@ function turnDone(k){ $$('.v-task[data-task="' + k + '"]').forEach(function(t){ 
 (function(){
   var list = $('#focusList'); if(!list) return;
   var chip = list.parentNode.querySelector('.v-task'), seen = {};
-  $$('button', list).forEach(function(b, i){ b.addEventListener('click', function(){ var o = b.getAttribute('aria-expanded') !== 'true'; b.setAttribute('aria-expanded', o ? 'true' : 'false'); if(o){ seen[i] = 1; if(Object.keys(seen).length === 3 && chip) chip.classList.add('done'); } }); });
+  $$('button', list).forEach(function(b, i){ b.addEventListener('click', function(){ var o = b.getAttribute('aria-expanded') !== 'true'; b.setAttribute('aria-expanded', o ? 'true' : 'false'); if(o){ seen[i] = 1; if(Object.keys(seen).length === 3 && chip) chip.classList.add('done'); narrSub('mission/f' + (i + 1), true); } else if(narr.key === 'mission/f' + (i + 1) && narr.playing) narrStop(); }); });
 })();
 
 /* ══════════ mission: five cities, each for its own field ══════════
