@@ -60,6 +60,7 @@ if __name__ == '__main__':
     os.makedirs(SRC, exist_ok=True)
     cache = json.load(open(CACHE_P)) if os.path.exists(CACHE_P) else {}
     narr = scripts(); made = kept = 0
+    print('voice %s, model %s, %d clips' % (CFG['voice_id'], CFG['model_id'], len(narr)))
     for k, text in narr.items():
         name = k.replace('/', '-') + '.mp3'
         raw, dest, h = os.path.join(SRC, name), os.path.join(OUT, name), sig(text)

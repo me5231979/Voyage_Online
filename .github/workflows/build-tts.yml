@@ -1,11 +1,12 @@
 name: Record narration with ElevenLabs
 # Records every clip in narration-scripts.js with the voice in .github/tts.json
 # (the Manager Foundations narrator) and commits the MP3s to the branch that
-# ran it. Needs the ELEVENLABS_API_KEY repository secret. Until the clips
+# ran it, then mirrors the branch to gh-pages (the live site). Needs the ELEVENLABS_API_KEY repository secret. Until the clips
 # exist, the course reads the same words with the browser's own voice.
 on:
   push:
-    paths: ['.github/tts.json', 'narration-scripts.js', 'scripts/build-tts.py']
+    branches: ['claude/vanderbilt-voyage-online-tf7rux', 'main']
+    paths: ['.github/tts.json', 'narration-scripts.js', 'scripts/build-tts.py', '.github/workflows/build-tts.yml']
   workflow_dispatch:
 permissions:
   contents: write
@@ -31,3 +32,7 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add assets/audio .github/tts-cache.json 2>/dev/null || true
           if git diff --cached --quiet; then echo "No changes"; else git commit -m "Record narration with ElevenLabs"; git pull --rebase -X theirs origin "${GITHUB_REF_NAME}"; git push origin HEAD:"${GITHUB_REF_NAME}"; fi
+      - name: Publish to the live site
+        run: |
+          git fetch -q origin gh-pages || true
+          if git merge-base --is-ancestor origin/gh-pages HEAD; then git push origin HEAD:gh-pages; else echo "gh-pages holds commits this branch does not; leaving the live site alone."; fi
