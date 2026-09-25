@@ -71,3 +71,10 @@
 
 /* phones: twelve dots do not fit beside the controls; the page count and arrows carry navigation */
 @media (max-width:480px){ .bb-dots{ display:none; } .book-bar .bb-ctl{ margin-left:auto; } }
+
+/* the history video and the embedded timeline */
+.hist-video{ max-width:880px; margin:0 auto 18px; }
+.lead-s{ color:var(--tx2); max-width:70ch; line-height:1.6; margin-bottom:14px; }
+.embed{ border:1px solid var(--bdg); border-radius:var(--r); overflow:hidden; background:#FFFFFF; height:min(68vh, 760px); min-height:420px; }
+.embed iframe{ display:block; width:100%; height:100%; border:0; }
+@media (max-width:560px){ .embed{ height:70vh; min-height:360px; } }

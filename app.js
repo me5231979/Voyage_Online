@@ -166,6 +166,16 @@ document.addEventListener('visibilitychange', function(){ if(document.hidden && 
 narrUI();
 if(narr.auto) window.setTimeout(narrPlay, 600);
 
+/* ══════════ course videos: a waiting card until the file exists; pause on page turn; nothing talks over them ══════════ */
+$$('.cv-wrap').forEach(function(w){
+  var v = w.querySelector('video'); if(!v) return;
+  v.addEventListener('error', function(){ w.classList.add('nomedia'); }, true);
+  var src = v.querySelector('source') || v; src.addEventListener && src.addEventListener('error', function(){ w.classList.add('nomedia'); });
+  if(v.error) w.classList.add('nomedia');
+  document.addEventListener('chart:page', function(){ if(!v.paused) v.pause(); });
+});
+document.addEventListener('play', function(e){ if(e.target && e.target.tagName === 'VIDEO' && e.target.id !== 'heroVideo') narrStop(); }, true);
+
 /* ══════════ PROGRESS ══════════ */
 var SECTIONS = [
   { k:'welcome',  no:'01', name:'Welcome to the Voyage', how:'Open all six lessons' },

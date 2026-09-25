@@ -8,7 +8,7 @@ window.VVO_CONFIG = {
   surveyUrl: 'https://forms.cloud.microsoft/Pages/ResponsePage.aspx?id=OX9aur7js0q0UGf6gPrsreq8b35schZOi4vqfFyoXutUOThNNDdNUzhXRTRQU1IzSThPRFlWUzA1QiQlQCN0PWcu',
   links: {
     vision: 'https://news.vanderbilt.edu/2022/07/01/daring-to-grow-together-we-are-building-the-great-university-of-the-21st-century/',
-    history: 'https://www.vanderbilt.edu/about/history/',      /* CONFIRM: the history video and interactive timeline */
+    history: 'https://www.vanderbilt.edu/150/timeline/vanderbilt-timeline/',  /* the timeline, embedded on its own page */
     leadership: 'https://www.vanderbilt.edu/leadership/',      /* CONFIRM: Meet the Vice Chancellors */
     quickFacts: 'https://www.vanderbilt.edu/about/facts/'      /* CONFIRM: Quick Facts */
   },
