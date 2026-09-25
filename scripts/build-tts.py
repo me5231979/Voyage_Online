@@ -36,6 +36,7 @@ def speak(text, dest):
             if os.path.getsize(dest) > 1000: return
         except urllib.error.HTTPError as e:
             msg = e.read()[:400].decode('utf-8', 'replace')
+            if 'missing_permissions' in msg: raise SystemExit('ElevenLabs refused the key: it needs the Text to Speech permission. In ElevenLabs, Profile > API Keys, enable Text to Speech on this key (or create an unrestricted key and update the ELEVENLABS_API_KEY secret). Details: ' + msg)
             if e.code in (401, 402, 403) or 'quota' in msg.lower(): raise SystemExit('ElevenLabs refused the request (%d): %s' % (e.code, msg))
             sys.stderr.write('attempt %d failed (%d): %s\n' % (attempt + 1, e.code, msg))
         except Exception as e:
