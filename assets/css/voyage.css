@@ -515,3 +515,26 @@ html.paged .page > section#history{ justify-content:flex-start; padding-top:clam
 .v-areas li.you{ border-color:var(--eyebrow); background:var(--card2); }
 .v-areas li.you small{ color:var(--eyebrow); }
 html.paged .page > section#leaders{ justify-content:flex-start; }
+
+/* the campus network map: gold dot-grid US, a color per campus, leader lines to each name */
+.us-map.net{ --c-sf:var(--vu-sky); --c-nyc:var(--vu-gold); --c-chattanooga:var(--vu-sage); --c-wpb:var(--vu-highlight); --c-nashville:var(--vu-gold); }
+.us-map.net .dots{ fill:none; stroke:var(--vu-gold); stroke-width:4.6; stroke-linecap:round; opacity:.5; }
+.us-map.net [data-city="sf"]{ --c:var(--c-sf); } .us-map.net [data-city="nyc"]{ --c:var(--c-nyc); } .us-map.net [data-city="chattanooga"]{ --c:var(--c-chattanooga); } .us-map.net [data-city="wpb"]{ --c:var(--c-wpb); } .us-map.net [data-city="nashville"]{ --c:var(--c-nashville); }
+.us-map.net .lbl .lead{ fill:none; stroke:var(--c); stroke-width:1.6; }
+.us-map.net .lbl text{ paint-order:normal; stroke:none; }
+.us-map.net .lbl .t1{ font-family:var(--sans); font-weight:700; font-size:26px; fill:#FFFFFF; }
+.us-map.net .lbl .t2{ font-family:var(--sans); font-weight:400; font-size:21px; fill:var(--c); }
+.us-map.net .lbl{ cursor:pointer; }
+.us-map.net .pin .ring{ stroke:var(--c); stroke-width:2.4; animation-name:netPulse; }
+@keyframes netPulse{ 0%{ opacity:.7; transform:scale(1); } 100%{ opacity:0; transform:scale(1.9); } }
+@media (prefers-reduced-motion:reduce){ .us-map.net .pin .ring{ animation:none; opacity:.35; transform:scale(1.35); } }
+.us-map.net .pin .badge{ fill:var(--vu-black); stroke:var(--c); stroke-width:2.6; }
+.us-map.net .pin .ic{ stroke:var(--c); stroke-width:1.8; }
+.us-map.net .pin .ic .fillc{ fill:var(--c); }
+.us-map.net .pin.home .badge{ fill:var(--vu-gold); stroke:#FFFFFF; stroke-width:2; }
+.us-map.net .pin.home .ic{ stroke:var(--vu-black); }
+.us-map.net .pin.on .badge{ fill:var(--c); stroke:#FFFFFF; }
+.us-map.net .pin.on .ic{ stroke:var(--vu-black); }
+.us-map.net .pin.on .ic .fillc{ fill:var(--vu-black); }
+.us-map.net .lbl.on .t1{ fill:var(--c); }
+@media (max-width:600px){ .us-map.net .lbl{ display:none; } .us-map.net{ margin:0 -4px; } }

@@ -369,13 +369,13 @@ var CITIES = {
   var map = $('#mission .us-map'), chips = $('#mission .v-cities'), card = $('#cityCard'); if(!map || !chips || !card) return;
   function show(k){
     var c = CITIES[k]; if(!c) return;
-    $$('.pin', map).forEach(function(p){ p.classList.toggle('on', p.getAttribute('data-city') === k); });
+    $$('.pin, .lbl', map).forEach(function(p){ p.classList.toggle('on', p.getAttribute('data-city') === k); });
     $$('button[data-city]', chips).forEach(function(b){ b.setAttribute('aria-pressed', b.getAttribute('data-city') === k ? 'true' : 'false'); });
     var ic = map.querySelector('.pin[data-city="' + k + '"] .ic');
     card.innerHTML = '<span class="v-label">' + (ic ? '<svg viewBox="0 0 24 24" aria-hidden="true">' + ic.innerHTML + '</svg>' : '') + esc(c.focus) + '</span><b>' + esc(c.name) + '</b><p>' + esc(c.line) + '</p><a href="' + esc(c.url) + '" target="_blank" rel="noopener">Read more about ' + esc(c.name) + '</a>';
   }
   chips.addEventListener('click', function(e){ var b = e.target.closest('button[data-city]'); if(b) show(b.getAttribute('data-city')); });
-  map.addEventListener('click', function(e){ var p = e.target.closest('.pin'); if(p) show(p.getAttribute('data-city')); });
+  map.addEventListener('click', function(e){ var p = e.target.closest('.pin, .lbl'); if(p) show(p.getAttribute('data-city')); });
 })();
 
 /* ══════════ lesson 1: the route, six stops ══════════ */
