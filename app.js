@@ -366,9 +366,10 @@ var CITIES = {
   sf:          { name:'San Francisco', focus:'Technology', line:'San Francisco puts Vanderbilt next to the people and companies shaping tech.', url:'https://www.vanderbilt.edu/chancellor/initiatives-and-outreach/growth/san-francisco/' }
 };
 (function(){
-  var map = $('#mission .us-map'), chips = $('#mission .v-cities'), card = $('#cityCard'); if(!map || !chips || !card) return;
+  var map = $('#cities .us-map'), chips = $('#cities .v-cities'), card = $('#cityCard'), cchip = $('#cities .v-task'), cseen = {}; if(!map || !chips || !card) return;
   function show(k){
     var c = CITIES[k]; if(!c) return;
+    cseen[k] = 1; if(cchip && Object.keys(cseen).length === 5) cchip.classList.add('done');
     $$('.pin, .lbl', map).forEach(function(p){ p.classList.toggle('on', p.getAttribute('data-city') === k); });
     $$('button[data-city]', chips).forEach(function(b){ b.setAttribute('aria-pressed', b.getAttribute('data-city') === k ? 'true' : 'false'); });
     var ic = map.querySelector('.pin[data-city="' + k + '"] .ic');

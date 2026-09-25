@@ -538,3 +538,15 @@ html.paged .page > section#leaders{ justify-content:flex-start; }
 .us-map.net .pin.on .ic .fillc{ fill:var(--vu-black); }
 .us-map.net .lbl.on .t1{ fill:var(--c); }
 @media (max-width:600px){ .us-map.net .lbl{ display:none; } .us-map.net{ margin:0 -4px; } }
+
+/* lesson 1: five cities, the map on its own page */
+.v-op{ margin-bottom:4px; }
+#mission .v-part{ margin-top:22px; }
+.v-cities-head{ display:flex; align-items:flex-end; justify-content:space-between; gap:6px 28px; flex-wrap:wrap; margin-bottom:clamp(10px,2vh,20px); }
+.v-cities-head .v-why{ margin-top:0; max-width:44ch; }
+.v-netmap{ display:grid; grid-template-columns:minmax(0,7.5fr) minmax(0,2.8fr); gap:clamp(16px,2.4vw,32px); align-items:center; }
+.v-netmap .v-map{ padding:clamp(10px,1.6vw,20px); }
+.v-netside .v-task{ margin-top:0; }
+.v-netside .v-cities{ margin-top:0; }
+.v-netside .v-city{ min-height:150px; }
+@media (max-width:1000px){ .v-netmap{ grid-template-columns:1fr; } }
