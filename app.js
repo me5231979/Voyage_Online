@@ -14,7 +14,9 @@ function $(s, c){ return (c || document).querySelector(s); }
 function $$(s, c){ return Array.prototype.slice.call((c || document).querySelectorAll(s)); }
 
 /* ── storage ── */
-var KEY = 'vvo-';
+/* bump the version to start every learner fresh (review resets); old keys are cleared */
+var KEY = 'vvo2-';
+try{ Object.keys(window.localStorage).forEach(function(k){ if(/^vvo-/.test(k)) window.localStorage.removeItem(k); }); }catch(e){}
 var mem = {};
 var store = (function(){ try{ var t = KEY + 'test'; window.localStorage.setItem(t, '1'); window.localStorage.removeItem(t); return window.localStorage; }catch(e){ return null; } })();
 function get(k){ if(store){ try{ var v = store.getItem(KEY + k); if(v !== null) return v; }catch(e){} } return mem[k] === undefined ? null : mem[k]; }
@@ -299,8 +301,9 @@ document.addEventListener('click', function(e){ if(progPanel && !progPanel.hidde
 document.addEventListener('keydown', function(e){ if(e.key === 'Escape') progOpen(false); });
 var progReset = $('#progReset');
 if(progReset) progReset.addEventListener('click', function(){
-  SECTIONS.forEach(function(s){ progWrite(s.k, false); });
-  ['done-seen', 'compass', 'belief', 'reflect', 'commit', 'quiz-score', 'hunt'].forEach(function(k){ set(k, null); });
+  /* everything this course saved: progress, answers, compass, commitments, hunt, narration spots */
+  mem = {};
+  if(store){ try{ Object.keys(store).forEach(function(k){ if(k.indexOf(KEY) === 0 && k !== KEY + 'auto') store.removeItem(k); }); store.removeItem('vvo2-page'); }catch(e){} }
   doneSeen = false;
   if(progStatus) progStatus.textContent = 'Progress reset. 0 of ' + SECTIONS.length + ' activities complete.';
   window.setTimeout(function(){ location.hash = '#p/home/1'; location.reload(); }, 400);
@@ -903,6 +906,8 @@ SECTIONS.forEach(function(s){ if(progIs(s.k)) turnDone(s.k); });
 /* ══════════ print my Voyage summary: results and everything the learner wrote ══════════
    Built fresh each time (the button, or the browser's own Print), on white,
    in the brand's type. Nothing leaves the browser. */
+/* the printout's logo loads with the course, so it is ready the moment someone prints */
+(function(){ try{ var im = new Image(); im.src = './assets/img/vu-lockup-black.png'; }catch(e){} })();
 function buildPrint(){
   var sheet = $('#printSheet'); if(!sheet) return;
   function val(k){ return (get(k) || '').trim(); }
@@ -913,14 +918,26 @@ function buildPrint(){
   var tell = $('#tellText') ? $('#tellText').textContent : '';
   var today = new Date().toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' });
   var nm = ''; try{ var q = new URLSearchParams(location.search); nm = q.get('name') || ''; }catch(e){}
+  var survey = C.surveyUrl || '', qr = '';
+  try{ if(window.qrcode && survey){ var q2 = qrcode(0, 'M'); q2.addData(survey); q2.make(); qr = q2.createSvgTag({ cellSize:2, margin:0, scalable:true }); } }catch(e){}
   var html = '<header class="ps-head"><img src="./assets/img/vu-lockup-black.png" alt="Vanderbilt University" width="166" height="43" /><div><span class="ps-k">Vanderbilt Voyage Online</span><h1>My Vanderbilt <em>Voyage</em>.</h1><p>' + (nm ? esc(nm) + ' &middot; ' : '') + esc(today) + '</p></div></header>';
+  var RECAP = [
+    ['Welcome and the mission', 'Define the great university of the 21st century, and be it. One Vanderbilt, five cities: Nashville, Chattanooga, New York City, West Palm Beach, San Francisco.'],
+    ['Our history and leadership', 'Founded in 1873 with the Commodore’s $1 million gift. Chancellor Daniel Diermeier, ninth chancellor, since 2020.'],
+    ['By the numbers', '7,300+ undergraduates, 6,200+ graduate and professional students, 12 schools and colleges, $1 billion+ in research.'],
+    ['The four beliefs', 'Belonging, self-direction, collaboration, and growth: the Vanderbilt Way.'],
+    ['Dare to grow', 'Crescere aude. Grow your mindset, use what’s here, and grow together.'],
+    ['Next steps', 'Four moves, below, and a talk with your manager.']
+  ];
+  html += '<section class="ps-recap"><h2>What the course covered</h2><ol>' + RECAP.map(function(r, i){ return '<li><span class="ps-n">' + (i + 1) + '</span><span><b>' + esc(r[0]) + '.</b> ' + esc(r[1]) + '</span></li>'; }).join('') + '</ol></section>';
+  html += '<section class="ps-moves"><h2>My next four moves</h2><ol class="ps-checks">' + COMMITS.map(function(c, i){
+      return '<li class="' + (commits[i] ? 'on' : '') + '"><span class="ps-box" aria-hidden="true">' + (commits[i] ? '&#10003;' : '') + '</span><span class="ps-t"><b>' + esc(c[0]) + '.</b> ' + esc(c[1]) + (commits[i] ? ' <i class="ps-cm">Committed in the course.</i>' : '') + '</span><span class="ps-by">Done by <i></i></span></li>'; }).join('') + '</ol>' +
+    '<div class="ps-survey">' + (qr ? '<div class="ps-qr">' + qr + '</div>' : '') + '<div><b>Vanderbilt Voyage Day One Survey</b><p>Two minutes. Scan the code, or open the link from the course.</p><p class="ps-fine">Questions about your Voyage: pcb@vanderbilt.edu</p></div></div></section>';
   html += '<section class="ps-row"><div class="ps-stat"><b>' + done + '/' + SECTIONS.length + '</b><span>activities complete</span></div><div class="ps-stat"><b>' + (score === null ? '&ndash;' : esc(score) + '/5') + '</b><span>quick check score</span></div><div class="ps-stat"><b>' + (belief ? esc(belief) : '&ndash;') + '</b><span>my belief compass</span></div></section>';
   html += '<section><h2>My belief</h2>' + (b ? '<p class="ps-big">' + esc(b.line) + '</p><p class="ps-sub">Behaviors to start with: ' + esc(b.behaviors[0]) + '; ' + esc(b.behaviors[1]) + '.</p>' : '<p class="ps-empty">Not answered yet. Lesson 4, the belief compass.</p>') +
     '<h3>How I will show it at work</h3><p class="ps-write">' + (reflect ? esc(reflect) : '<span class="ps-empty">Not written yet.</span>') + '</p></section>';
-  html += '<section><h2>My four commitments</h2><ul class="ps-checks">' + COMMITS.map(function(c, i){ return '<li class="' + (commits[i] ? 'on' : '') + '"><span class="ps-box" aria-hidden="true">' + (commits[i] ? '&#10003;' : '') + '</span><span><b>' + esc(c[0]) + '.</b> ' + esc(c[1]) + '</span></li>'; }).join('') + '</ul></section>';
   html += '<section><h2>Message to my manager</h2><p class="ps-quote">' + esc(tell) + '</p></section>';
-  html += '<section><h2>My Quick Facts hunt</h2><table class="ps-table"><tbody>' + HUNT.map(function(q, i){ var a = (hunt[i] || '').trim(); return '<tr><th>' + esc(q.q) + '</th><td>' + (a ? esc(a) : '<span class="ps-empty">&ndash;</span>') + (q.open ? '' : '<small>Quick Facts: ' + esc(q.big) + '</small>') + '</td></tr>'; }).join('') + '</tbody></table></section>';
-  html += '<section class="ps-steps"><h2>Still to do</h2><p>Vanderbilt Voyage Day One Survey &middot; Benefits Information Course &middot; required compliance education &middot; a one-on-one with my manager about my belief and my development plan.</p><p class="ps-foot">Questions: pcb@vanderbilt.edu &middot; Crescere aude.</p></section>';
+  html += '<section><h2>My Quick Facts hunt</h2><table class="ps-table"><tbody>' + HUNT.map(function(q, i){ var a = (hunt[i] || '').trim(); return '<tr><th>' + esc(q.q) + '</th><td>' + (a ? esc(a) : '<span class="ps-empty">&ndash;</span>') + (q.open ? '' : '<small>Quick Facts: ' + esc(q.big) + '</small>') + '</td></tr>'; }).join('') + '</tbody></table><p class="ps-foot">Crescere aude. Dare to grow.</p></section>';
   sheet.innerHTML = html;
 }
 window.addEventListener('beforeprint', buildPrint);

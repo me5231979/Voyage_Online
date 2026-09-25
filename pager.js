@@ -118,12 +118,12 @@ try{
   }
   var cur = -1, animT = null;
   var store = (function(){
-    try{ var t = 'vvo-page-test'; window.localStorage.setItem(t,'1'); window.localStorage.removeItem(t); return window.localStorage; }
+    try{ var t = 'vvo2-page-test'; window.localStorage.setItem(t,'1'); window.localStorage.removeItem(t); return window.localStorage; }
     catch(e){ return null; }
   })();
   function writeHash(p){
     try{ window.history.replaceState(null, '', '#p/' + p.key + '/' + p.n); }catch(e){}
-    if(store){ try{ store.setItem('vvo-page', p.key + '/' + p.n); }catch(e){} }
+    if(store){ try{ store.setItem('vvo2-page', p.key + '/' + p.n); }catch(e){} }
   }
   function hashIndex(h){
     if(!h) return null;
@@ -261,7 +261,7 @@ try{
   var startIdx = hashIndex(window.location.hash);
   if(startIdx === null && store){
     try{
-      var saved = store.getItem('vvo-page');
+      var saved = store.getItem('vvo2-page');
       if(saved){ var sb = saved.split('/'); startIdx = hashIndex('p/' + sb[0] + '/' + (sb[1] || 1)); }
     }catch(e){}
   }
