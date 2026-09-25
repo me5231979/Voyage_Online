@@ -111,7 +111,19 @@ function narrSpeak(text){
 /* bumped whenever a clip is re-recorded, so browsers fetch the new file */
 var MEDIA_V = C.mediaVersion || '1';
 function textHash(t){ var h = 5381; for(var i = 0; i < t.length; i++){ h = ((h << 5) + h + t.charCodeAt(i)) | 0; } return (h >>> 0).toString(36); }
-function pauseVideos(){ $$('video').forEach(function(v){ if(v.id !== 'heroVideo' && !v.paused){ try{ v.pause(); }catch(e){} } }); }
+function pauseVideos(){
+  $$('video').forEach(function(v){ if(v.id !== 'heroVideo' && !v.paused){ try{ v.pause(); }catch(e){} } });
+  /* hosted players (Vimeo) pause through their postMessage API */
+  $$('.v-video iframe').forEach(function(f){ try{ f.contentWindow.postMessage(JSON.stringify({ method:'pause' }), 'https://player.vimeo.com'); }catch(e){} });
+}
+/* a video starting, from our play button or the player's own controls, stops the narration */
+window.addEventListener('message', function(e){
+  if(!/^https:\/\/player\.vimeo\.com$/.test(e.origin)) return;
+  var d = e.data; if(typeof d === 'string'){ try{ d = JSON.parse(d); }catch(err){ return; } }
+  if(!d || !d.event) return;
+  if(d.event === 'ready'){ ['play', 'playing'].forEach(function(ev){ try{ e.source.postMessage(JSON.stringify({ method:'addEventListener', value:ev }), e.origin); }catch(err){} }); }
+  else if(d.event === 'play' || d.event === 'playing'){ if(narr.playing) narrStop(); }
+});
 function narrPlay(k){
   k = k || narrKey(); var text = NARR[k];
   narrStop(); pauseVideos();
@@ -288,7 +300,7 @@ document.addEventListener('keydown', function(e){ if(e.key === 'Escape') progOpe
 var progReset = $('#progReset');
 if(progReset) progReset.addEventListener('click', function(){
   SECTIONS.forEach(function(s){ progWrite(s.k, false); });
-  ['done-seen', 'compass', 'belief', 'reflect', 'commit', 'quiz-score'].forEach(function(k){ set(k, null); });
+  ['done-seen', 'compass', 'belief', 'reflect', 'commit', 'quiz-score', 'hunt'].forEach(function(k){ set(k, null); });
   doneSeen = false;
   if(progStatus) progStatus.textContent = 'Progress reset. 0 of ' + SECTIONS.length + ' activities complete.';
   window.setTimeout(function(){ location.hash = '#p/home/1'; location.reload(); }, 400);
@@ -647,6 +659,74 @@ var NUMS = [
 })();
 
 
+/* ══════════ lesson 3: a Quick Facts scavenger hunt ══════════
+   One question per section of the real Quick Facts page, one at a time.
+   Each number the learner brings back lights up its tile on the board;
+   close is good enough (the site rounds). The last question is theirs.
+   Saved in this browser; prints with the Voyage summary. */
+function hNum(v){ var m = String(v || '').replace(/,/g, '').match(/\d+(\.\d+)?/); return m ? parseFloat(m[0]) : NaN; }
+function hIn(lo, hi){ return function(v){ var n = hNum(v); return !isNaN(n) && n >= lo && n <= hi; }; }
+var HUNT = [
+  { sec:'Students', q:'How many undergraduate students study at Vanderbilt?', big:'7,300+', ok:hIn(7000, 7700) },
+  { sec:'Campus', q:'How many schools and colleges make up the university?', big:'12', ok:hIn(12, 12) },
+  { sec:'Academics', q:'What is the student-to-faculty ratio?', big:'8:1', hint:'For example, 10:1', ok:function(v){ return /^\s*8\s*(:|to|\/)?\s*(1)?\s*$/i.test(String(v || '')); } },
+  { sec:'Undergraduate life', q:'What percent of undergraduates conduct research?', big:'62%', ok:hIn(60, 64) },
+  { sec:'Research', q:'How much does Vanderbilt spend on research and development each year?', big:'$1 billion+', hint:'For example, $500 million', ok:function(v){ var t = String(v || '').toLowerCase(), n = hNum(t); if(isNaN(n)) return false; return /b/.test(t) ? n >= 1 && n < 2 : n >= 1000 && n < 2000 || n >= 1e9 && n < 2e9; } },
+  { sec:'Faculty', q:'How many faculty members does Vanderbilt have?', big:'1,841', ok:hIn(1800, 1900) },
+  { sec:'Affordability', q:'Opportunity Vanderbilt offers full-tuition scholarships to households earning up to how much?', big:'$150,000', hint:'For example, $100,000', ok:function(v){ var t = String(v || '').toLowerCase(), n = hNum(t); if(isNaN(n)) return false; if(/k/.test(t) || n < 1000) n *= 1000; return n >= 140000 && n <= 160000; } },
+  { sec:'Life after Vanderbilt', q:'What percent of 2024 graduates were employed or in graduate school within six months?', big:'93%', ok:hIn(91, 95) },
+  { sec:'Your take', q:'Which fact surprised you most?', open:true }
+];
+(function(){
+  var box = $('#hunt'); if(!box) return;
+  var ans = (function(){ try{ var v = JSON.parse(get('hunt') || '[]'); return Array.isArray(v) ? v : []; }catch(e){ return []; } })();
+  var tries = {}, cur = 0, N = HUNT.length, FACTS = HUNT.filter(function(h){ return !h.open; }).length;
+  box.innerHTML = HUNT.map(function(h, i){
+    return '<div class="hq" data-i="' + i + '"><span class="hq-no" aria-hidden="true">' + (i + 1) + '</span><span class="v-label">' + esc(h.sec) + ' &middot; ' + (i + 1) + ' of ' + N + '</span><label for="hunt' + i + '">' + esc(h.q) + '</label>' +
+      '<div class="hq-row"><input type="text" id="hunt' + i + '" maxlength="160" autocomplete="off" placeholder="' + esc(h.open ? 'In your own words' : (h.hint || 'The number you found')) + '" />' + (h.open ? '' : '<button type="button" data-check="' + i + '">Check</button>') + '</div>' +
+      '<p class="hq-fb" role="status"></p><span class="hq-ok" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></span></div>';
+  }).join('') +
+  '<div class="hq-nav"><button type="button" class="btn btn-ghost btn-sm" data-hprev>Back</button><span class="hq-dots" aria-hidden="true">' + HUNT.map(function(){ return '<i></i>'; }).join('') + '</span><button type="button" class="btn btn-primary btn-sm" data-hnext>Next</button></div>' +
+  '<p class="hinttxt">Saved in this browser only. Your answers print with your Voyage summary.</p>';
+  var chip = $('#facts .v-task'), tally = $('#huntTally');
+  function good(i){ var h = HUNT[i]; return h.open ? !!(ans[i] || '').trim() : h.ok(ans[i]); }
+  function light(i, pop){ var t = $('.v-mosaic .mt[data-m="' + i + '"]'); if(!t) return; t.classList.add('lit'); if(pop){ t.classList.remove('pop'); void t.offsetWidth; t.classList.add('pop'); } t.querySelector('b').textContent = HUNT[i].big; }
+  function paint(){
+    var n = 0, f = 0;
+    HUNT.forEach(function(h, i){ var r = $('.hq[data-i="' + i + '"]', box), g = good(i); r.classList.toggle('found', g); if(g){ n++; if(!h.open){ f++; light(i); r.querySelector('.hq-fb').textContent = 'Found it: ' + h.big + '.'; } } });
+    if(tally) tally.textContent = f + '/' + FACTS;
+    $$('.hq-dots i', box).forEach(function(d, i){ d.classList.toggle('on', i === cur); d.classList.toggle('ok', good(i)); });
+    if(chip) chip.classList.toggle('done', n === N);
+  }
+  function show(i, focus){
+    cur = Math.max(0, Math.min(N - 1, i));
+    $$('.hq', box).forEach(function(r, ri){ r.classList.toggle('cur', ri === cur); });
+    $('[data-hprev]', box).disabled = cur === 0;
+    var nx = $('[data-hnext]', box); nx.hidden = cur === N - 1;
+    paint();
+    if(focus){ var inp = $('#hunt' + cur); if(inp) inp.focus({ preventScroll:true }); }
+  }
+  function check(i){
+    var r = $('.hq[data-i="' + i + '"]', box), fb = r.querySelector('.hq-fb'), h = HUNT[i];
+    if(good(i)){ light(i, true); paint(); return true; }
+    tries[i] = (tries[i] || 0) + 1;
+    fb.textContent = !(ans[i] || '').trim() ? 'Type what you found on Quick Facts.' : tries[i] < 2 ? 'Not quite. Look again on Quick Facts.' : 'Quick Facts says ' + h.big + '. Type it in to light up the board.';
+    return false;
+  }
+  $$('input', box).forEach(function(inp, i){
+    inp.value = ans[i] || '';
+    inp.addEventListener('input', function(){ ans[i] = inp.value; set('hunt', JSON.stringify(ans)); if(HUNT[i].open || good(i)){ if(good(i) && !HUNT[i].open) light(i, true); paint(); } });
+    inp.addEventListener('keydown', function(e){ if(e.key !== 'Enter') return; e.preventDefault(); if(HUNT[i].open || check(i)) show(i + 1, true); });
+  });
+  box.addEventListener('click', function(e){
+    var c = e.target.closest('button[data-check]'); if(c){ if(check(+c.getAttribute('data-check'))) window.setTimeout(function(){ show(cur + 1, true); }, 500); return; }
+    if(e.target.closest('[data-hnext]')){ show(cur + 1, true); return; }
+    if(e.target.closest('[data-hprev]')){ show(cur - 1, true); }
+  });
+  var first = 0; while(first < N - 1 && good(first)) first++;
+  show(first);
+})();
+
 /* ══════════ lesson 4: the four beliefs on a compass rose ══════════ */
 var BELIEFS = [
   { k:'belonging', pt:'n', name:'Belonging', line:'Once you’re chosen, you belong.', h:'Once you&rsquo;re chosen, you <em>belong</em>.',
@@ -725,22 +805,24 @@ var COMPASS = [
       '<div class="cp-dots" aria-hidden="true">' + COMPASS.map(function(x, di){ return '<i class="' + (di <= i ? 'on' : '') + '"></i>'; }).join('') + '</div>' +
       (i > 0 ? '<button type="button" class="cp-back" data-back="1">&larr; Back</button>' : '') + '</div>';
   }).join('') + '<div class="cp-result" id="cpResult" aria-live="polite"></div>';
-  var result = $('#cpResult');
+  var result = $('#cpResult'), hint = $('#roseHint'), chip = $('#compass .v-task');
   function winner(){ var tally = {}, best = null, bestN = 0; ans.forEach(function(k){ if(!k) return; tally[k] = (tally[k] || 0) + 1; if(tally[k] >= bestN){ bestN = tally[k]; best = k; } }); return best; }
   function point(k){
     var b = BELIEF_BY_KEY[k];
-    if(needle) needle.style.transform = 'rotate(' + (b ? ROSE_ANGLE[b.pt] : -35) + 'deg)';
+    if(needle) needle.style.transform = 'rotate(' + (b ? ROSE_ANGLE[b.pt] : 0) + 'deg)';
+    if(nr) nr.classList.toggle('idle', !b);
+    if(hint) hint.textContent = !b ? 'The needle moves as you answer.' : box.classList.contains('result') ? 'Your compass points to ' + b.name + '.' : 'Leaning toward ' + b.name + ' so far.';
     if(nr) $$('.pt', nr).forEach(function(p){ p.classList.toggle('on', !!b && p.getAttribute('data-k') === k); });
   }
   function step(i){
-    cur = i; box.classList.remove('result');
+    cur = i; box.classList.remove('result'); if(chip) chip.classList.remove('done');
     $$('.cp-q', box).forEach(function(q, qi){ q.classList.toggle('cur', qi === i); $$('button[data-b]', q).forEach(function(bt){ bt.setAttribute('aria-pressed', ans[qi] === bt.getAttribute('data-b') ? 'true' : 'false'); }); });
     var n = ans.filter(Boolean).length; if(status) status.textContent = n + ' of ' + COMPASS.length + ' answered.';
     point(ans.filter(Boolean).length ? winner() : null);
   }
   function finish(announce){
     var w = BELIEF_BY_KEY[winner()]; if(!w) return;
-    set('belief', w.name); box.classList.add('result'); point(w.k);
+    set('belief', w.name); box.classList.add('result'); point(w.k); if(chip) chip.classList.add('done');
     result.innerHTML = '<span class="v-label">Your compass points to</span><h3>' + esc(w.name) + subBtn('compass/' + w.k) + '</h3><p class="cp-line">' + esc(w.line) + '</p>' +
       '<div class="field"><label for="cpReflect">How will you show it at work this week?</label><textarea id="cpReflect" rows="3" placeholder="One sentence is plenty."></textarea><p class="hinttxt">Goes into your message to your manager. Saved in this browser only.</p></div>' +
       '<button type="button" class="cp-redo">Answer again</button>';
@@ -839,6 +921,36 @@ var QUIZ = [
 })();
 
 SECTIONS.forEach(function(s){ if(progIs(s.k)) turnDone(s.k); });
+
+/* ══════════ print my Voyage summary: results and everything the learner wrote ══════════
+   Built fresh each time (the button, or the browser's own Print), on white,
+   in the brand's type. Nothing leaves the browser. */
+function buildPrint(){
+  var sheet = $('#printSheet'); if(!sheet) return;
+  function val(k){ return (get(k) || '').trim(); }
+  function list(k){ try{ var v = JSON.parse(get(k) || '[]'); return Array.isArray(v) ? v : []; }catch(e){ return []; } }
+  var done = SECTIONS.filter(function(s){ return progIs(s.k); }).length;
+  var score = get('quiz-score'), belief = val('belief'), reflect = val('reflect'), commits = list('commit'), hunt = list('hunt');
+  var b = null; BELIEFS.forEach(function(x){ if(x.name === belief) b = x; });
+  var tell = $('#tellText') ? $('#tellText').textContent : '';
+  var today = new Date().toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' });
+  var nm = ''; try{ var q = new URLSearchParams(location.search); nm = q.get('name') || ''; }catch(e){}
+  var html = '<header class="ps-head"><img src="./assets/img/vu-lockup-black.png" alt="Vanderbilt University" width="166" height="43" /><div><span class="ps-k">Vanderbilt Voyage Online</span><h1>My Vanderbilt <em>Voyage</em>.</h1><p>' + (nm ? esc(nm) + ' &middot; ' : '') + esc(today) + '</p></div></header>';
+  html += '<section class="ps-row"><div class="ps-stat"><b>' + done + '/' + SECTIONS.length + '</b><span>activities complete</span></div><div class="ps-stat"><b>' + (score === null ? '&ndash;' : esc(score) + '/5') + '</b><span>quick check score</span></div><div class="ps-stat"><b>' + (belief ? esc(belief) : '&ndash;') + '</b><span>my belief compass</span></div></section>';
+  html += '<section><h2>My belief</h2>' + (b ? '<p class="ps-big">' + esc(b.line) + '</p><p class="ps-sub">Behaviors to start with: ' + esc(b.behaviors[0]) + '; ' + esc(b.behaviors[1]) + '.</p>' : '<p class="ps-empty">Not answered yet. Lesson 4, the belief compass.</p>') +
+    '<h3>How I will show it at work</h3><p class="ps-write">' + (reflect ? esc(reflect) : '<span class="ps-empty">Not written yet.</span>') + '</p></section>';
+  html += '<section><h2>My four commitments</h2><ul class="ps-checks">' + COMMITS.map(function(c, i){ return '<li class="' + (commits[i] ? 'on' : '') + '"><span class="ps-box" aria-hidden="true">' + (commits[i] ? '&#10003;' : '') + '</span><span><b>' + esc(c[0]) + '.</b> ' + esc(c[1]) + '</span></li>'; }).join('') + '</ul></section>';
+  html += '<section><h2>Message to my manager</h2><p class="ps-quote">' + esc(tell) + '</p></section>';
+  html += '<section><h2>My Quick Facts hunt</h2><table class="ps-table"><tbody>' + HUNT.map(function(q, i){ var a = (hunt[i] || '').trim(); return '<tr><th>' + esc(q.q) + '</th><td>' + (a ? esc(a) : '<span class="ps-empty">&ndash;</span>') + (q.open ? '' : '<small>Quick Facts: ' + esc(q.big) + '</small>') + '</td></tr>'; }).join('') + '</tbody></table></section>';
+  html += '<section class="ps-steps"><h2>Still to do</h2><p>Vanderbilt Voyage Day One Survey &middot; Benefits Information Course &middot; required compliance education &middot; a one-on-one with my manager about my belief and my development plan.</p><p class="ps-foot">Questions: pcb@vanderbilt.edu &middot; Crescere aude.</p></section>';
+  sheet.innerHTML = html;
+}
+window.addEventListener('beforeprint', buildPrint);
+document.addEventListener('click', function(e){
+  if(!e.target.closest('[data-print]')) return;
+  narrStop(); buildPrint();
+  try{ window.print(); }catch(err){ toast('Printing is not available here. Use your browser menu to print.'); }
+});
 
 /* ══════════ copy to clipboard ══════════ */
 $$('[data-copytext]').forEach(function(b){

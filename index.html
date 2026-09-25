@@ -27,9 +27,9 @@
   No em or en dashes anywhere in this file.
 -->
 <script>document.documentElement.classList.add('js','paged');</script>
-<link rel="stylesheet" href="./assets/css/course.css?v=20260925a" />
+<link rel="stylesheet" href="./assets/css/course.css?v=20260925k" />
 <link rel="stylesheet" href="./assets/css/foundation.css?v=20260925a" />
-<link rel="stylesheet" href="./assets/css/voyage.css?v=20260925h" />
+<link rel="stylesheet" href="./assets/css/voyage.css?v=20260925m" />
 <link rel="stylesheet" href="./assets/css/nav.css?v=20260925a" />
 </head>
 <body>
@@ -243,11 +243,29 @@
 <section id="facts" class="th-dark v-sec" aria-label="Lesson 3: Quick facts">
   <div class="wrap">
     <div class="v-rail" data-lesson="3"><span>Lesson 3 of 6 &middot; Quick facts</span></div>
-    <div class="v-embed-head">
-      <h2 class="v-h sm">The rest of the <em>numbers</em>.</h2>
-      <a class="btn btn-ghost btn-sm" id="factsLink" href="https://www.vanderbilt.edu/about/quick-facts/" target="_blank" rel="noopener">Open full window<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></a>
+    <div class="v-stage">
+      <div class="v-copy">
+        <h2 class="v-h">Go find the <em>numbers</em>.</h2>
+        <p class="v-why">Open Quick Facts, find eight numbers, and fill in the board.</p>
+        <a class="btn btn-gold v-launch" id="factsLink" href="https://www.vanderbilt.edu/about/quick-facts/" target="_blank" rel="noopener">Launch Vanderbilt Quick Facts<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></a>
+        <div class="v-mosaic" aria-label="Your Quick Facts board">
+          <div class="mt big lit" data-m="founded"><img src="./assets/img/course/campus-aerial.jpg" alt="" loading="lazy" /><small>Campus</small><b>1873</b><span>university founded</span></div>
+          <div class="mt" data-m="0"><small>Students</small><b>?</b><span>undergraduate students</span></div>
+          <div class="mt" data-m="1"><small>Campus</small><b>?</b><span>schools and colleges</span></div>
+          <div class="mt" data-m="2"><small>Academics</small><b>?</b><span>student-to-faculty ratio</span></div>
+          <div class="mt" data-m="3"><small>Undergraduate life</small><b>?</b><span>of students conduct research</span></div>
+          <div class="mt" data-m="4"><small>Research</small><b>?</b><span>in annual research and development</span></div>
+          <div class="mt" data-m="5"><small>Faculty</small><b>?</b><span>total faculty members</span></div>
+          <div class="mt" data-m="6"><small>Affordability</small><b>?</b><span>household income for full tuition</span></div>
+          <div class="mt" data-m="7"><small>Life after</small><b>?</b><span>of 2024 grads employed or in grad school</span></div>
+          <div class="mt tally" data-m="tally"><small>Your board</small><b id="huntTally">0/8</b><span>facts found</span></div>
+        </div>
+      </div>
+      <div class="v-act">
+        <p class="v-task" data-task="hunt">Find eight numbers on Quick Facts</p>
+        <div class="v-hunt" id="hunt"></div>
+      </div>
     </div>
-    <div class="embed"><iframe src="https://www.vanderbilt.edu/about/quick-facts/" title="Vanderbilt Quick Facts" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe></div>
   </div>
 </section>
 
@@ -278,9 +296,10 @@
         <h2 class="v-h">Which belief points your <em>way</em>?</h2>
         <p class="v-why">Four quick questions. No wrong answers.</p>
         <div class="v-rose small" id="needleRose"></div>
+        <p class="rose-hint" id="roseHint" aria-live="polite">The needle moves as you answer.</p>
       </div>
       <div class="v-act">
-        <p class="v-task" data-task="compass">Pick the answer most like you</p>
+        <p class="v-task">Pick the answer most like you</p>
         <div class="v-cq" id="compassBox"></div>
         <p class="drill-status" id="compassStatus" role="status" aria-live="polite"></p>
       </div>
@@ -343,6 +362,7 @@
           <button type="button" class="btn btn-gold btn-sm" id="copyTell" data-copytext="I just finished Vanderbilt Voyage Online. The belief I align with most is [belief]. Can we talk about it, and about my development plan, in our next one-on-one?">Copy the message</button>
         </div>
         <a class="v-survey" data-survey href="https://forms.cloud.microsoft/Pages/ResponsePage.aspx?id=OX9aur7js0q0UGf6gPrsreq8b35schZOi4vqfFyoXutUOThNNDdNUzhXRTRQU1IzSThPRFlWUzA1QiQlQCN0PWcu" target="_blank" rel="noopener"><span class="v-label">Two minutes</span><b>Vanderbilt Voyage Day One Survey</b><i aria-hidden="true">&rarr;</i></a>
+        <button type="button" class="btn btn-ghost btn-sm v-print" data-print><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9V3h12v6M6 18H4a1 1 0 0 1-1-1v-6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v6a1 1 0 0 1-1 1h-2"/><rect x="6" y="14" width="12" height="7"/></svg>Print my Voyage summary</button>
         <p class="v-visit">In Nashville? Join the in-person Voyage, a campus tour, or lunch. <a href="mailto:pcb@vanderbilt.edu">pcb@vanderbilt.edu</a></p>
       </div>
     </div>
@@ -358,6 +378,7 @@
     <p class="v-hello">Welcome to Vanderbilt.</p>
     <div class="v-hero-cta center">
       <a class="btn btn-gold" data-survey href="https://forms.cloud.microsoft/Pages/ResponsePage.aspx?id=OX9aur7js0q0UGf6gPrsreq8b35schZOi4vqfFyoXutUOThNNDdNUzhXRTRQU1IzSThPRFlWUzA1QiQlQCN0PWcu" target="_blank" rel="noopener">Vanderbilt Voyage Day One Survey</a>
+      <button type="button" class="btn btn-ghost" data-print>Print my Voyage summary</button>
       <button type="button" class="btn btn-ghost" id="exitBtn">Exit the course</button>
     </div>
     <nav class="v-links" aria-label="Keep these close">
@@ -400,6 +421,7 @@
   </div>
 </div>
 <p class="narr-toast" id="narrToast" role="status" aria-live="polite"></p>
+<div id="printSheet" class="print-sheet" aria-hidden="true"></div>
 
 <div class="oracle-overlay" id="oracleModal" role="dialog" aria-modal="true" aria-labelledby="oracleTitle" hidden>
   <div class="oracle-modal">
@@ -415,9 +437,9 @@
 </div>
 
 <script src="config.js?v=20260925h"></script>
-<script src="narration-scripts.js?v=20260925i"></script>
+<script src="narration-scripts.js?v=20260925j"></script>
 <script src="./assets/js/nav.js?v=20260925a"></script>
 <script src="pager.js?v=20260925h"></script>
-<script src="app.js?v=20260925h"></script>
+<script src="app.js?v=20260925m"></script>
 </body>
 </html>

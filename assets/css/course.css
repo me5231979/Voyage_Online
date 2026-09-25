@@ -1132,41 +1132,7 @@ html.paged .hero .hw-mini li{ display:inline-flex; align-items:baseline; gap:8px
 html.paged .hero .hw-mini li::before{ content:counter(hm,decimal-leading-zero); font-family:var(--cond); font-weight:700;
   font-size:.68rem; letter-spacing:.05em; color:var(--vu-gold); }
 
-/* ═══════════════════ PRINT SUMMARY ═══════════════════
-   #printSummary is display:none on screen and populated only when the
-   learner clicks "Download your summary (PDF)"; @media print swaps the
-   whole app out for it. Screen rendering is untouched. */
-#printSummary{ display:none; }
-.print-cta{ display:flex; flex-wrap:wrap; align-items:center; gap:12px; margin-top:18px; }
-.print-cta .hinttxt{ margin:0; }
-@media print{
-  html, body{ height:auto !important; overflow:visible !important; background:#fff !important; }
-  body > *:not(#printSummary){ display:none !important; }
-  #printSummary{ display:block !important; color:#000; background:#fff;
-    font-family:-apple-system, "Segoe UI", Helvetica, Arial, sans-serif; font-size:11pt; line-height:1.5; }
-  #printSummary .ps-head{ display:flex; align-items:center; gap:16pt; border-bottom:2pt solid #000; padding-bottom:10pt; }
-  #printSummary .ps-head img{ width:52pt; height:auto; }
-  #printSummary .ps-title{ font-family:Georgia, "Times New Roman", serif; font-size:16pt; margin:0; }
-  #printSummary .ps-meta{ margin:2pt 0 0; font-size:9pt; color:#333; }
-  #printSummary h2{ font-family:Georgia, "Times New Roman", serif; font-weight:700; color:#000; font-size:13pt; margin:16pt 0 4pt;
-    border-bottom:.75pt solid #999; padding-bottom:2pt; break-after:avoid; page-break-after:avoid; }
-  #printSummary h3{ font-family:inherit; color:#000; font-size:10.5pt; margin:8pt 0 2pt; break-after:avoid; page-break-after:avoid; }
-  #printSummary .ps-title{ color:#000; }
-  #printSummary p{ margin:3pt 0; }
-  #printSummary ul, #printSummary ol{ margin:3pt 0 3pt 16pt; padding:0; }
-  #printSummary li{ margin:2pt 0; break-inside:avoid; page-break-inside:avoid; }
-  #printSummary .ps-block{ break-inside:avoid; page-break-inside:avoid; margin:6pt 0; }
-  #printSummary .ps-pre{ white-space:pre-wrap; font-family:"Courier New", monospace; font-size:9pt;
-    border:.75pt solid #999; padding:6pt; margin:4pt 0; break-inside:avoid; page-break-inside:avoid; }
-  #printSummary .ps-empty{ color:#555; font-style:italic; }
-  #printSummary .ps-url{ color:#000; word-break:break-all; }
-  #printSummary a{ color:#000; text-decoration:none; }
-  #printSummary .ps-fine{ font-size:8.5pt; color:#444; margin-top:14pt; border-top:.75pt solid #999; padding-top:6pt; }
-  #printSummary dl{ margin:3pt 0; }
-  #printSummary dt{ font-weight:700; display:inline; }
-  #printSummary dd{ display:inline; margin:0; }
-  #printSummary .ps-term{ margin:2pt 0; }
-}
+/* (print: see voyage.css, which prints the Voyage summary) */
 
 /* ═══════════════════ REDUCED MOTION ═══════════════════ */
 @media (prefers-reduced-motion:reduce){
