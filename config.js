@@ -25,5 +25,5 @@ window.VVO_CONFIG = {
   /* where Exit goes; empty closes the tab (inside an LMS) or returns to the start */
   exitUrl: '',
   /* bump after re-recording narration so browsers fetch the new clips */
-  mediaVersion: '20260925a'
+  mediaVersion: '20260925r1'
 };

@@ -54,8 +54,9 @@ The same narrator as Manager Foundations: ElevenLabs voice
 2. Run **Record narration with ElevenLabs** from the Actions tab (it also runs on any push that changes `narration-scripts.js`).
 3. It writes `assets/audio/voyage/<key>.mp3` and commits them. Only changed clips are re-recorded.
 
-Until the clips exist, each Listen button reads the same words with the
-browser's built-in voice, so the course is never silent. After re-recording,
+All 39 clips are recorded (about 14 minutes) in `assets/audio/voyage/`, raw
+ElevenLabs files in `source/`. If a clip is ever missing, the Listen button
+reads the same words with the browser's built-in voice. After re-recording,
 bump `mediaVersion` in `config.js`.
 
 ## Videos
