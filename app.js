@@ -360,10 +360,10 @@ function turnDone(k){ $$('.v-task[data-task="' + k + '"]').forEach(function(t){ 
    Growth is not a copy of Nashville: each city puts Vanderbilt where a field leads. */
 var CITIES = {
   nashville:   { name:'Nashville', focus:'Home', line:'Our home since 1873: the residential campus and the heart of the university. It is where the Voyage begins.', url:'https://www.vanderbilt.edu/' },
-  chattanooga: { name:'Chattanooga', focus:'Quantum', line:'Vanderbilt is in Chattanooga to help build the next wave of quantum research and technology.', url:'https://www.vanderbilt.edu/chancellor/initiatives-and-outreach/growth/quantum-innovation/' },
-  nyc:         { name:'New York City', focus:'Finance', line:'New York puts Vanderbilt at the center of global finance and business.', url:'https://www.vanderbilt.edu/nyc/' },
-  wpb:         { name:'West Palm Beach', focus:'Engineering and space', line:'West Palm Beach extends Vanderbilt into engineering and the technology behind space.', url:'https://www.vanderbilt.edu/chancellor/initiatives-and-outreach/growth/west-palm-beach/' },
-  sf:          { name:'San Francisco', focus:'Technology', line:'San Francisco puts Vanderbilt next to the people and companies shaping tech.', url:'https://www.vanderbilt.edu/chancellor/initiatives-and-outreach/growth/san-francisco/' }
+  chattanooga: { name:'Chattanooga', focus:'Quantum', line:'The Institute for Quantum Innovation, with EPB: about 250 researchers, faculty, and staff, and the first commercial access in the U.S. to a trapped-ion quantum computer.', url:'https://www.vanderbilt.edu/chancellor/initiatives-and-outreach/growth/quantum-innovation/' },
+  nyc:         { name:'New York City', focus:'Finance, media, and design', line:'Open since August 2026: 13 buildings on 2.7 acres in Chelsea, with an undergraduate semester program and a master’s in business and technology.', url:'https://www.vanderbilt.edu/nyc/' },
+  wpb:         { name:'West Palm Beach', focus:'Engineering and space', line:'A graduate campus for business, engineering, data science, and AI in a hub for finance, defense, and space technology: about 1,000 graduate students.', url:'https://www.vanderbilt.edu/chancellor/initiatives-and-outreach/growth/west-palm-beach/' },
+  sf:          { name:'San Francisco', focus:'Technology and design', line:'Opening in 2027 on the former California College of the Arts campus, home to the Jen-Hsun and Lori Huang College of Art, Architecture and Design: about 1,000 students.', url:'https://www.vanderbilt.edu/chancellor/initiatives-and-outreach/growth/san-francisco/' }
 };
 (function(){
   var map = $('#cities .us-map'), chips = $('#cities .v-cities'), card = $('#cityCard'), cchip = $('#cities .v-task'), cseen = {}; if(!map || !chips || !card) return;
@@ -377,6 +377,33 @@ var CITIES = {
   }
   chips.addEventListener('click', function(e){ var b = e.target.closest('button[data-city]'); if(b) show(b.getAttribute('data-city')); });
   map.addEventListener('click', function(e){ var p = e.target.closest('.pin, .lbl'); if(p) show(p.getAttribute('data-city')); });
+})();
+
+/* ══════════ lesson 1: our growth, in the news ══════════
+   Press coverage of the campus network, filterable by campus. Headlines are
+   the outlets' own; the one-line takeaways summarize the reporting. */
+var PRESS = [
+  { c:'nyc', src:'Vanderbilt News', d:'Aug 27, 2026', h:'Start spreading the news… Vanderbilt University New York City is open!', t:'The first campus beyond Nashville opens in Chelsea, and the Chancellor rings the opening bell at Nasdaq.', u:'https://news.vanderbilt.edu/2026/08/27/start-spreading-the-news-vanderbilt-university-new-york-city-is-open/' },
+  { c:'nyc', src:'Chelsea Community News', d:'Aug 26, 2026', h:'If You ‘VanderBuild’ It, They Will Come', t:'The neighborhood view of a campus spanning nearly a full city block: 13 buildings on 2.7 acres.', u:'https://chelseacommunitynews.com/2026/08/26/if-you-vanderbuild-it-they-will-come-tn-based-university-launches-satellite-in-chelsea/' },
+  { c:'sf', src:'SF.gov', d:'Jan 2026', h:'Mayor Lurie Announces Vanderbilt University Will Establish a Full-Time Presence in San Francisco', t:'San Francisco’s mayor welcomes a full-time Vanderbilt campus, starting in the 2027 to 2028 academic year.', u:'https://www.sf.gov/news-mayor-lurie-announces-vanderbilt-university-will-establish-a-full-time-presence-in-san-francisco' },
+  { c:'sf', src:'ABC7 San Francisco', d:'Jan 2026', h:'Vanderbilt University to open new campus in San Francisco in 2027', t:'Vanderbilt takes over the California College of the Arts campus, anchored by the Huang College of Art, Architecture and Design.', u:'https://abc7news.com/post/vanderbilt-university-open-new-campus-san-francisco-2027-acquiring-california-college-arts-building/18398105/' },
+  { c:'wpb', src:'Vanderbilt News', d:'Jan 12, 2026', h:'Vanderbilt surges forward with West Palm Beach campus, launches broader fundraising effort', t:'A $250 million fundraising phase for a graduate campus in business, engineering, data science, and AI.', u:'https://news.vanderbilt.edu/2026/01/12/vanderbilt-surges-forward-with-west-palm-beach-campus-launches-broader-fundraising-effort/' },
+  { c:'wpb', src:'Higher Ed Dive', d:'2024', h:'Vanderbilt University gets approval for $520M Florida graduate campus', t:'West Palm Beach approves the plan for a $520 million graduate campus.', u:'https://www.highereddive.com/news/vanderbilt-university-approval-520m-florida-west-palm-beach-graduate-campus/730825/' },
+  { c:'chattanooga', src:'Vanderbilt News', d:'Jul 22, 2026', h:'Vanderbilt University, EPB of Chattanooga launch Institute for Quantum Innovation', t:'A quantum campus of about 250 researchers, faculty, and staff, with a trapped-ion quantum computer and a quantum network.', u:'https://news.vanderbilt.edu/2026/07/22/vanderbilt-university-epb-of-chattanooga-launch-institute-for-quantum-innovation/' },
+  { c:'strategy', src:'Forbes', d:'Aug 1, 2026', h:'Is Vanderbilt’s Campus Expansion The Next Big Thing For Universities?', t:'A national look at Vanderbilt’s network of campuses and what it could mean for higher education.', u:'https://www.forbes.com/sites/michaeltnietzel/2026/08/01/is-vanderbilts-campus-expansion-the-next-big-thing-for-universities/' },
+  { c:'strategy', src:'Vanderbilt News', d:'Jul 31, 2026', h:'Why Vanderbilt is building campuses beyond Nashville', t:'The case, in Vanderbilt’s own words, for placing campuses in the country’s innovation hubs.', u:'https://news.vanderbilt.edu/2026/07/31/why-vanderbilt-is-building-campuses-beyond-nashville-opinion/' },
+  { c:'strategy', src:'WSMV', d:'Mar 6, 2026', h:'Chancellor reveals details behind Vanderbilt’s expansion to NYC, San Francisco, West Palm Beach', t:'Chancellor Diermeier explains the thinking behind the new campuses.', u:'https://www.wsmv.com/2026/03/06/chancellor-reveals-details-behind-vanderbilts-expansion-nyc-san-francisco-west-palm-beach/' }
+];
+var PRESS_TAG = { nyc:'New York City', sf:'San Francisco', wpb:'West Palm Beach', chattanooga:'Chattanooga', strategy:'The strategy' };
+(function(){
+  var box = $('#pressList'), filt = $('.v-press-filter'); if(!box || !filt) return;
+  box.innerHTML = PRESS.map(function(p){ return '<a class="pc" data-c="' + p.c + '" href="' + esc(p.u) + '" target="_blank" rel="noopener"><span class="pc-top"><span class="pc-tag" data-c="' + p.c + '">' + esc(PRESS_TAG[p.c]) + '</span><span class="pc-src">' + esc(p.src) + ' &middot; ' + esc(p.d) + '</span></span><b>' + esc(p.h) + '</b><span class="pc-t">' + esc(p.t) + '</span><span class="pc-go">Read the story<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></span></a>'; }).join('');
+  filt.addEventListener('click', function(e){
+    var b = e.target.closest('button[data-pf]'); if(!b) return;
+    var f = b.getAttribute('data-pf');
+    $$('button', filt).forEach(function(x){ x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); });
+    $$('.pc', box).forEach(function(c){ c.hidden = f !== 'all' && c.getAttribute('data-c') !== f; });
+  });
 })();
 
 /* ══════════ lesson 1: the route, six stops ══════════ */

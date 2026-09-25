@@ -550,3 +550,22 @@ html.paged .page > section#leaders{ justify-content:flex-start; }
 .v-netside .v-cities{ margin-top:0; }
 .v-netside .v-city{ min-height:150px; }
 @media (max-width:1000px){ .v-netmap{ grid-template-columns:1fr; } }
+
+/* lesson 1: our growth, in the news */
+.v-press-filter{ display:flex; flex-wrap:wrap; gap:6px; margin-bottom:14px; }
+.v-press-filter button{ font:inherit; font-size:.84rem; color:var(--tx); background:none; border:1px solid var(--bdg); border-radius:999px; padding:6px 13px; cursor:pointer; min-height:36px; }
+.v-press-filter button:hover{ border-color:var(--eyebrow); color:var(--eyebrow); }
+.v-press-filter button[aria-pressed="true"]{ background:var(--eyebrow); border-color:var(--eyebrow); color:var(--vu-black); }
+.v-press{ display:grid; grid-template-columns:repeat(auto-fill, minmax(260px,1fr)); gap:10px; }
+.pc{ display:flex; flex-direction:column; gap:8px; border:1px solid var(--bd); border-top:3px solid var(--pc, var(--eyebrow)); background:var(--card); border-radius:var(--r); padding:14px 16px; text-decoration:none; color:var(--tx); transition:border-color .2s ease, background .2s ease, transform .2s ease; }
+.pc:hover{ background:var(--card2); border-color:var(--bdg); transform:translateY(-2px); }
+.pc[hidden]{ display:none !important; }
+.pc-top{ display:flex; flex-direction:column; gap:3px; }
+.pc-tag{ font-family:var(--cond); font-weight:700; font-size:.68rem; letter-spacing:.08em; text-transform:uppercase; color:var(--pc, var(--eyebrow)); }
+.pc-src{ font-size:.78rem; color:var(--tx3); }
+.pc b{ font-family:var(--serif); font-weight:400; font-size:1.12rem; line-height:1.28; }
+.pc-t{ color:var(--tx2); font-size:.86rem; line-height:1.45; }
+.pc-go{ margin-top:auto; display:inline-flex; align-items:center; gap:6px; color:var(--link); font-size:.84rem; }
+.pc-go svg{ width:14px; height:14px; }
+.pc[data-c="nyc"]{ --pc:var(--vu-gold); } .pc[data-c="sf"]{ --pc:var(--vu-sky); } .pc[data-c="wpb"]{ --pc:var(--vu-highlight); } .pc[data-c="chattanooga"]{ --pc:var(--vu-sage); } .pc[data-c="strategy"]{ --pc:#FFFFFF; }
+@media (prefers-reduced-motion: reduce){ .pc{ transition:none; } .pc:hover{ transform:none; } }

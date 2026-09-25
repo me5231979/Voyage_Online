@@ -14,6 +14,7 @@ try{
     { sel:'#welcome',         key:'welcome',   label:'Lesson 1: Welcome',          mode:'whole' },
     { sel:'#mission',         key:'mission',   label:'Lesson 1: The mission',      mode:'whole' },
     { sel:'#cities',          key:'cities',    label:'Lesson 1: Five cities',      mode:'whole' },
+    { sel:'#press',           key:'press',     label:'Lesson 1: In the news',      mode:'whole' },
     { sel:'#history',         key:'history',   label:'Lesson 2: Our history',      mode:'whole' },
     { sel:'#leaders',         key:'leaders',   label:'Lesson 2: Our leadership',   mode:'whole' },
     { sel:'#numbers',         key:'numbers',   label:'Lesson 3: By the numbers',   mode:'whole' },

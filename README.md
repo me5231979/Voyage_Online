@@ -2,13 +2,15 @@
 
 The self-paced start of a new Vanderbilt staff member's journey, rebuilt
 from the Rise course on the **Manager Foundations** engine
-(`me5231979/Manager-Voyage`, `foundation/`) in the FLH brand. Six lessons,
+(`me5231979/Manager-Voyage`, `foundation/`) in the Vanderbilt brand. Six lessons,
 about thirty minutes, one idea per page, every page narrated.
 
 | Page | Key | Activity (tracked) |
 | --- | --- | --- |
 | Welcome | `home` | |
-| The mission, with the five-city map | `mission` | |
+| The mission and the three areas of focus | `mission` | |
+| Five cities: the campus network map | `cities` | |
+| Our growth, in the news (press coverage) | `press` | |
 | Lesson 1 · Welcome to the Voyage | `welcome` | Visit all six stops on the route |
 | Lesson 2 · Our history | `history` | The video, then a twelve-moment timeline |
 | Lesson 2 · Our leadership | `leaders` | Fact or fiction, four statements |
