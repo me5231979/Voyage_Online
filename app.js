@@ -151,7 +151,7 @@ function subBtn(k){ return NARR[k] ? '<button type="button" class="sub-listen" d
 document.addEventListener('click', function(e){
   var b = e.target.closest('[data-narr]'); if(b){ e.preventDefault(); narrSub(b.getAttribute('data-narr'), true); return; }
   /* clicking into an activity stops whatever is playing, so the audio never talks over the learner */
-  if(e.target.closest('.scn button[data-o], [data-drill] button, .flip-btn, .kq button, .cp-opts button, .commit-list button, .idea-tabs button')){ pauseVideos(); if(narr.playing) narrStop(); }
+  if(e.target.closest('.scn button[data-o], [data-drill] button, .kq button, .cp-opts button, .v-commits button, .v-tile button, .v-focus button')){ pauseVideos(); if(narr.playing) narrStop(); }
 }, true);
 if(bbAuto) bbAuto.addEventListener('click', function(){
   narr.auto = !narr.auto; narr.on = narr.auto; set('auto', narr.auto ? '1' : '0'); narrUI();
@@ -166,27 +166,30 @@ document.addEventListener('visibilitychange', function(){ if(document.hidden && 
 narrUI();
 if(narr.auto) window.setTimeout(narrPlay, 600);
 
-/* ══════════ course videos: a waiting card until the file exists; pause on page turn; nothing talks over them ══════════ */
-$$('.cv-wrap').forEach(function(w){
-  var v = w.querySelector('video'); if(!v) return;
-  v.addEventListener('error', function(){ w.classList.add('nomedia'); }, true);
-  var src = v.querySelector('source') || v; src.addEventListener && src.addEventListener('error', function(){ w.classList.add('nomedia'); });
-  if(v.error) w.classList.add('nomedia');
+/* ══════════ course videos: poster first, "coming soon" until the file exists; nothing talks over them ══════════ */
+$$('[data-video]').forEach(function(f){
+  var v = f.querySelector('video'); if(!v) return;
+  var src = v.getAttribute('src');
+  function none(){ f.classList.add('nomedia'); }
+  v.addEventListener('error', none);
+  /* preload is none, so ask quietly whether the file is there */
+  if(src && window.fetch){ try{ fetch(src, { method:'HEAD' }).then(function(r){ if(!r.ok) none(); }, none); }catch(e){} }
+  v.addEventListener('play', function(){ f.classList.add('playing'); narrStop(); });
+  v.addEventListener('pause', function(){ f.classList.remove('playing'); });
   document.addEventListener('chart:page', function(){ if(!v.paused) v.pause(); });
 });
-document.addEventListener('play', function(e){ if(e.target && e.target.tagName === 'VIDEO' && e.target.id !== 'heroVideo') narrStop(); }, true);
 
 /* ══════════ PROGRESS ══════════ */
 var SECTIONS = [
-  { k:'welcome',  no:'01', name:'Welcome to the Voyage', how:'Open all six lessons' },
-  { k:'history',  no:'02', name:'Our history',           how:'Open all four moments' },
+  { k:'welcome',  no:'01', name:'Welcome to the Voyage', how:'Visit all six stops' },
+  { k:'history',  no:'02', name:'Our history',           how:'Open all four years' },
   { k:'leaders',  no:'03', name:'Our leadership',        how:'Fact or fiction, four statements' },
-  { k:'numbers',  no:'04', name:'By the numbers',        how:'Guess all six numbers' },
+  { k:'numbers',  no:'04', name:'By the numbers',        how:'Guess all seven numbers' },
   { k:'beliefs',  no:'05', name:'The four beliefs',      how:'Find the best response in each belief’s moment' },
   { k:'compass',  no:'06', name:'Your belief compass',   how:'Answer four questions and see your belief' },
   { k:'grow',     no:'07', name:'Dare to grow',          how:'Find the growth response in three situations' },
   { k:'quiz',     no:'08', name:'A quick check',         how:'Score 4 of 5' },
-  { k:'nextstep', no:'09', name:'Next steps',            how:'Agree to all four tasks' }
+  { k:'nextstep', no:'09', name:'Next steps',            how:'Commit to all four moves' }
 ];
 function progIs(k){ return get('p-' + k) === '1'; }
 function progWrite(k, v){ set('p-' + k, v ? '1' : null); }
@@ -290,21 +293,65 @@ document.addEventListener('keydown', function(e){
   else if(!e.shiftKey && active === last){ e.preventDefault(); first.focus(); }
 });
 
-/* ══════════ tap-to-open maps: the six lessons, the history timeline ══════════ */
-[{ map:'#voyageMap',  status:'#voyageStatus',  noun:'lessons', prog:'welcome', narr:'welcome/g', done:' Activity complete. Turn the page for lesson 2.' },
- { map:'#historyMap', status:'#historyStatus', noun:'moments', prog:'history', narr:'history/g', done:' Activity complete. Turn the page to meet our leadership.' }].forEach(function(cfg){
-  var map = $(cfg.map), status = $(cfg.status); if(!map) return;
-  var cards = $$('.fw-card', map), seen = {};
-  cards.forEach(function(c, i){
-    if(NARR[cfg.narr + (i + 1)]) c.setAttribute('data-nk', cfg.narr + (i + 1));
-    c.addEventListener('click', function(){
-      var open = c.getAttribute('aria-expanded') !== 'true';
-      c.setAttribute('aria-expanded', open ? 'true' : 'false');
-      if(open) narrSub(cfg.narr + (i + 1)); else if(narr.playing) narrStop();
-      if(open){ seen[i] = 1; var n = Object.keys(seen).length; if(status) status.textContent = n + ' of ' + cards.length + ' ' + cfg.noun + ' opened.' + (n === cards.length ? cfg.done : ''); if(n === cards.length) progDone(cfg.prog); }
-    });
+/* ══════════ task chips: the instruction above each activity turns gold with a check when done ══════════ */
+function turnDone(k){ $$('.v-task[data-task="' + k + '"]').forEach(function(t){ t.classList.add('done'); }); }
+
+/* ══════════ mission: the three areas of focus open in place ══════════ */
+(function(){
+  var list = $('#focusList'); if(!list) return;
+  var chip = list.parentNode.querySelector('.v-task'), seen = {};
+  $$('button', list).forEach(function(b, i){ b.addEventListener('click', function(){ var o = b.getAttribute('aria-expanded') !== 'true'; b.setAttribute('aria-expanded', o ? 'true' : 'false'); if(o){ seen[i] = 1; if(Object.keys(seen).length === 3 && chip) chip.classList.add('done'); } }); });
+})();
+
+/* ══════════ lesson 1: the route, six stops ══════════ */
+var STOPS = [
+  { h:'Welcome to the <em>Voyage</em>', p:'Where you are now: the route, and the Chancellor’s vision.', tags:['The route', 'A message from the Chancellor'] },
+  { h:'Our history and <em>leadership</em>', p:'150 years of daring to grow, and who leads today.', tags:['A video', 'The Vanderbilt timeline', 'Fact or fiction'] },
+  { h:'Our mission, our students, and <em>you</em>', p:'Seven numbers that put the mission in perspective.', tags:['Guess the number', 'Quick facts', 'A campus fun fact'] },
+  { h:'The four <em>beliefs</em>', p:'The heart of the course, and how you live them.', tags:['The compass', 'Four moments', 'Your belief compass'] },
+  { h:'Dare to <em>grow</em>', p:'Our motto, as a mindset.', tags:['A video', 'Three situations'] },
+  { h:'Next <em>steps</em>', p:'Check what you learned, and plan what comes after today.', tags:['Five questions', 'Four commitments', 'Day One Survey'] }
+];
+(function(){
+  var route = $('#route'), port = $('#port'); if(!route) return;
+  var btns = $$('button[data-stop]', route), seen = {};
+  btns.forEach(function(b, i){ if(NARR['welcome/g' + (i + 1)]) b.setAttribute('data-nk', 'welcome/g' + (i + 1)); });
+  route.addEventListener('click', function(e){
+    var b = e.target.closest('button[data-stop]'); if(!b) return;
+    var i = +b.getAttribute('data-stop'), s = STOPS[i]; seen[i] = 1;
+    btns.forEach(function(x){ x.setAttribute('aria-expanded', x === b ? 'true' : 'false'); x.classList.toggle('seen', !!seen[+x.getAttribute('data-stop')]); });
+    port.innerHTML = '<span class="v-label">Stop ' + (i + 1) + ' of 6</span><h3>' + s.h + subBtn('welcome/g' + (i + 1)) + '</h3><p>' + esc(s.p) + '</p><ul>' + s.tags.map(function(t){ return '<li>' + esc(t) + '</li>'; }).join('') + '</ul>';
+    narrSub('welcome/g' + (i + 1));
+    if(Object.keys(seen).length === STOPS.length) progDone('welcome');
   });
-});
+})();
+
+/* ══════════ lesson 2: four years ══════════ */
+var YEARS = [
+  { b:'The founding', p:'Cornelius Vanderbilt gives $1 million to found a university in Nashville, hoping to strengthen the ties between all parts of the country.' },
+  { b:'The first classes', p:'Vanderbilt opens its doors. More than 177,000 degrees have followed.' },
+  { b:'A new chancellor', p:'Daniel Diermeier takes the helm and leads the safe return to campus through the COVID-19 pandemic.' },
+  { b:'Growing boldly', p:'Research passes $1 billion, a capital campaign succeeds, and Vanderbilt now works from five cities.' }
+];
+(function(){
+  var box = $('#years'), out = $('#yearOut'); if(!box) return;
+  var tabs = $$('button[data-y]', box), seen = {};
+  tabs.forEach(function(b, i){ if(NARR['history/g' + (i + 1)]) b.setAttribute('data-nk', 'history/g' + (i + 1)); });
+  function show(i, silent){
+    seen[i] = 1;
+    tabs.forEach(function(t, ti){ t.setAttribute('aria-selected', ti === i ? 'true' : 'false'); t.classList.toggle('seen', !!seen[ti]); t.tabIndex = ti === i ? 0 : -1; });
+    out.innerHTML = '<b>' + esc(YEARS[i].b) + subBtn('history/g' + (i + 1)) + '</b><p>' + esc(YEARS[i].p) + '</p>';
+    if(!silent) narrSub('history/g' + (i + 1));
+    if(Object.keys(seen).length === YEARS.length) progDone('history');
+  }
+  box.addEventListener('click', function(e){ var b = e.target.closest('button[data-y]'); if(b) show(+b.getAttribute('data-y')); });
+  box.addEventListener('keydown', function(e){
+    if(e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+    e.preventDefault(); e.stopPropagation();
+    var cur = tabs.findIndex(function(t){ return t.getAttribute('aria-selected') === 'true'; });
+    var n = (Math.max(cur, 0) + (e.key === 'ArrowRight' ? 1 : tabs.length - 1)) % tabs.length; tabs[n].focus(); show(n);
+  });
+})();
 
 /* ══════════ your call: one scenario, three responses, consequences ══════════ */
 var SCENARIOS = {
@@ -396,21 +443,13 @@ function buildCalls(el){
 }
 $$('[data-calls]').forEach(buildCalls);
 
-/* ══════════ drills: fact or fiction, guess the number ══════════ */
+/* ══════════ drills: fact or fiction ══════════ */
 var DRILLS = {
   leaders: { opts:['Fact', 'Fiction'], prog:'leaders', verb:'decided', items:[
     { s:'Chancellor Diermeier was born in Berlin, Germany.', a:0, x:'Fact. He was born in Berlin and came to Vanderbilt as its chancellor in 2020.' },
     { s:'Chancellor Diermeier is the first in his family to graduate from college.', a:0, x:'Fact. He is a first-generation college graduate, which is part of why access to an elite education matters so much to him.' },
     { s:'Each vice chancellor runs a single academic department.', a:1, x:'Fiction. Vice chancellors lead large parts of the university, such as academic affairs, financial operations, and staff culture and belonging, and guide them toward the mission.' },
     { s:'Under Chancellor Diermeier, Vanderbilt has passed $1 billion in research expenditures.', a:0, x:'Fact. It is one of the milestones of his tenure, along with a successful capital campaign and a reaffirmed commitment to free expression and civil discourse.' }
-  ]},
-  numbers: { opts:null, prog:'numbers', verb:'guessed', items:[
-    { s:'Vanderbilt is a registered arboretum. How many trees and shrubs grow on campus?', opts:['About 650', 'About 6,500', 'About 65,000'], a:1, x:'About 6,500 trees and shrubs, from many species. As a registered arboretum, the campus is a living laboratory for students and researchers studying biodiversity and conservation in a city.' },
-    { s:'In 2023, how many beds were used by students and visitors on campus?', opts:['6,400', '1,200', '24,000'], a:0, x:'6,400 beds. On-campus housing is a big part of the community here, and of the work that keeps it running.' },
-    { s:'At the 2023 Turkey Toss, an annual employee appreciation event, how many turkeys were given away?', opts:['About 150', 'More than 15,000', 'More than 1,560'], a:2, x:'More than 1,560 turkeys, plus 102 Tofurkeys and 1,000 gift sets. The Turkey Toss is one way Vanderbilt says thank you to its staff.' },
-    { s:'How many degrees has Vanderbilt awarded since 1875?', opts:['About 17,000', 'More than 177,000', 'About 1.7 million'], a:1, x:'More than 177,000 degrees. That is nearly one degree for every person in Chattanooga, Tennessee.' },
-    { s:'About how many visits do the spaces in the Heard Library get each year?', opts:['About 1.24 million', 'About 124,000', 'About 12,400'], a:0, x:'About 1.24 million visits a year, for books, digital resources, study space, events, and workshops. The library is a hub for learning and collaboration.' },
-    { s:'VUIT manages about 51,000 devices. How many voice calls does it handle each day?', opts:['About 5,000', 'About 50,000', 'About 500,000'], a:2, x:'About 500,000 voice calls a day, on top of 51,000 devices. VUIT keeps the whole university connected.' }
   ]}
 };
 function buildDrill(el){
@@ -443,65 +482,109 @@ function buildDrill(el){
 }
 $$('[data-drill]').forEach(buildDrill);
 
-/* ══════════ the four beliefs, one at a time ══════════ */
+/* ══════════ lesson 3: guess the number, seven tiles and a squirrel ══════════
+   Guessing before the reveal (the pretesting effect) makes the number stick. */
+var NUMS = [
+  { lab:'Trees and shrubs', q:'Vanderbilt is a registered arboretum. How many trees and shrubs?', opts:['About 650', 'About 6,500', 'About 65,000'], a:1, big:'6,500', x:'A living laboratory for biodiversity, right on campus.' },
+  { lab:'Beds on campus', q:'How many beds were used by students and visitors in 2023?', opts:['1,200', '6,400', '24,000'], a:1, big:'6,400', x:'On-campus housing keeps the community close.' },
+  { lab:'Turkey Toss', q:'How many turkeys went to staff at the 2023 Turkey Toss?', opts:['About 150', 'More than 1,560', 'More than 15,000'], a:1, big:'1,560+', x:'Plus 102 Tofurkeys and 1,000 gift sets. A thank you to staff.' },
+  { lab:'Degrees since 1875', q:'How many degrees has Vanderbilt awarded since 1875?', opts:['About 17,000', 'More than 177,000', 'About 1.7 million'], a:1, big:'177,000+', x:'Nearly one for every person in Chattanooga.' },
+  { lab:'Library visits', q:'How many visits do Heard Library spaces get each year?', opts:['About 124,000', 'About 480,000', 'About 1.24 million'], a:2, big:'1.24M', x:'A hub for learning, collaboration, and events.' },
+  { lab:'VUIT voice calls', q:'VUIT manages 51,000 devices. How many voice calls a day?', opts:['About 5,000', 'About 50,000', 'About 500,000'], a:2, big:'500,000', x:'Every day. VUIT keeps the university connected.' },
+  { lab:'Game-day fans', q:'How many fans attend Vandy home athletic events each year?', opts:['40,000+', '400,000+', '4 million+'], a:1, big:'400,000+', x:'Anchor Down. Home games are a community event.' }
+];
+(function(){
+  var grid = $('#nums'), status = $('#numbersStatus'); if(!grid) return;
+  var done = {}, right = 0;
+  grid.innerHTML = NUMS.map(function(n, i){
+    return '<div class="v-tile" data-n="' + i + '"><button type="button" class="v-tile-face" aria-expanded="false"><span class="q" aria-hidden="true">?</span><span class="lab">' + esc(n.lab) + '</span></button></div>';
+  }).join('') +
+    '<div class="v-tile photo" data-n="fun"><img src="./assets/img/course/squirrel.jpg" alt="" width="900" height="675" loading="lazy" /><button type="button" class="v-tile-face" aria-expanded="false"><span class="q">Did you know?</span><span class="lab">Our unofficial mascot</span></button></div>';
+  function paint(){ var n = Object.keys(done).length; if(status) status.textContent = n + ' of ' + NUMS.length + ' guessed.' + (n === NUMS.length ? ' ' + right + ' right. Activity complete.' : ''); if(n === NUMS.length) progDone('numbers'); }
+  grid.addEventListener('click', function(e){
+    var tile = e.target.closest('.v-tile'); if(!tile) return;
+    var k = tile.getAttribute('data-n');
+    if(k === 'fun'){
+      if(tile.classList.contains('open')) return;
+      tile.classList.add('open');
+      var f = tile.querySelector('.v-tile-face'); f.setAttribute('aria-expanded', 'true');
+      f.outerHTML = '<div class="v-reveal" tabindex="-1"><span class="lab">Fun fact</span><p>Squirrels are an inside joke here. So many live on campus that they became an unofficial mascot. One, named Corny, has starred in Vanderbilt videos.</p></div>';
+      tile.querySelector('.v-reveal').focus(); return;
+    }
+    var i = +k, n = NUMS[i];
+    if(e.target.closest('.v-tile-face') && !tile.classList.contains('open') && !done[i]){
+      tile.classList.add('open');
+      tile.innerHTML = '<div class="v-guess"><span class="v-label">' + esc(n.lab) + '</span><p>' + esc(n.q) + '</p><div class="opts" role="group" aria-label="Your guess">' + n.opts.map(function(o, oi){ return '<button type="button" data-o="' + oi + '">' + esc(o) + '</button>'; }).join('') + '</div></div>';
+      var fb = tile.querySelector('button[data-o]'); if(fb) fb.focus();
+      return;
+    }
+    var b = e.target.closest('button[data-o]'); if(!b || done[i]) return;
+    var ok = +b.getAttribute('data-o') === n.a; done[i] = 1; if(ok) right++;
+    tile.classList.remove('open'); tile.classList.add('done');
+    tile.innerHTML = '<div class="v-reveal" tabindex="-1"><span class="verdict' + (ok ? ' ok' : '') + '">' + (ok ? 'You got it' : 'You guessed ' + esc(n.opts[+b.getAttribute('data-o')])) + '</span><span class="big">' + esc(n.big) + '</span><span class="lab">' + esc(n.lab) + '</span><p>' + esc(n.x) + '</p></div>';
+    tile.querySelector('.v-reveal').focus();
+    paint();
+  });
+  paint();
+})();
+
+
+/* ══════════ lesson 4: the four beliefs on a compass rose ══════════ */
 var BELIEFS = [
-  { k:'belonging', name:'Belonging', line:'Once you’re chosen, you belong.', h:'Once you&rsquo;re chosen, you <em>belong</em>.',
+  { k:'belonging', pt:'n', name:'Belonging', line:'Once you’re chosen, you belong.', h:'Once you&rsquo;re chosen, you <em>belong</em>.',
     what:'Vanderbilt is intentionally very selective. Only people with the highest potential make the cut. Once you are here, you are surrounded by the best and brightest, brought together for one simple purpose: to improve each other.',
     behaviors:['Confident, never cutthroat', 'When you join, you commit', 'Respect the Vanderbilt Way', 'Create and cultivate conditions for success', 'Celebrate differences', 'Foster unity'],
     week:'Introduce yourself to one person outside your team, and ask what they are working on.' },
-  { k:'selfdir', name:'Self-direction', line:'Choose your own path, and go all in.', h:'Choose your own path, and go all <em>in</em>.',
+  { k:'selfdir', pt:'e', name:'Self-direction', line:'Choose your own path, and go all in.', h:'Choose your own path, and go all <em>in</em>.',
     what:'Personal purpose is found through relentless exploration and challenge. If it is too comfortable, you are not doing it right. Experience as much as you can. And once you discover your path, give it everything you have.',
     behaviors:['Try, fail, learn, repeat', 'Embrace discomfort', 'Ready to change your mind', 'Put in the work', 'No shortcuts', 'Prove the doubters wrong'],
-    week:'Say yes to one task this week that stretches you, and tell your manager what you want to learn from it.' },
-  { k:'collab', name:'Collaboration', line:'Teams challenge and support each other.', h:'Teams challenge and support each <em>other</em>.',
+    week:'Say yes to one task that stretches you, and tell your manager what you want to learn from it.' },
+  { k:'collab', pt:'s', name:'Collaboration', line:'Teams challenge and support each other.', h:'Teams challenge and support each <em>other</em>.',
     what:'Our goal as a community is to work as one. By challenging and supporting one another, high-functioning teams accomplish far more than individuals. Only by rallying around a common purpose can we truly multiply our individual potential.',
     behaviors:['Bands do more than soloists', 'Ditch the ego', 'See no boundaries', 'Pioneer together', 'Challenge directly', 'Respect the person', 'Redefine “possible”'],
     week:'Ask a teammate for their honest take on something you are working on, and use it.' },
-  { k:'growth', name:'Growth', line:'We never stop growing and achieving.', h:'We never stop growing and <em>achieving</em>.',
+  { k:'growth', pt:'w', name:'Growth', line:'We never stop growing and achieving.', h:'We never stop growing and <em>achieving</em>.',
     what:'A permanent growth mindset matters more than any single achievement, however big. Human potential is realized over a lifetime, in increments and leaps, and it expands as you grow.',
     behaviors:['Growing the whole person', 'Obsessive self-improvement', 'In competition with yourself', 'Be the ladder for others', 'Lifelong leveling up'],
-    week:'Pick one skill you want to be better at in ninety days, and bring it to your next one-on-one.' }
+    week:'Pick one skill to be better at in ninety days, and bring it to your next one-on-one.' }
 ];
+var BELIEF_BY_KEY = {}; BELIEFS.forEach(function(b){ BELIEF_BY_KEY[b.k] = b; });
+var ROSE_ANGLE = { n:0, e:90, s:180, w:270 };
+/* the rose: rings, ticks, a four-point star (one point per belief), four diagonal minor points, and a needle */
+function roseSVG(needle){
+  var t = '', i;
+  for(i = 0; i < 72; i++){ var a = i * 5 * Math.PI / 180, r1 = i % 18 === 0 ? 150 : i % 3 === 0 ? 156 : 160; t += '<line class="tick" x1="' + (200 + Math.sin(a) * r1).toFixed(1) + '" y1="' + (200 - Math.cos(a) * r1).toFixed(1) + '" x2="' + (200 + Math.sin(a) * 165).toFixed(1) + '" y2="' + (200 - Math.cos(a) * 165).toFixed(1) + '"/>'; }
+  function pt(ang, len, w, cls, key){ var a = ang * Math.PI / 180, s = Math.sin(a), c = Math.cos(a), px = -c, py = -s;
+    var tip = [200 + s * len, 200 - c * len], l = [200 + s * 22 + px * w, 200 - c * 22 + py * w], r = [200 + s * 22 - px * w, 200 - c * 22 - py * w];
+    return '<path class="' + cls + '"' + (key ? ' data-pt="' + key + '"' : '') + ' d="M200 200L' + l.map(function(v){ return v.toFixed(1); }).join(' ') + 'L' + tip.map(function(v){ return v.toFixed(1); }).join(' ') + 'L' + r.map(function(v){ return v.toFixed(1); }).join(' ') + 'Z"/>'; }
+  var star = pt(45, 92, 12, 'minor') + pt(135, 92, 12, 'minor') + pt(225, 92, 12, 'minor') + pt(315, 92, 12, 'minor') + pt(0, 140, 22, '', 'n') + pt(90, 140, 22, '', 'e') + pt(180, 140, 22, '', 's') + pt(270, 140, 22, '', 'w');
+  return '<svg viewBox="0 0 400 400" aria-hidden="true"><circle class="ring2" cx="200" cy="200" r="178"/><circle class="ring" cx="200" cy="200" r="165"/>' + t + '<g class="star">' + star + '</g>' +
+    (needle ? '<g class="needle" style="transform:rotate(-35deg)"><path d="M200 58L210 200L200 214L190 200Z"/></g>' : '') + '<circle class="hub" cx="200" cy="200" r="9"/></svg>';
+}
 (function(){
-  var box = $('#beliefsBox'), status = $('#beliefsStatus'); if(!box) return;
-  var cur = -1, seen = {}, found = {};
-  box.innerHTML = '<div class="idea-tabs" role="tablist" aria-label="The four beliefs">' + BELIEFS.map(function(it, i){ return '<button type="button" role="tab" aria-selected="false" data-tab="' + i + '">' + (i + 1) + ' &middot; ' + it.name + '</button>'; }).join('') + '</div>' +
-    '<div class="idea idea-intro cur" role="region" aria-label="About the four beliefs"><span class="who-is">Start here</span><h3>Explore our <em>beliefs</em>.</h3>' +
-      '<div class="intro-copy"><p>At Vanderbilt we offer more than an education: a journey of exceptional learning, opportunity, and experience. Four core beliefs guide it, and they guide how we work together, too.</p>' +
-      '<p><b>How this works.</b> Each belief gives you what it means, the behaviors that show it, and one thing to try this week. Then a short moment to apply it. After all four, the belief compass helps you find the one that fits you best.</p>' +
-      '<p class="intro-cta"><button type="button" class="btn btn-primary btn-sm" data-tab="0">Start with belonging<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></p></div>' +
-      '<ol class="intro-list" aria-label="The four beliefs">' + BELIEFS.map(function(it, i){ return '<li><button type="button" data-tab="' + i + '"><span class="il-no">' + (i + 1) + '</span><span class="il-t"><b>' + it.name + '</b><span>' + esc(it.line) + '</span></span></button></li>'; }).join('') + '</ol></div>' +
-    BELIEFS.map(function(it, i){
-      return '<div class="idea" role="tabpanel" data-i="' + i + '"><span class="who-is">' + it.name + subBtn('beliefs/t' + (i + 1)) + '</span><h3>' + it.h + '</h3>' +
-        '<p class="blk"><b>What it means</b>' + esc(it.what) + '</p>' +
-        '<div class="blk"><b>The behaviors</b><ul class="behaviors">' + it.behaviors.map(function(x){ return '<li>' + esc(x) + '</li>'; }).join('') + '</ul></div>' +
-        '<div class="side"><div class="week"><b>Try it this week</b>' + esc(it.week) + '</div></div>' +
-        '<div class="try"><p class="cq-h"><span class="mono">Apply it</span><span class="try-t">' + esc(SCENARIOS[it.k].h) + '</span>' + subBtn('beliefs/m' + (i + 1)) + '<span class="try-note">Tap the response you would give, then try the other two.</span></p><div class="scn" data-scn="' + it.k + '"></div></div>' +
-        '<div class="idea-nav">' + (i > 0 ? '<button type="button" class="btn btn-ghost btn-sm" data-prev="1">Back</button>' : '') + (i < BELIEFS.length - 1 ? '<button type="button" class="btn btn-primary btn-sm" data-next="1">Next belief<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>' : '<span class="hinttxt">All four read. Turn the page for your belief compass.</span>') + '</div></div>';
-    }).join('');
+  var rose = $('#rose'), out = $('#beliefOut'), status = $('#beliefsStatus'); if(!rose) return;
+  rose.innerHTML = roseSVG(false) + '<div role="tablist" aria-label="The four beliefs">' + BELIEFS.map(function(b, i){ return '<button type="button" role="tab" class="pt ' + b.pt + '" aria-selected="false" data-b="' + i + '" data-nk="beliefs/t' + (i + 1) + '">' + b.name + '</button>'; }).join('') + '</div>';
+  var seen = {}, found = {}, chip = $('#beliefs .v-task');
+  function paint(){ var n = Object.keys(seen).length, f = Object.keys(found).length; if(status) status.textContent = n + ' of 4 beliefs. ' + f + ' of 4 moments.' + (f === 4 ? ' Activity complete.' : ''); if(f === 4) progDone('beliefs'); }
   function show(i){
-    cur = i; seen[i] = 1;
-    var intro = box.querySelector('.idea-intro'); if(intro) intro.classList.remove('cur');
-    $$('.idea[data-i]', box).forEach(function(p, pi){ p.classList.toggle('cur', pi === i); });
-    $$('.idea-tabs button', box).forEach(function(t, ti){ t.setAttribute('aria-selected', ti === i ? 'true' : 'false'); t.classList.toggle('seen', !!seen[ti]); });
-    paint();
-    if(window.chartPager && window.chartPager.current().key === 'beliefs'){ var f = $$('.idea[data-i]', box)[i].querySelector('.idea-nav button'); if(f) f.focus({ preventScroll:true }); }
+    var b = BELIEFS[i]; seen[i] = 1;
+    $$('.pt', rose).forEach(function(p){ var on = +p.getAttribute('data-b') === i; p.setAttribute('aria-selected', on ? 'true' : 'false'); p.classList.toggle('seen', !!seen[+p.getAttribute('data-b')]); });
+    $$('.star path[data-pt]', rose).forEach(function(p){ p.classList.toggle('lit', p.getAttribute('data-pt') === b.pt); });
+    out.innerHTML = '<span class="v-label">Belief ' + (i + 1) + ' of 4 &middot; ' + b.name + subBtn('beliefs/t' + (i + 1)) + '</span><h3>' + b.h + '</h3>' +
+      '<ul class="behaviors" aria-label="Behaviors">' + b.behaviors.map(function(x){ return '<li>' + esc(x) + '</li>'; }).join('') + '</ul>' +
+      '<details><summary>What it means, and one thing to try</summary><p>' + esc(b.what) + '</p><p><b>Try it this week.</b> ' + esc(b.week) + '</p></details>' +
+      '<p class="v-label try-h">Apply it: ' + esc(SCENARIOS[b.k].h.split(' · ')[1] || '') + subBtn('beliefs/m' + (i + 1)) + '</p><div class="scn" data-scn="' + b.k + '"></div>';
+    buildScenario(out.querySelector('.scn'));
+    if(found[b.k]){ var best = out.querySelector('.scn'); }
     narrSub('beliefs/t' + (i + 1));
+    paint();
   }
-  function paint(){ var n = Object.keys(seen).length, f = Object.keys(found).length; if(status) status.textContent = n + ' of 4 beliefs. ' + f + ' of 4 moments.' + (f === 4 ? ' Activity complete.' : n === 4 && f < 4 ? ' Find the best response in each moment.' : ''); if(f === 4) progDone('beliefs'); }
-  $$('.scn[data-scn]', box).forEach(buildScenario);
-  box.addEventListener('click', function(e){
-    var b = e.target.closest('.scn button[data-o]'); if(b){ var k = b.closest('.scn').getAttribute('data-scn'); if(SCENARIOS[k].opts[parseInt(b.getAttribute('data-o'), 10)].best){ found[k] = 1; paint(); } return; }
-    var t = e.target.closest('button[data-tab]'); if(t){ show(parseInt(t.getAttribute('data-tab'), 10)); return; }
-    if(e.target.closest('button[data-next]')){ show(Math.min(Math.max(cur, 0) + 1, BELIEFS.length - 1)); return; }
-    if(e.target.closest('button[data-prev]')){ show(Math.max(cur - 1, 0)); }
-  });
+  rose.addEventListener('click', function(e){ var p = e.target.closest('.pt'); if(p) show(+p.getAttribute('data-b')); });
+  out.addEventListener('click', function(e){ var b = e.target.closest('.scn button[data-o]'); if(!b) return; var k = b.closest('.scn').getAttribute('data-scn'); if(SCENARIOS[k].opts[+b.getAttribute('data-o')].best){ found[k] = 1; paint(); } });
+  paint();
 })();
 
-/* ══════════ the belief compass: four questions, one belief, one reflection ══════════
-   Replaces the chat agent in the original course. Each answer points to a
-   belief; the most-picked one (the latest pick breaks a tie) is the result.
-   The result, and the reflection, carry into the message to the manager. */
+/* ══════════ lesson 4: the belief compass, one question at a time; the needle finds your belief ══════════ */
 var COMPASS = [
   { q:'It is a free afternoon at work. What do you reach for first?', o:[
     ['belonging', 'Getting to know the people around me'], ['selfdir', 'Something new I have never tried'], ['collab', 'A problem I can work on with others'], ['growth', 'A skill I want to get better at'] ]},
@@ -509,75 +592,79 @@ var COMPASS = [
     ['collab', '“The team is better when you are on it.”'], ['growth', '“You are not the same person you were a year ago.”'], ['belonging', '“You make people feel welcome here.”'], ['selfdir', '“You went all in, and it showed.”'] ]},
   { q:'A project gets hard. What keeps you going?', o:[
     ['selfdir', 'I chose this, and I finish what I choose'], ['belonging', 'The people counting on me'], ['growth', 'What I am learning along the way'], ['collab', 'Working it out together'] ]},
-  { q:'Picture yourself a year from now. What would make you proudest?', o:[
+  { q:'A year from now, what would make you proudest?', o:[
     ['growth', 'How much I have grown'], ['collab', 'What my team accomplished together'], ['selfdir', 'That I found my path here and went for it'], ['belonging', 'That this place feels like mine'] ]}
 ];
-var BELIEF_BY_KEY = {}; BELIEFS.forEach(function(b){ BELIEF_BY_KEY[b.k] = b; });
 (function(){
-  var box = $('#compassBox'), status = $('#compassStatus'); if(!box) return;
+  var box = $('#compassBox'), status = $('#compassStatus'), nr = $('#needleRose'); if(!box) return;
+  if(nr) nr.innerHTML = roseSVG(true) + BELIEFS.map(function(b){ return '<span class="pt ' + b.pt + '" data-k="' + b.k + '">' + b.name + '</span>'; }).join('');
+  var needle = nr ? nr.querySelector('.needle') : null;
   var ans = (function(){ try{ var v = JSON.parse(get('compass') || '[]'); return Array.isArray(v) ? v : []; }catch(e){ return []; } })();
-  box.innerHTML = '<div class="cp-steps">' + COMPASS.map(function(c, i){
-      return '<div class="cp-q" data-i="' + i + '"><p class="cp-h"><span class="mono">' + (i + 1) + ' of ' + COMPASS.length + '</span>' + esc(c.q) + '</p><div class="cp-opts" role="group" aria-label="' + esc(c.q) + '">' +
-        c.o.map(function(o){ return '<button type="button" data-b="' + o[0] + '" aria-pressed="false">' + esc(o[1]) + '</button>'; }).join('') + '</div></div>';
-    }).join('') + '</div>' +
-    '<div class="cp-result" id="cpResult" role="status" aria-live="polite"></div>';
+  var cur = 0;
+  box.innerHTML = COMPASS.map(function(c, i){
+    return '<div class="cp-q" data-i="' + i + '"><p class="cp-h"><span class="v-label">Question ' + (i + 1) + ' of ' + COMPASS.length + '</span>' + esc(c.q) + '</p><div class="cp-opts" role="group" aria-label="' + esc(c.q) + '">' +
+      c.o.map(function(o){ return '<button type="button" data-b="' + o[0] + '" aria-pressed="false">' + esc(o[1]) + '</button>'; }).join('') + '</div>' +
+      '<div class="cp-dots" aria-hidden="true">' + COMPASS.map(function(x, di){ return '<i class="' + (di <= i ? 'on' : '') + '"></i>'; }).join('') + '</div>' +
+      (i > 0 ? '<button type="button" class="cp-back" data-back="1">&larr; Back</button>' : '') + '</div>';
+  }).join('') + '<div class="cp-result" id="cpResult" aria-live="polite"></div>';
   var result = $('#cpResult');
-  function winner(){
-    var tally = {}, best = null, bestN = 0;
-    ans.forEach(function(k){ if(!k) return; tally[k] = (tally[k] || 0) + 1; if(tally[k] >= bestN){ bestN = tally[k]; best = k; } });
-    return best;
+  function winner(){ var tally = {}, best = null, bestN = 0; ans.forEach(function(k){ if(!k) return; tally[k] = (tally[k] || 0) + 1; if(tally[k] >= bestN){ bestN = tally[k]; best = k; } }); return best; }
+  function point(k){
+    var b = BELIEF_BY_KEY[k];
+    if(needle) needle.style.transform = 'rotate(' + (b ? ROSE_ANGLE[b.pt] : -35) + 'deg)';
+    if(nr) $$('.pt', nr).forEach(function(p){ p.classList.toggle('on', !!b && p.getAttribute('data-k') === k); });
   }
-  function paint(){
-    $$('.cp-q', box).forEach(function(q, i){ $$('button', q).forEach(function(b){ b.setAttribute('aria-pressed', ans[i] === b.getAttribute('data-b') ? 'true' : 'false'); }); q.classList.toggle('answered', !!ans[i]); });
-    var n = ans.filter(Boolean).length;
-    if(status) status.textContent = n + ' of ' + COMPASS.length + ' answered.' + (n === COMPASS.length ? ' Activity complete. Your belief is below.' : '');
-    if(n < COMPASS.length){ result.innerHTML = ''; result.classList.remove('show'); return; }
+  function step(i){
+    cur = i; box.classList.remove('result');
+    $$('.cp-q', box).forEach(function(q, qi){ q.classList.toggle('cur', qi === i); $$('button[data-b]', q).forEach(function(bt){ bt.setAttribute('aria-pressed', ans[qi] === bt.getAttribute('data-b') ? 'true' : 'false'); }); });
+    var n = ans.filter(Boolean).length; if(status) status.textContent = n + ' of ' + COMPASS.length + ' answered.';
+    point(ans.filter(Boolean).length ? winner() : null);
+  }
+  function finish(announce){
     var w = BELIEF_BY_KEY[winner()]; if(!w) return;
-    set('belief', w.name);
-    result.innerHTML = '<span class="mono">Your compass points to</span><h3>' + esc(w.name) + subBtn('compass/' + w.k) + '</h3><p class="cp-line">' + esc(w.line) + '</p>' +
-      '<p>Every belief matters here, and you will live all four. This is the one that sounds most like you right now. Two behaviors to start with: <b>' + esc(w.behaviors[0]) + '</b> and <b>' + esc(w.behaviors[1]) + '</b>.</p>' +
-      '<div class="field"><label for="cpReflect">How will you embody ' + esc(w.name.toLowerCase()) + ' in how you show up to work? One or two sentences, for you and your manager.</label>' +
-      '<textarea id="cpReflect" rows="3" placeholder="For example: I will ask one colleague outside my team what they are working on each week."></textarea><p class="hinttxt">Saved in this browser only. It carries into the message to your manager on the next steps page.</p></div>';
-    result.classList.add('show');
+    set('belief', w.name); box.classList.add('result'); point(w.k);
+    result.innerHTML = '<span class="v-label">Your compass points to</span><h3>' + esc(w.name) + subBtn('compass/' + w.k) + '</h3><p class="cp-line">' + esc(w.line) + '</p>' +
+      '<div class="field"><label for="cpReflect">How will you show it at work this week?</label><textarea id="cpReflect" rows="3" placeholder="One sentence is plenty."></textarea><p class="hinttxt">Goes into your message to your manager. Saved in this browser only.</p></div>' +
+      '<button type="button" class="cp-redo">Answer again</button>';
     var ta = $('#cpReflect'); ta.value = get('reflect') || '';
     ta.addEventListener('input', function(){ set('reflect', ta.value); tellPaint(); });
-    progDone('compass');
-    tellPaint();
+    if(status) status.textContent = 'Your compass points to ' + w.name + '. Activity complete.';
+    progDone('compass'); tellPaint();
+    if(announce){ narrSub('compass/' + w.k); var h = result.querySelector('h3'); if(h){ h.tabIndex = -1; h.focus({ preventScroll:true }); } }
   }
   box.addEventListener('click', function(e){
+    if(e.target.closest('.cp-redo')){ ans = []; set('compass', null); step(0); var f = box.querySelector('.cp-q.cur button'); if(f) f.focus(); return; }
+    if(e.target.closest('[data-back]')){ step(Math.max(cur - 1, 0)); return; }
     var b = e.target.closest('.cp-opts button'); if(!b) return;
-    var i = parseInt(b.closest('.cp-q').getAttribute('data-i'), 10);
-    ans[i] = b.getAttribute('data-b'); set('compass', JSON.stringify(ans));
-    var had = result.classList.contains('show');
-    paint();
-    if(!had && result.classList.contains('show')){ var w = BELIEF_BY_KEY[winner()]; if(w) narrSub('compass/' + w.k); }
-    else { var nq = $$('.cp-q', box)[i + 1]; if(nq && !ans[i + 1]){ var f = nq.querySelector('button'); if(f) f.focus({ preventScroll:false }); } }
+    ans[cur] = b.getAttribute('data-b'); set('compass', JSON.stringify(ans));
+    if(cur < COMPASS.length - 1){ step(cur + 1); var f2 = box.querySelector('.cp-q.cur button'); if(f2) f2.focus({ preventScroll:true }); }
+    else finish(true);
   });
-  paint();
+  if(ans.filter(Boolean).length === COMPASS.length) finish(false); else step(Math.min(ans.filter(Boolean).length, COMPASS.length - 1));
 })();
 
 /* ══════════ next steps: four commitments, and the message to the manager ══════════ */
 var COMMITS = [
-  'I will discuss with my manager which belief I most closely align with, and how it will help guide how I show up to work.',
-  'I will work with my manager to put my professional development plan into action, building on my strengths and growing my opportunities.',
-  'I will complete all of my required compliance education.',
-  'I will finish all other tasks, including additional courses such as the Benefits Information Course, and complete the Vanderbilt Voyage Day One Survey.'
+  ['Talk beliefs with your manager', 'Which belief you align with most, and how it will guide how you show up to work.'],
+  ['Start your development plan', 'Build on your strengths and grow your opportunities, together with your manager.'],
+  ['Finish your compliance training', 'All of your required compliance education.'],
+  ['Wrap up day one', 'The Benefits Information Course, any other assigned courses, and the Vanderbilt Voyage Day One Survey.']
 ];
 function tellPaint(){
   var tell = $('#tellText'), copy = $('#copyTell'); if(!tell) return;
   var b = get('belief'), r = (get('reflect') || '').trim();
-  var msg = 'I just finished Vanderbilt Voyage Online. The belief I align with most is ' + (b ? b.toLowerCase() : '[belief]') + ', and I want it to guide how I show up to work.' + (r ? ' Here is how I plan to show it: ' + r + (/[.!?]$/.test(r) ? '' : '.') : '') + ' Can we talk about it, and about my development plan, in our next one-on-one?';
+  var msg = 'I just finished Vanderbilt Voyage Online. The belief I align with most is ' + (b ? b.toLowerCase() : '[belief]') + '.' + (r ? ' Here is how I plan to show it: ' + r + (/[.!?]$/.test(r) ? '' : '.') : '') + ' Can we talk about it, and about my development plan, in our next one-on-one?';
   tell.textContent = '“' + msg + '”';
   if(copy) copy.setAttribute('data-copytext', msg);
 }
 (function(){
   var list = $('#commitList'), status = $('#commitStatus'); if(!list) return;
   var on = (function(){ try{ var v = JSON.parse(get('commit') || '[]'); return Array.isArray(v) ? v : []; }catch(e){ return []; } })();
-  list.innerHTML = COMMITS.map(function(t, i){ return '<button type="button" role="checkbox" aria-checked="false" data-c="' + i + '"><span class="cb" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></span><span>' + esc(t) + '</span></button>'; }).join('');
+  list.innerHTML = COMMITS.map(function(t, i){ return '<button type="button" role="checkbox" aria-checked="false" data-c="' + i + '"><span class="cb" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></span><b>' + esc(t[0]) + '</b><small>' + esc(t[1]) + '</small></button>'; }).join('');
   function paint(){
     $$('button[data-c]', list).forEach(function(b){ b.setAttribute('aria-checked', on[+b.getAttribute('data-c')] ? 'true' : 'false'); });
     var n = on.filter(Boolean).length;
-    if(status) status.textContent = n + ' of ' + COMMITS.length + ' agreed.' + (n === COMMITS.length ? ' Activity complete. Send the message below to your manager.' : '');
+    if(status) status.textContent = n + ' of ' + COMMITS.length + ' committed.' + (n === COMMITS.length ? ' Activity complete.' : '');
     if(n === COMMITS.length) progDone('nextstep');
   }
   list.addEventListener('click', function(e){ var b = e.target.closest('button[data-c]'); if(!b) return; var i = +b.getAttribute('data-c'); on[i] = !on[i]; set('commit', JSON.stringify(on)); paint(); });
@@ -633,24 +720,6 @@ var QUIZ = [
   render();
 })();
 
-/* ══════════ "Your turn": a callout above every activity, gold check when done ══════════ */
-var TURNS = [
-  { sel:'#voyageMap',    prog:'welcome',  text:'Tap each lesson to open it and hear what is inside.' },
-  { sel:'#historyMap',   prog:'history',  text:'Tap each moment to open it.' },
-  { sel:'#leadersDrill', prog:'leaders',  text:'Four statements. Tap fact or fiction.' },
-  { sel:'#numbersDrill', prog:'numbers',  text:'Make your best guess, then read the story behind the number.' },
-  { sel:'#beliefsBox',   prog:'beliefs',  text:'Read each belief, then apply it in the moment below it. Tap the response you would give, and try the other two.' },
-  { sel:'#compassBox',   prog:'compass',  text:'Four questions. Pick the answer that sounds most like you. There are no wrong answers.' },
-  { sel:'#growCalls',    prog:'grow',     text:'Tap the response you would give, then try the other two.' },
-  { sel:'#quizBox',      prog:'quiz',     text:'Five questions. Four of five finishes the check.' },
-  { sel:'#commitList',   prog:'nextstep', text:'Read each task and tap to agree.' }
-];
-function turnHTML(t){ return '<div class="turn"' + (t.prog ? ' data-turn="' + t.prog + '"' : '') + ' role="note"><span class="t-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span><div><span class="mono">Your turn</span><p>' + esc(t.text) + '</p></div></div>'; }
-TURNS.forEach(function(t){
-  var el = $(t.sel); if(!el) return;
-  var wrap = document.createElement('div'); wrap.className = 'turn-wrap'; el.parentNode.insertBefore(wrap, el); wrap.innerHTML = turnHTML(t); wrap.appendChild(el);
-});
-function turnDone(k){ $$('.turn[data-turn="' + k + '"]').forEach(function(t){ t.classList.add('done'); t.querySelector('.t-ic').innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>'; t.querySelector('.mono').textContent = 'Done'; }); }
 SECTIONS.forEach(function(s){ if(progIs(s.k)) turnDone(s.k); });
 
 /* ══════════ copy to clipboard ══════════ */

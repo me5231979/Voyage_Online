@@ -9,17 +9,17 @@ about thirty minutes, one idea per page, every page narrated.
 | --- | --- | --- |
 | Welcome | `home` | |
 | The mission, with the five-city map | `mission` | |
-| Lesson 1 · Welcome to the Voyage | `welcome` | Open all six lesson cards |
-| Lesson 2 · Our history | `history` | Open the four timeline moments |
+| Lesson 1 · Welcome to the Voyage | `welcome` | Visit all six stops on the route |
+| Lesson 2 · Our history | `history` | Open all four years |
 | Lesson 2 · The timeline (embedded) | `timeline` | |
 | Lesson 2 · Our leadership | `leaders` | Fact or fiction, four statements |
-| Lesson 3 · By the numbers | `numbers` | Guess six numbers |
+| Lesson 3 · By the numbers | `numbers` | Guess seven numbers |
 | Lesson 3 · Quick facts (embedded) | `facts` | |
-| Lesson 4 · The four beliefs | `beliefs` | One moment per belief |
+| Lesson 4 · The four beliefs | `beliefs` | Compass rose; one moment per belief |
 | Lesson 4 · Belief compass | `compass` | Four questions, one belief, a reflection |
 | Lesson 5 · Dare to grow | `grow` | Three situations |
 | Lesson 6 · Quick check | `quiz` | Four of five |
-| Lesson 6 · Next steps | `nextstep` | Agree to the four tasks |
+| Lesson 6 · Next steps | `nextstep` | Commit to four moves |
 | Keep going | `learn` | Links, the Day One Survey, exit |
 
 The mission page (vision, how we operate, the three areas of focus, and the
@@ -28,6 +28,10 @@ Francisco) is carried over from Manager Foundations and reworded for every
 staff member. The belief compass replaces the chat agent in the original
 course; the belief it lands on, and the learner's reflection, fill in the
 message to their manager on the next steps page.
+
+## Design
+
+One idea per page: a headline, one line of why, one interaction; narration carries the depth. See `AUDIT.md` for the adult learning audit behind it. Images come from the Rise course export (`assets/img/course/`); the Chancellor portrait is the photo uploaded to `assets/img/`, resized for the web.
 
 ## Live site
 
