@@ -175,6 +175,11 @@ $$('[data-video]').forEach(function(f){
   var key = f.getAttribute('data-video'), cfg = (C.videos || {})[key] || {}, cap = f.getAttribute('data-caption') || 'Video';
   var ph = f.querySelector('.v-ph');
   if(cfg.ratio) f.style.aspectRatio = cfg.ratio;
+  /* a Vimeo slot takes the video's real shape, so the box always matches the video */
+  else if(cfg.embed && /player\.vimeo\.com\/video\/(\d+)/.test(cfg.embed) && window.fetch){
+    var vid = cfg.embed.match(/video\/(\d+)/)[1], vh = (cfg.embed.match(/[?&]h=([0-9a-f]+)/) || [])[1];
+    try{ fetch('https://vimeo.com/api/oembed.json?url=' + encodeURIComponent('https://vimeo.com/' + vid + (vh ? '/' + vh : ''))).then(function(r){ return r.ok ? r.json() : null; }).then(function(d){ if(d && d.width && d.height) f.style.aspectRatio = d.width + ' / ' + d.height; }, function(){}); }catch(e){}
+  }
   /* a hosted player (Vimeo, YouTube): the still stays until the learner taps play, then the player loads in place */
   if(cfg.embed){
     f.classList.add('facade');
@@ -360,7 +365,7 @@ var CITIES = {
 
 /* ══════════ lesson 1: the route, six stops ══════════ */
 var STOPS = [
-  { h:'Welcome to the <em>Voyage</em>', p:'Where you are now: the route, and the Chancellor’s vision.', tags:['The route', 'A message from the Chancellor'] },
+  { h:'Welcome to the <em>Voyage</em>', p:'Where you are now: a welcome from the Chancellor, then the mission and our five cities.', tags:['The Chancellor’s welcome', 'The mission', 'Five cities'] },
   { h:'Our history and <em>leadership</em>', p:'150 years of daring to grow, and who leads today.', tags:['A video', 'The Vanderbilt timeline', 'Fact or fiction'] },
   { h:'Our mission, our students, and <em>you</em>', p:'Seven numbers that put the mission in perspective.', tags:['Guess the number', 'Quick facts', 'A campus fun fact'] },
   { h:'The four <em>beliefs</em>', p:'The heart of the course, and how you live them.', tags:['The compass', 'Four moments', 'Your belief compass'] },

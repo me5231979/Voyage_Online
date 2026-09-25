@@ -29,7 +29,7 @@
 <script>document.documentElement.classList.add('js','paged');</script>
 <link rel="stylesheet" href="./assets/css/course.css?v=20260925a" />
 <link rel="stylesheet" href="./assets/css/foundation.css?v=20260925a" />
-<link rel="stylesheet" href="./assets/css/voyage.css?v=20260925f" />
+<link rel="stylesheet" href="./assets/css/voyage.css?v=20260925h" />
 <link rel="stylesheet" href="./assets/css/nav.css?v=20260925a" />
 </head>
 <body>
@@ -75,7 +75,7 @@
     <h1 class="v-display">Welcome <em>aboard</em>.</h1>
     <p class="v-hello" id="heroHello">Your Vanderbilt journey starts here.</p>
     <div class="v-hero-cta">
-      <a class="btn btn-gold" href="#p/mission/1">Begin the voyage<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      <a class="btn btn-gold" href="#p/welcome/1">Begin the voyage<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
       <ul class="v-meta" aria-label="Course at a glance"><li>6 lessons</li><li>About 30 minutes</li><li>Narrated</li></ul>
     </div>
     <details class="v-goals">
@@ -92,10 +92,41 @@
   </div>
 </section>
 
-<!-- ═══ THE MISSION (from Manager Foundations) ═══ -->
-<section id="mission" class="th-dark v-sec" aria-label="The mission">
+<!-- ═══ LESSON 1 · THE ROUTE ═══ -->
+<section id="welcome" class="th-dark v-sec" aria-label="Lesson 1: Welcome to the Vanderbilt Voyage">
   <div class="wrap">
-    <div class="v-rail" data-lesson="0"><span>Before we sail &middot; The mission</span></div>
+    <div class="v-rail" data-lesson="1"><span>Lesson 1 of 6 &middot; Welcome to the Voyage</span></div>
+    <div class="v-welcome">
+      <div class="v-stephead"><span class="v-step" aria-hidden="true">1</span><h2 class="v-h sm">Start with a welcome from the <em>Chancellor</em>.</h2></div>
+      <figure class="v-video v-hero-video" data-video="chancellor" data-caption="A welcome from Chancellor Diermeier">
+        <img class="v-ph" src="./assets/img/course/chancellor-message.jpg" alt="" width="1280" height="720" />
+        <span class="v-ph-play" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13l11-6.5z"/></svg></span>
+        <span class="v-soon">Video coming soon</span>
+        <figcaption>A welcome from Chancellor Diermeier</figcaption>
+      </figure>
+      <div class="v-explore">
+        <div class="v-explore-head">
+          <div class="v-stephead"><span class="v-step" aria-hidden="true">2</span><h3 class="v-h xs">Then explore: six stops, one <em>voyage</em>.</h3></div>
+          <p class="v-task" data-task="welcome">Tap each stop to preview it</p>
+          <ol class="v-route" id="route">
+            <li><button type="button" aria-expanded="false" data-stop="0"><i>1</i><span>Welcome</span></button></li>
+            <li><button type="button" aria-expanded="false" data-stop="1"><i>2</i><span>History</span></button></li>
+            <li><button type="button" aria-expanded="false" data-stop="2"><i>3</i><span>Numbers</span></button></li>
+            <li><button type="button" aria-expanded="false" data-stop="3"><i>4</i><span>Beliefs</span></button></li>
+            <li><button type="button" aria-expanded="false" data-stop="4"><i>5</i><span>Grow</span></button></li>
+            <li><button type="button" aria-expanded="false" data-stop="5"><i>6</i><span>Next steps</span></button></li>
+          </ol>
+        </div>
+        <div class="v-port" id="port" aria-live="polite"><p class="v-port-empty">Six short lessons, about thirty minutes. Tap a stop to see what&rsquo;s there.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ THE MISSION (from Manager Foundations) ═══ -->
+<section id="mission" class="th-dark v-sec" aria-label="Lesson 1: The mission">
+  <div class="wrap">
+    <div class="v-rail" data-lesson="1"><span>Lesson 1 of 6 &middot; The mission</span></div>
     <div class="v-stage">
       <div class="v-copy">
         <h2 class="v-h">Define the great university of the 21st century, and <em>be</em> it.</h2>
@@ -122,36 +153,7 @@
   </div>
 </section>
 
-<!-- ═══ LESSON 1 · THE ROUTE ═══ -->
-<section id="welcome" class="th-dark v-sec" aria-label="Lesson 1: Welcome to the Vanderbilt Voyage">
-  <div class="wrap">
-    <div class="v-rail" data-lesson="1"><span>Lesson 1 of 6 &middot; Welcome to the Voyage</span></div>
-    <div class="v-stage wide-act">
-      <div class="v-copy">
-        <h2 class="v-h">Six stops, one <em>voyage</em>.</h2>
-        <p class="v-why">Know the route before you set sail.</p>
-        <figure class="v-video" data-video="chancellor" data-caption="A message from Chancellor Diermeier">
-          <img class="v-ph" src="./assets/img/course/chancellor-message.jpg" alt="" width="1280" height="720" loading="lazy" />
-          <span class="v-ph-play" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13l11-6.5z"/></svg></span>
-          <span class="v-soon">Video coming soon</span>
-          <figcaption>A message from Chancellor Diermeier</figcaption>
-        </figure>
-      </div>
-      <div class="v-act">
-        <p class="v-task" data-task="welcome">Tap each stop to preview it</p>
-        <ol class="v-route" id="route">
-          <li><button type="button" aria-expanded="false" data-stop="0"><i>1</i><span>Welcome</span></button></li>
-          <li><button type="button" aria-expanded="false" data-stop="1"><i>2</i><span>History</span></button></li>
-          <li><button type="button" aria-expanded="false" data-stop="2"><i>3</i><span>Numbers</span></button></li>
-          <li><button type="button" aria-expanded="false" data-stop="3"><i>4</i><span>Beliefs</span></button></li>
-          <li><button type="button" aria-expanded="false" data-stop="4"><i>5</i><span>Grow</span></button></li>
-          <li><button type="button" aria-expanded="false" data-stop="5"><i>6</i><span>Next steps</span></button></li>
-        </ol>
-        <div class="v-port" id="port" aria-live="polite"><p class="v-port-empty">Six short lessons. Tap a stop to see what&rsquo;s there.</p></div>
-      </div>
-    </div>
-  </div>
-</section>
+
 
 <!-- ═══ LESSON 2 · OUR HISTORY ═══ -->
 <section id="history" class="th-dark v-sec" aria-label="Lesson 2: Our history">
@@ -412,10 +414,10 @@
   </div>
 </div>
 
-<script src="config.js?v=20260925g"></script>
-<script src="narration-scripts.js?v=20260925f"></script>
+<script src="config.js?v=20260925h"></script>
+<script src="narration-scripts.js?v=20260925h"></script>
 <script src="./assets/js/nav.js?v=20260925a"></script>
-<script src="pager.js?v=20260925e"></script>
-<script src="app.js?v=20260925f"></script>
+<script src="pager.js?v=20260925h"></script>
+<script src="app.js?v=20260925h"></script>
 </body>
 </html>

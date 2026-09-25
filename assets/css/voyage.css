@@ -111,6 +111,23 @@ html.paged .v-hero{ padding:0 0 clamp(28px,6vh,72px); }
 .v-city p{ color:var(--tx2); font-size:.92rem; line-height:1.5; margin-top:2px; }
 .v-city a{ color:var(--link); font-size:.88rem; }
 
+/* ── lesson 1: the welcome video first, then explore ── */
+.v-welcome{ display:grid; gap:clamp(14px,2.2vh,22px); }
+.v-stephead{ display:flex; align-items:center; gap:14px; }
+.v-step{ flex:0 0 auto; display:grid; place-items:center; width:40px; height:40px; border-radius:50%; background:var(--eyebrow); color:var(--vu-black); font-family:var(--serif); font-size:1.3rem; }
+.v-h.xs{ font-size:clamp(1.25rem,.8vw + 1rem,1.7rem); max-width:none; }
+.v-welcome .v-hero-video{ margin:0 auto; width:min(100%, 1000px, calc((100svh - 500px) * 1.7778)); min-width:min(100%, 480px); }
+.v-video.v-hero-video .v-ph-play{ width:84px; height:84px; }
+.v-video.v-hero-video .v-ph-play svg{ width:32px; height:32px; }
+html.paged .page > section#welcome{ padding-top:clamp(12px,2.4vh,32px); padding-bottom:clamp(12px,2.4vh,32px); }
+#welcome .v-rail{ margin-bottom:clamp(8px,1.6vh,18px); }
+#welcome .v-route i{ width:50px; height:50px; }
+#welcome .v-route::before{ top:31px; }
+.v-explore{ display:grid; grid-template-columns:minmax(0,7fr) minmax(0,5fr); gap:clamp(16px,3vw,40px); align-items:end; border-top:1px solid var(--bd); padding-top:clamp(14px,2.2vh,22px); }
+.v-explore .v-task{ margin:10px 0 8px; }
+.v-explore .v-port{ margin-top:0; min-height:0; }
+@media (max-width:1000px){ .v-explore{ grid-template-columns:1fr; } }
+
 /* ── lesson 1: the route ── */
 .v-route{ list-style:none; position:relative; display:grid; grid-template-columns:repeat(6,1fr); gap:4px; padding-top:6px; }
 .v-route::before{ content:''; position:absolute; left:8%; right:8%; top:34px; border-top:2px dashed rgba(207,174,112,.45); }
