@@ -11,8 +11,10 @@ about thirty minutes, one idea per page, every page narrated.
 | The mission, with the five-city map | `mission` | |
 | Lesson 1 · Welcome to the Voyage | `welcome` | Open all six lesson cards |
 | Lesson 2 · Our history | `history` | Open the four timeline moments |
+| Lesson 2 · The timeline (embedded) | `timeline` | |
 | Lesson 2 · Our leadership | `leaders` | Fact or fiction, four statements |
 | Lesson 3 · By the numbers | `numbers` | Guess six numbers |
+| Lesson 3 · Quick facts (embedded) | `facts` | |
 | Lesson 4 · The four beliefs | `beliefs` | One moment per belief |
 | Lesson 4 · Belief compass | `compass` | Four questions, one belief, a reflection |
 | Lesson 5 · Dare to grow | `grow` | Three situations |
@@ -62,7 +64,6 @@ about 2.5 Mbps is plenty for a talking-head or montage) and commit it to
 
 ## Check before launch
 
-- Confirm the three links marked CONFIRM in `config.js` (history and timeline, vice chancellors, quick facts).
 - Record the narration (above).
 
 ## Verification

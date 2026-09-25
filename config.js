@@ -1,7 +1,5 @@
 /* ══════════ VANDERBILT VOYAGE ONLINE · settings ══════════
-   The one place to change links without touching the course. Links marked
-   CONFIRM were carried over from the original Rise course's buttons and
-   should be checked by the program owner before launch. */
+   The one place to change links without touching the course. */
 window.VVO_CONFIG = {
   contact: 'pcb@vanderbilt.edu',
   /* the Day One survey (replaces the REDCap link in the original course) */
@@ -10,7 +8,7 @@ window.VVO_CONFIG = {
     vision: 'https://news.vanderbilt.edu/2022/07/01/daring-to-grow-together-we-are-building-the-great-university-of-the-21st-century/',
     history: 'https://www.vanderbilt.edu/150/timeline/vanderbilt-timeline/',  /* the timeline, embedded on its own page */
     leadership: 'https://www.vanderbilt.edu/about/university-leadership/',  /* Meet the Vice Chancellors */
-    quickFacts: 'https://www.vanderbilt.edu/about/facts/'      /* CONFIRM: Quick Facts */
+    quickFacts: 'https://www.vanderbilt.edu/about/quick-facts/'  /* Quick Facts, embedded on its own page */
   },
   /* where Exit goes; empty closes the tab (inside an LMS) or returns to the start */
   exitUrl: '',

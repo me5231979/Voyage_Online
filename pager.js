@@ -17,6 +17,7 @@ try{
     { sel:'#timeline',        key:'timeline',  label:'Lesson 2: The timeline',     mode:'whole' },
     { sel:'#leaders',         key:'leaders',   label:'Lesson 2: Our leadership',   mode:'whole' },
     { sel:'#numbers',         key:'numbers',   label:'Lesson 3: By the numbers',   mode:'whole' },
+    { sel:'#facts',           key:'facts',     label:'Lesson 3: Quick facts',      mode:'whole' },
     { sel:'#beliefs',         key:'beliefs',   label:'Lesson 4: The four beliefs', mode:'whole' },
     { sel:'#compass',         key:'compass',   label:'Lesson 4: Belief compass',   mode:'whole' },
     { sel:'#grow',            key:'grow',      label:'Lesson 5: Dare to grow',     mode:'whole' },
