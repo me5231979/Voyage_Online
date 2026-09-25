@@ -145,6 +145,35 @@ html.paged .v-hero{ padding:0 0 clamp(28px,6vh,72px); }
 .embed{ border:1px solid var(--bdg); border-radius:var(--r); overflow:hidden; background:#FFFFFF; height:min(64vh, 760px); min-height:380px; }
 .embed iframe{ display:block; width:100%; height:100%; border:0; }
 
+/* ── lesson 2: the history timeline ── */
+.v-tl{ border:1px solid var(--bdg); border-radius:var(--r); background:var(--card2); padding:clamp(18px,2.6vw,32px); }
+.tl-track{ position:relative; overflow-x:auto; padding:6px 2px 4px; }
+.tl-line{ position:absolute; left:calc(100% / 18); right:calc(100% / 18); top:24px; height:2px; background:rgba(207,174,112,.25); }
+.tl-line i{ display:block; height:100%; width:0; background:var(--eyebrow); transition:width .38s cubic-bezier(.33,1,.68,1); }
+.tl-nodes{ position:relative; display:grid; grid-template-columns:repeat(9, minmax(58px,1fr)); }
+.tl-node{ display:flex; flex-direction:column; align-items:center; gap:10px; background:none; border:0; color:var(--tx2); font:inherit; cursor:pointer; padding:6px 2px; min-height:44px; opacity:0; transform:translateY(8px); }
+.v-tl.drawn .tl-node{ animation:tlIn .32s ease-out both; animation-delay:var(--d); }
+@keyframes tlIn{ to{ opacity:1; transform:none; } }
+.tl-node .dot{ width:18px; height:18px; border-radius:50%; background:var(--vu-black); border:2px solid var(--eyebrow); transition:transform .2s ease, background .2s ease; }
+.tl-node .yr{ font-family:var(--serif); font-size:clamp(1rem,.6vw + .8rem,1.3rem); font-variant-numeric:tabular-nums; }
+.tl-node:hover .dot{ transform:scale(1.2); }
+.tl-node.past .dot{ background:var(--eyebrow); }
+.tl-node[aria-selected="true"] .dot{ background:var(--vu-highlight); border-color:var(--vu-highlight); transform:scale(1.35); box-shadow:0 0 0 6px rgba(207,174,112,.18); }
+.tl-node[aria-selected="true"] .yr{ color:var(--eyebrow); }
+.tl-node:focus-visible{ outline:2px solid var(--focus); outline-offset:2px; border-radius:4px; }
+.tl-card{ margin-top:clamp(16px,2.6vh,26px); border-top:1px solid var(--bd); padding-top:clamp(14px,2.2vh,22px); min-height:150px; }
+.tl-card.in .tl-body{ animation:tlCard .3s ease-out both; }
+@keyframes tlCard{ from{ opacity:0; transform:translateX(12px); } to{ opacity:1; transform:none; } }
+.tl-body{ display:grid; grid-template-columns:auto 1fr; gap:6px clamp(16px,3vw,40px); align-items:start; margin-top:8px; }
+.tl-yr{ font-family:var(--serif); font-weight:400; font-size:clamp(3rem,4vw + 1rem,5.5rem); line-height:.9; color:var(--eyebrow); font-variant-numeric:tabular-nums; }
+.tl-body h3{ font-family:var(--serif); font-weight:400; font-size:clamp(1.4rem,1vw + 1.05rem,2rem); color:var(--tx); line-height:1.15; }
+.tl-body p{ color:var(--tx2); margin-top:8px; line-height:1.55; max-width:58ch; font-size:1.02rem; }
+.tl-ctl{ display:flex; align-items:center; justify-content:space-between; gap:12px; margin-top:16px; }
+.tl-ctl .btn svg{ width:16px; height:16px; }
+.tl-count{ font-family:var(--cond); font-weight:700; font-size:.78rem; letter-spacing:.08em; color:var(--tx3); font-variant-numeric:tabular-nums; }
+@media (max-width:640px){ .tl-body{ grid-template-columns:1fr; } .tl-nodes{ grid-template-columns:repeat(9, 64px); } .tl-line{ left:32px; right:auto; width:calc(64px * 8); } }
+@media (prefers-reduced-motion: reduce){ .tl-node{ opacity:1; transform:none; } .v-tl.drawn .tl-node, .tl-card.in .tl-body{ animation:none; } .tl-line i{ transition:none; } }
+
 /* ── lesson 2: leadership ── */
 .v-person{ display:grid; grid-template-columns:140px 1fr; gap:18px; align-items:end; margin-top:18px; }
 .v-person img{ width:140px; height:175px; object-fit:cover; object-position:center 20%; border-radius:var(--r); border:1px solid var(--bdg); }

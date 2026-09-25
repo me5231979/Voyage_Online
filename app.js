@@ -357,6 +357,64 @@ var STOPS = [
   });
 })();
 
+/* ══════════ lesson 2: the history of Vanderbilt, as a living timeline ══════════
+   Highlights of what the History of Vanderbilt site covers, one tap at a time,
+   with a play-through that steps on its own until the learner takes over.
+   The full story lives on the site (Launch button). */
+var TL = [
+  { y:'1873', era:'The founding', h:'The Commodore’s gift', p:'In his 79th year, Cornelius Vanderbilt, “the Commodore,” makes the gift that founds the university in the spring of 1873.' },
+  { y:'1875', era:'The founding', h:'The doors open', p:'Classes begin in Nashville. More than 177,000 degrees have followed since.' },
+  { y:'1914', era:'Finding its own way', h:'An independent university', p:'Vanderbilt separates from the Methodist Episcopal Church, South, and charts its own course.' },
+  { y:'1953', era:'Opening doors', h:'A first', p:'Joseph A. Johnson Jr. becomes the first Black student admitted to Vanderbilt, in the Divinity School.' },
+  { y:'1979', era:'Growing', h:'Peabody joins', p:'George Peabody College for Teachers merges with Vanderbilt, bringing its education legacy with it.' },
+  { y:'2016', era:'Growing', h:'Two institutions', p:'Vanderbilt University Medical Center becomes an independent nonprofit, and the two keep working side by side.' },
+  { y:'2020', era:'A new chapter', h:'The ninth chancellor', p:'Daniel Diermeier becomes chancellor and puts Crescere aude, dare to grow, at the center of the vision.' },
+  { y:'2023', era:'A new chapter', h:'150 years', p:'Vanderbilt marks its sesquicentennial: a century and a half of daring to grow.' },
+  { y:'Today', era:'What’s next', h:'Five cities', p:'Research passes $1 billion, and Vanderbilt now works from Nashville, Chattanooga, New York City, West Palm Beach, and San Francisco.' }
+];
+(function(){
+  var box = $('#tl'); if(!box) return;
+  box.innerHTML = '<div class="tl-track"><div class="tl-line" aria-hidden="true"><i id="tlFill"></i></div><div class="tl-nodes" role="tablist" aria-label="Vanderbilt history, 1873 to today">' +
+    TL.map(function(t, i){ return '<button type="button" role="tab" class="tl-node" aria-selected="false" data-t="' + i + '" style="--d:' + (i * 60) + 'ms"><span class="dot" aria-hidden="true"></span><span class="yr">' + t.y + '</span></button>'; }).join('') + '</div></div>' +
+    '<div class="tl-card" role="tabpanel" aria-live="polite" id="tlCard"></div>' +
+    '<div class="tl-ctl"><button type="button" class="btn btn-ghost btn-sm" id="tlPlay" aria-pressed="false"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg><span>Play the timeline</span></button><span class="tl-count" id="tlCount" aria-hidden="true"></span></div>';
+  var nodes = $$('.tl-node', box), card = $('#tlCard'), fill = $('#tlFill'), playBtn = $('#tlPlay'), count = $('#tlCount');
+  var cur = -1, timer = null;
+  function show(i, focus){
+    cur = i; var t = TL[i];
+    nodes.forEach(function(n, ni){ n.setAttribute('aria-selected', ni === i ? 'true' : 'false'); n.classList.toggle('past', ni < i); n.tabIndex = ni === i ? 0 : -1; });
+    if(fill) fill.style.width = (i / (TL.length - 1) * 100) + '%';
+    card.innerHTML = '<span class="v-label">' + esc(t.era) + '</span><div class="tl-body"><b class="tl-yr">' + esc(t.y) + '</b><div><h3>' + esc(t.h) + '</h3><p>' + esc(t.p) + '</p></div></div>';
+    card.classList.remove('in'); void card.offsetWidth; card.classList.add('in');
+    if(count) count.textContent = (i + 1) + ' / ' + TL.length;
+    var tr = box.querySelector('.tl-track'); if(tr && tr.scrollWidth > tr.clientWidth){ var n = nodes[i]; tr.scrollTo({ left:Math.max(0, n.offsetLeft - (tr.clientWidth - n.offsetWidth) / 2), behavior:reduce ? 'auto' : 'smooth' }); }
+    if(focus) nodes[i].focus();
+  }
+  function stop(){ if(timer){ window.clearInterval(timer); timer = null; } playBtn.setAttribute('aria-pressed', 'false'); playBtn.querySelector('span').textContent = 'Play the timeline'; }
+  function play(){
+    if(timer){ stop(); return; }
+    narrStop();
+    if(cur >= TL.length - 1) show(0); else show(cur + 1);
+    playBtn.setAttribute('aria-pressed', 'true'); playBtn.querySelector('span').textContent = 'Pause';
+    timer = window.setInterval(function(){ if(cur >= TL.length - 1){ stop(); return; } show(cur + 1); }, 3800);
+  }
+  box.addEventListener('click', function(e){ var n = e.target.closest('.tl-node'); if(n){ stop(); show(+n.getAttribute('data-t')); } });
+  box.addEventListener('keydown', function(e){
+    if(!e.target.closest('.tl-node')) return;
+    if(e.key !== 'ArrowRight' && e.key !== 'ArrowLeft' && e.key !== 'Home' && e.key !== 'End') return;
+    e.preventDefault(); e.stopPropagation(); stop();
+    var n = e.key === 'Home' ? 0 : e.key === 'End' ? TL.length - 1 : Math.min(Math.max(cur + (e.key === 'ArrowRight' ? 1 : -1), 0), TL.length - 1);
+    show(n, true);
+  });
+  playBtn.addEventListener('click', play);
+  document.addEventListener('chart:page', function(ev){
+    stop();
+    if(ev.detail && ev.detail.key === 'timeline'){ box.classList.remove('drawn'); void box.offsetWidth; box.classList.add('drawn'); }
+  });
+  show(0);
+  box.classList.add('drawn');
+})();
+
 /* ══════════ lesson 2: four years ══════════ */
 var YEARS = [
   { b:'The founding', p:'Cornelius Vanderbilt gives $1 million to found a university in Nashville, hoping to strengthen the ties between all parts of the country.' },
