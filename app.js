@@ -110,13 +110,15 @@ function narrSpeak(text){
 }
 /* bumped whenever a clip is re-recorded, so browsers fetch the new file */
 var MEDIA_V = C.mediaVersion || '1';
+function textHash(t){ var h = 5381; for(var i = 0; i < t.length; i++){ h = ((h << 5) + h + t.charCodeAt(i)) | 0; } return (h >>> 0).toString(36); }
 function pauseVideos(){ $$('video').forEach(function(v){ if(v.id !== 'heroVideo' && !v.paused){ try{ v.pause(); }catch(e){} } }); }
 function narrPlay(k){
   k = k || narrKey(); var text = NARR[k];
   narrStop(); pauseVideos();
   if(!text){ toast('No narration on this page.'); return; }
   narr.key = k; narr.playing = true; narrUI();
-  var a = new Audio('./assets/audio/voyage/' + k.replace(/\//g, '-') + '.mp3?v=' + MEDIA_V);
+  /* the version carries a hash of the script, so a re-recorded clip is never served from an old cache */
+  var a = new Audio('./assets/audio/voyage/' + k.replace(/\//g, '-') + '.mp3?v=' + MEDIA_V + '-' + textHash(text));
   a.preload = 'auto';
   a.addEventListener('ended', function(){ if(narr.audio === a){ narr.audio = null; narr.playing = false; delete narrPos[k]; narrPosSave(); narrUI(); } });
   a.addEventListener('error', function(){ if(narr.audio === a){ narr.audio = null; narrSpeak(text); } });
@@ -332,6 +334,28 @@ function turnDone(k){ $$('.v-task[data-task="' + k + '"]').forEach(function(t){ 
   var list = $('#focusList'); if(!list) return;
   var chip = list.parentNode.querySelector('.v-task'), seen = {};
   $$('button', list).forEach(function(b, i){ b.addEventListener('click', function(){ var o = b.getAttribute('aria-expanded') !== 'true'; b.setAttribute('aria-expanded', o ? 'true' : 'false'); if(o){ seen[i] = 1; if(Object.keys(seen).length === 3 && chip) chip.classList.add('done'); } }); });
+})();
+
+/* ══════════ mission: five cities, each for its own field ══════════
+   Growth is not a copy of Nashville: each city puts Vanderbilt where a field leads. */
+var CITIES = {
+  nashville:   { name:'Nashville', focus:'Home', line:'Our home since 1873: the residential campus and the heart of the university. It is where the Voyage begins.', url:'https://www.vanderbilt.edu/' },
+  chattanooga: { name:'Chattanooga', focus:'Quantum', line:'Vanderbilt is in Chattanooga to help build the next wave of quantum research and technology.', url:'https://www.vanderbilt.edu/chancellor/initiatives-and-outreach/growth/quantum-innovation/' },
+  nyc:         { name:'New York City', focus:'Finance', line:'New York puts Vanderbilt at the center of global finance and business.', url:'https://www.vanderbilt.edu/nyc/' },
+  wpb:         { name:'West Palm Beach', focus:'Engineering and space', line:'West Palm Beach extends Vanderbilt into engineering and the technology behind space.', url:'https://www.vanderbilt.edu/chancellor/initiatives-and-outreach/growth/west-palm-beach/' },
+  sf:          { name:'San Francisco', focus:'Technology', line:'San Francisco puts Vanderbilt next to the people and companies shaping tech.', url:'https://www.vanderbilt.edu/chancellor/initiatives-and-outreach/growth/san-francisco/' }
+};
+(function(){
+  var map = $('#mission .us-map'), chips = $('#mission .v-cities'), card = $('#cityCard'); if(!map || !chips || !card) return;
+  function show(k){
+    var c = CITIES[k]; if(!c) return;
+    $$('.pin', map).forEach(function(p){ p.classList.toggle('on', p.getAttribute('data-city') === k); });
+    $$('button[data-city]', chips).forEach(function(b){ b.setAttribute('aria-pressed', b.getAttribute('data-city') === k ? 'true' : 'false'); });
+    var ic = map.querySelector('.pin[data-city="' + k + '"] .ic');
+    card.innerHTML = '<span class="v-label">' + (ic ? '<svg viewBox="0 0 24 24" aria-hidden="true">' + ic.innerHTML + '</svg>' : '') + esc(c.focus) + '</span><b>' + esc(c.name) + '</b><p>' + esc(c.line) + '</p><a href="' + esc(c.url) + '" target="_blank" rel="noopener">Read more about ' + esc(c.name) + '</a>';
+  }
+  chips.addEventListener('click', function(e){ var b = e.target.closest('button[data-city]'); if(b) show(b.getAttribute('data-city')); });
+  map.addEventListener('click', function(e){ var p = e.target.closest('.pin'); if(p) show(p.getAttribute('data-city')); });
 })();
 
 /* ══════════ lesson 1: the route, six stops ══════════ */

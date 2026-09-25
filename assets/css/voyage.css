@@ -80,13 +80,36 @@ html.paged .v-hero{ padding:0 0 clamp(28px,6vh,72px); }
 .v-map figcaption{ color:var(--tx2); font-size:.98rem; margin-bottom:8px; }
 .v-map figcaption b{ color:var(--tx); font-family:var(--serif); font-weight:400; font-size:1.25rem; display:block; }
 .v-map .us-map{ max-height:none; width:100%; }
-.v-cities{ list-style:none; display:flex; flex-wrap:wrap; gap:6px; margin-top:10px; }
 .v-cities a{ display:inline-block; font-size:.84rem; color:var(--tx); text-decoration:none; border:1px solid var(--bdg); border-radius:999px; padding:5px 12px; }
 .v-cities a:hover{ border-color:var(--eyebrow); color:var(--eyebrow); }
 .v-part{ list-style:none; display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:12px; }
 .v-part li{ border-top:2px solid var(--eyebrow); padding-top:8px; font-size:.95rem; color:var(--tx); }
 .v-part b{ font-weight:600; }
 @media (max-width:560px){ .v-part{ grid-template-columns:1fr; } }
+
+/* the five cities: an icon per city, each for its own field */
+.us-map .pin .badge{ fill:var(--vu-black); stroke:var(--vu-gold); stroke-width:1.6; }
+.us-map .pin .ic{ fill:none; stroke:var(--vu-gold); stroke-width:1.9; stroke-linecap:round; stroke-linejoin:round; pointer-events:none; }
+.us-map .pin .ic .fillc{ fill:var(--vu-gold); stroke:none; }
+.us-map .pin.home .badge{ fill:var(--vu-gold); stroke:#fff; stroke-width:1.2; }
+.us-map .pin.home .ic{ stroke:var(--vu-black); }
+.us-map .pin *{ pointer-events:none; }
+.us-map .pin .badge{ pointer-events:all; cursor:pointer; }
+.us-map .pin.on .badge{ fill:var(--vu-gold); stroke:#fff; }
+.us-map .pin.on .ic{ stroke:var(--vu-black); }
+.us-map .pin.on .ic .fillc{ fill:var(--vu-black); }
+.us-map .pin.on text{ fill:var(--vu-gold); }
+.v-cities{ display:flex; flex-wrap:wrap; gap:6px; margin-top:10px; }
+.v-cities button{ font:inherit; font-size:.84rem; color:var(--tx); background:none; border:1px solid var(--bdg); border-radius:999px; padding:6px 12px; cursor:pointer; min-height:36px; transition:border-color .2s ease, background .2s ease, color .2s ease; }
+.v-cities button:hover{ border-color:var(--eyebrow); color:var(--eyebrow); }
+.v-cities button[aria-pressed="true"]{ background:var(--eyebrow); border-color:var(--eyebrow); color:var(--vu-black); }
+.v-city{ margin-top:12px; border-top:1px solid var(--bd); padding-top:12px; min-height:84px; }
+.v-city .v-label{ display:flex; align-items:center; gap:8px; }
+.v-city .v-label svg{ width:18px; height:18px; fill:none; stroke:currentColor; stroke-width:1.9; stroke-linecap:round; stroke-linejoin:round; }
+.v-city .v-label svg .fillc{ fill:currentColor; stroke:none; }
+.v-city b{ display:block; font-family:var(--serif); font-weight:400; font-size:1.2rem; color:var(--tx); margin-top:4px; }
+.v-city p{ color:var(--tx2); font-size:.92rem; line-height:1.5; margin-top:2px; }
+.v-city a{ color:var(--link); font-size:.88rem; }
 
 /* ── lesson 1: the route ── */
 .v-route{ list-style:none; position:relative; display:grid; grid-template-columns:repeat(6,1fr); gap:4px; padding-top:6px; }
