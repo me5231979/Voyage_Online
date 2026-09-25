@@ -29,7 +29,7 @@
 <script>document.documentElement.classList.add('js','paged');</script>
 <link rel="stylesheet" href="./assets/css/course.css?v=20260925k" />
 <link rel="stylesheet" href="./assets/css/foundation.css?v=20260925a" />
-<link rel="stylesheet" href="./assets/css/voyage.css?v=20260925m" />
+<link rel="stylesheet" href="./assets/css/voyage.css?v=20260925n" />
 <link rel="stylesheet" href="./assets/css/nav.css?v=20260925a" />
 </head>
 <body>
@@ -159,45 +159,29 @@
 <section id="history" class="th-dark v-sec" aria-label="Lesson 2: Our history">
   <div class="wrap">
     <div class="v-rail" data-lesson="2"><span>Lesson 2 of 6 &middot; Our history</span></div>
-    <div class="v-stage wide-act">
-      <div class="v-copy">
-        <h2 class="v-h">150 years of daring to <em>grow</em>.</h2>
-        <p class="v-why">Where we came from shapes where we&rsquo;re headed.</p>
-        <p class="v-task" data-task="history">Tap each year</p>
-        <div class="v-years" id="years" role="tablist" aria-label="Four moments in Vanderbilt history">
-          <button type="button" role="tab" aria-selected="false" data-y="0">1873</button>
-          <button type="button" role="tab" aria-selected="false" data-y="1">1875</button>
-          <button type="button" role="tab" aria-selected="false" data-y="2">2020</button>
-          <button type="button" role="tab" aria-selected="false" data-y="3">Today</button>
+    <div class="v-welcome">
+      <div class="v-stephead"><span class="v-step" aria-hidden="true">1</span><h2 class="v-h sm">Watch 150 years of daring to <em>grow</em>.</h2></div>
+      <figure class="v-video v-hero-video" data-video="history" data-caption="Our history, in two minutes">
+        <img class="v-ph" src="./assets/img/course/history-poster.jpg" alt="" width="1280" height="720" />
+        <span class="v-ph-play" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13l11-6.5z"/></svg></span>
+        <span class="v-soon">Video coming soon</span>
+        <figcaption>Our history, in two minutes</figcaption>
+      </figure>
+      <div class="v-explore v-explore-tl">
+        <div class="v-tl-head">
+          <div class="v-stephead"><span class="v-step" aria-hidden="true">2</span><h3 class="v-h xs">Then walk the timeline, one moment at a <em>time</em>.</h3></div>
+          <div class="v-tl-actions">
+            <p class="v-task" data-task="history">Visit every moment</p>
+            <a class="btn btn-ghost btn-sm" id="historyLink" href="https://www.vanderbilt.edu/150/timeline/vanderbilt-timeline/" target="_blank" rel="noopener">The full history<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></a>
+          </div>
         </div>
-        <div class="v-year-out" id="yearOut" role="tabpanel" aria-live="polite"><p class="v-port-empty">Pick a year.</p></div>
-      </div>
-      <div class="v-act">
-        <figure class="v-video" data-video="history" data-caption="Our history, in two minutes">
-          <img class="v-ph" src="./assets/img/course/history-poster.jpg" alt="" width="1280" height="720" loading="lazy" />
-          <span class="v-ph-play" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13l11-6.5z"/></svg></span>
-          <span class="v-soon">Video coming soon</span>
-          <figcaption>Our history, in two minutes</figcaption>
-        </figure>
+        <div class="v-tl" id="tl"></div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ═══ LESSON 2 · THE TIMELINE (embedded) ═══ -->
-<section id="timeline" class="th-dark v-sec" aria-label="Lesson 2: The history of Vanderbilt">
-  <div class="wrap">
-    <div class="v-rail" data-lesson="2"><span>Lesson 2 of 6 &middot; The history of Vanderbilt</span></div>
-    <div class="v-embed-head">
-      <div>
-        <h2 class="v-h sm">150 years, one moment at a <em>time</em>.</h2>
-        <p class="v-why">Tap a year to see what the History of Vanderbilt site covers. Then explore the full story.</p>
-      </div>
-      <a class="btn btn-gold" id="historyLink" href="https://www.vanderbilt.edu/150/timeline/vanderbilt-timeline/" target="_blank" rel="noopener">Launch the History of Vanderbilt<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></a>
-    </div>
-    <div class="v-tl" id="tl"></div>
-  </div>
-</section>
+
 
 <!-- ═══ LESSON 2 · OUR LEADERSHIP ═══ -->
 <section id="leaders" class="th-dark v-sec" aria-label="Lesson 2: Our leadership">
@@ -437,9 +421,9 @@
 </div>
 
 <script src="config.js?v=20260925h"></script>
-<script src="narration-scripts.js?v=20260925j"></script>
+<script src="narration-scripts.js?v=20260925n"></script>
 <script src="./assets/js/nav.js?v=20260925a"></script>
-<script src="pager.js?v=20260925h"></script>
-<script src="app.js?v=20260925m"></script>
+<script src="pager.js?v=20260925n"></script>
+<script src="app.js?v=20260925n"></script>
 </body>
 </html>

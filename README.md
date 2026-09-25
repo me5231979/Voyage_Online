@@ -10,11 +10,10 @@ about thirty minutes, one idea per page, every page narrated.
 | Welcome | `home` | |
 | The mission, with the five-city map | `mission` | |
 | Lesson 1 · Welcome to the Voyage | `welcome` | Visit all six stops on the route |
-| Lesson 2 · Our history | `history` | Open all four years |
-| Lesson 2 · The timeline (embedded) | `timeline` | |
+| Lesson 2 · Our history | `history` | The video, then a twelve-moment timeline |
 | Lesson 2 · Our leadership | `leaders` | Fact or fiction, four statements |
 | Lesson 3 · By the numbers | `numbers` | Guess seven numbers |
-| Lesson 3 · Quick facts (embedded) | `facts` | |
+| Lesson 3 · Quick facts | `facts` | Scavenger hunt on the real Quick Facts page |
 | Lesson 4 · The four beliefs | `beliefs` | Compass rose; one moment per belief |
 | Lesson 4 · Belief compass | `compass` | Four questions, one belief, a reflection |
 | Lesson 5 · Dare to grow | `grow` | Three situations |

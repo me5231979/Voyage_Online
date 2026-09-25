@@ -14,7 +14,6 @@ try{
     { sel:'#welcome',         key:'welcome',   label:'Lesson 1: Welcome',          mode:'whole' },
     { sel:'#mission',         key:'mission',   label:'Lesson 1: The mission',      mode:'whole' },
     { sel:'#history',         key:'history',   label:'Lesson 2: Our history',      mode:'whole' },
-    { sel:'#timeline',        key:'timeline',  label:'Lesson 2: History',          mode:'whole' },
     { sel:'#leaders',         key:'leaders',   label:'Lesson 2: Our leadership',   mode:'whole' },
     { sel:'#numbers',         key:'numbers',   label:'Lesson 3: By the numbers',   mode:'whole' },
     { sel:'#facts',           key:'facts',     label:'Lesson 3: Quick facts',      mode:'whole' },

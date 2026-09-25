@@ -188,16 +188,16 @@ html.paged .page > section#welcome{ padding-top:clamp(12px,2.4vh,32px); padding-
 /* ── lesson 2: the history timeline ── */
 .v-tl{ border:1px solid var(--bdg); border-radius:var(--r); background:var(--card2); padding:clamp(18px,2.6vw,32px); }
 .tl-track{ position:relative; overflow-x:auto; padding:6px 2px 4px; }
-.tl-line{ position:absolute; left:calc(100% / 18); right:calc(100% / 18); top:24px; height:2px; background:rgba(207,174,112,.25); }
+.tl-line{ position:absolute; left:calc(100% / 24); right:calc(100% / 24); top:24px; height:2px; background:rgba(207,174,112,.25); }
 .tl-line i{ display:block; height:100%; width:0; background:var(--eyebrow); transition:width .38s cubic-bezier(.33,1,.68,1); }
-.tl-nodes{ position:relative; display:grid; grid-template-columns:repeat(9, minmax(58px,1fr)); }
+.tl-nodes{ position:relative; display:grid; grid-template-columns:repeat(12, minmax(56px,1fr)); }
 .tl-node{ display:flex; flex-direction:column; align-items:center; gap:10px; background:none; border:0; color:var(--tx2); font:inherit; cursor:pointer; padding:6px 2px; min-height:44px; opacity:0; transform:translateY(8px); }
 .v-tl.drawn .tl-node{ animation:tlIn .32s ease-out both; animation-delay:var(--d); }
 @keyframes tlIn{ to{ opacity:1; transform:none; } }
 .tl-node .dot{ width:18px; height:18px; border-radius:50%; background:var(--vu-black); border:2px solid var(--eyebrow); transition:transform .2s ease, background .2s ease; }
 .tl-node .yr{ font-family:var(--serif); font-size:clamp(1rem,.6vw + .8rem,1.3rem); font-variant-numeric:tabular-nums; }
 .tl-node:hover .dot{ transform:scale(1.2); }
-.tl-node.past .dot{ background:var(--eyebrow); }
+.tl-node.past .dot, .tl-node.seen .dot{ background:var(--eyebrow); }
 .tl-node[aria-selected="true"] .dot{ background:var(--vu-highlight); border-color:var(--vu-highlight); transform:scale(1.35); box-shadow:0 0 0 6px rgba(207,174,112,.18); }
 .tl-node[aria-selected="true"] .yr{ color:var(--eyebrow); }
 .tl-node:focus-visible{ outline:2px solid var(--focus); outline-offset:2px; border-radius:4px; }
@@ -211,7 +211,7 @@ html.paged .page > section#welcome{ padding-top:clamp(12px,2.4vh,32px); padding-
 .tl-ctl{ display:flex; align-items:center; justify-content:space-between; gap:12px; margin-top:16px; }
 .tl-ctl .btn svg{ width:16px; height:16px; }
 .tl-count{ font-family:var(--cond); font-weight:700; font-size:.78rem; letter-spacing:.08em; color:var(--tx3); font-variant-numeric:tabular-nums; }
-@media (max-width:640px){ .tl-body{ grid-template-columns:1fr; } .tl-nodes{ grid-template-columns:repeat(9, 64px); } .tl-line{ left:32px; right:auto; width:calc(64px * 8); } }
+@media (max-width:900px){ .tl-body{ grid-template-columns:1fr; } .tl-nodes{ grid-template-columns:repeat(12, 64px); } .tl-line{ left:32px; right:auto; width:calc(64px * 11); } }
 @media (prefers-reduced-motion: reduce){ .tl-node{ opacity:1; transform:none; } .v-tl.drawn .tl-node, .tl-card.in .tl-body{ animation:none; } .tl-line i{ transition:none; } }
 
 /* ── lesson 2: leadership ── */
@@ -465,3 +465,15 @@ html.paged .page > section#welcome{ padding-top:clamp(12px,2.4vh,32px); padding-
   .ps-empty{ color:#777 !important; font-style:italic; }
   .ps-foot{ margin-top:6px; font-size:8.5pt; color:#555 !important; }
 }
+
+/* lesson 2: the video, then the timeline, on one page */
+.v-explore-tl{ grid-template-columns:1fr; align-items:stretch; }
+.v-tl-head{ display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px 20px; }
+.v-tl-actions{ display:flex; align-items:center; gap:16px; flex-wrap:wrap; }
+.v-tl-actions .v-task{ margin:0; }
+.v-tl-actions .btn svg{ width:16px; height:16px; }
+#history .v-tl{ padding:clamp(14px,2vw,24px); }
+#history .tl-card{ min-height:0; margin-top:14px; padding-top:14px; }
+#history .tl-yr{ font-size:clamp(2.4rem,3vw + 1rem,4rem); }
+#history .tl-node .yr{ font-size:clamp(.9rem,.5vw + .7rem,1.15rem); }
+html.paged .page > section#history{ justify-content:flex-start; padding-top:clamp(12px,2.4vh,32px); }

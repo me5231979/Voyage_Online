@@ -232,7 +232,7 @@ $$('[data-video]').forEach(function(f){
 /* ══════════ PROGRESS ══════════ */
 var SECTIONS = [
   { k:'welcome',  no:'01', name:'Welcome to the Voyage', how:'Visit all six stops' },
-  { k:'history',  no:'02', name:'Our history',           how:'Open all four years' },
+  { k:'history',  no:'02', name:'Our history',           how:'Visit every moment on the timeline' },
   { k:'leaders',  no:'03', name:'Our leadership',        how:'Fact or fiction, four statements' },
   { k:'numbers',  no:'04', name:'By the numbers',        how:'Guess all seven numbers' },
   { k:'beliefs',  no:'05', name:'The four beliefs',      how:'Find the best response in each belief’s moment' },
@@ -378,7 +378,7 @@ var CITIES = {
 /* ══════════ lesson 1: the route, six stops ══════════ */
 var STOPS = [
   { h:'Welcome to the <em>Voyage</em>', p:'Where you are now: a welcome from the Chancellor, then the mission and our five cities.', tags:['The Chancellor’s welcome', 'The mission', 'Five cities'] },
-  { h:'Our history and <em>leadership</em>', p:'150 years of daring to grow, and who leads today.', tags:['A video', 'The Vanderbilt timeline', 'Fact or fiction'] },
+  { h:'Our history and <em>leadership</em>', p:'150 years of daring to grow, and who leads today.', tags:['A video', 'A living timeline', 'Fact or fiction'] },
   { h:'Our mission, our students, and <em>you</em>', p:'Seven numbers that put the mission in perspective.', tags:['Guess the number', 'Quick facts', 'A campus fun fact'] },
   { h:'The four <em>beliefs</em>', p:'The heart of the course, and how you live them.', tags:['The compass', 'Four moments', 'Your belief compass'] },
   { h:'Dare to <em>grow</em>', p:'Our motto, as a mindset.', tags:['A video', 'Three situations'] },
@@ -403,29 +403,34 @@ var STOPS = [
    with a play-through that steps on its own until the learner takes over.
    The full story lives on the site (Launch button). */
 var TL = [
-  { y:'1873', era:'The founding', h:'The Commodore’s gift', p:'In his 79th year, Cornelius Vanderbilt, “the Commodore,” makes the gift that founds the university in the spring of 1873.' },
-  { y:'1875', era:'The founding', h:'The doors open', p:'Classes begin in Nashville. More than 177,000 degrees have followed since.' },
-  { y:'1914', era:'Finding its own way', h:'An independent university', p:'Vanderbilt separates from the Methodist Episcopal Church, South, and charts its own course.' },
-  { y:'1953', era:'Opening doors', h:'A first', p:'Joseph A. Johnson Jr. becomes the first Black student admitted to Vanderbilt, in the Divinity School.' },
-  { y:'1979', era:'Growing', h:'Peabody joins', p:'George Peabody College for Teachers merges with Vanderbilt, bringing its education legacy with it.' },
-  { y:'2016', era:'Growing', h:'Two institutions', p:'Vanderbilt University Medical Center becomes an independent nonprofit, and the two keep working side by side.' },
-  { y:'2020', era:'A new chapter', h:'The ninth chancellor', p:'Daniel Diermeier becomes chancellor and puts Crescere aude, dare to grow, at the center of the vision.' },
-  { y:'2023', era:'A new chapter', h:'150 years', p:'Vanderbilt marks its sesquicentennial: a century and a half of daring to grow.' },
-  { y:'Today', era:'What’s next', h:'Five cities', p:'Research passes $1 billion, and Vanderbilt now works from Nashville, Chattanooga, New York City, West Palm Beach, and San Francisco.' }
+  { y:'1873', era:'The founding', h:'The Commodore’s gift', p:'In his 79th year, Cornelius Vanderbilt gives $1 million to build a university in the South that would “contribute to strengthening the ties which should exist between all sections of our common country.”' },
+  { y:'1875', era:'The founding', h:'The doors open', p:'Bishop Holland N. McTyeire picks the site and plants many of the trees that make Vanderbilt an arboretum today. One Main Building, now Kirkland Hall, an observatory, and 307 students.' },
+  { y:'1893', era:'Building a university', h:'The longest-serving chancellor', p:'James H. Kirkland leads for 44 years, and rebuilds after a 1905 fire consumes the Main Building, later renamed in his honor.' },
+  { y:'1913', era:'Building a university', h:'Women on equal footing', p:'At least one woman attended classes every year from 1875. By 1913, 78 women make up just over 20 percent of the academic enrollment.' },
+  { y:'1914', era:'Finding its own way', h:'An independent university', p:'The Board of Trust severs ties with the Methodist Episcopal Church, South, after a dispute over who appoints trustees.' },
+  { y:'1949', era:'National stature', h:'A seat at the top table', p:'Vanderbilt is elected to the Association of American Universities, a mark of national recognition.' },
+  { y:'1963', era:'National stature', h:'Top 20', p:'At its 90th anniversary, Vanderbilt ranks among the top 20 private universities for the first time. Chancellor Alexander Heard adds Blair, Owen, and Peabody College.' },
+  { y:'2000', era:'Growing fast', h:'Research takes off', p:'Under Chancellor Gordon Gee, Vanderbilt leads the country in the growth rate of research funding and becomes one of the most selective universities.' },
+  { y:'2008', era:'Growing fast', h:'Opportunity Vanderbilt', p:'Chancellor Nicholas S. Zeppos launches loan-free aid, opens Martha Ingram Commons, the start of the residential colleges, and begins FutureVU.' },
+  { y:'2016', era:'Growing fast', h:'Two institutions', p:'Vanderbilt University and Vanderbilt University Medical Center separate, positioning both for long-term success, and keep working closely together.' },
+  { y:'2020', era:'A new chapter', h:'The ninth chancellor', p:'Daniel Diermeier takes office on July 1, guides Vanderbilt through the pandemic, and launches Destination Vanderbilt and the Vanderbilt Project on Unity and American Democracy.' },
+  { y:'Today', era:'What’s next', h:'One university, five cities', p:'A private research university with 7,300+ undergraduates, 6,200+ graduate and professional students, and 12 schools and colleges, working from Nashville and four more cities.' }
 ];
 (function(){
   var box = $('#tl'); if(!box) return;
   box.innerHTML = '<div class="tl-track"><div class="tl-line" aria-hidden="true"><i id="tlFill"></i></div><div class="tl-nodes" role="tablist" aria-label="Vanderbilt history, 1873 to today">' +
-    TL.map(function(t, i){ return '<button type="button" role="tab" class="tl-node" aria-selected="false" data-t="' + i + '" style="--d:' + (i * 60) + 'ms"><span class="dot" aria-hidden="true"></span><span class="yr">' + t.y + '</span></button>'; }).join('') + '</div></div>' +
+    TL.map(function(t, i){ return '<button type="button" role="tab" class="tl-node" aria-selected="false" data-t="' + i + '" data-nk="history/t' + (i + 1) + '" style="--d:' + (i * 50) + 'ms"><span class="dot" aria-hidden="true"></span><span class="yr">' + t.y + '</span></button>'; }).join('') + '</div></div>' +
     '<div class="tl-card" role="tabpanel" aria-live="polite" id="tlCard"></div>' +
     '<div class="tl-ctl"><button type="button" class="btn btn-ghost btn-sm" id="tlPlay" aria-pressed="false"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg><span>Play the timeline</span></button><span class="tl-count" id="tlCount" aria-hidden="true"></span></div>';
   var nodes = $$('.tl-node', box), card = $('#tlCard'), fill = $('#tlFill'), playBtn = $('#tlPlay'), count = $('#tlCount');
-  var cur = -1, timer = null;
-  function show(i, focus){
-    cur = i; var t = TL[i];
+  var cur = -1, timer = null, seen = {};
+  function show(i, focus, speak){
+    cur = i; var t = TL[i]; seen[i] = 1; nodes[i].classList.add('seen');
+    if(Object.keys(seen).length === TL.length) progDone('history');
+    if(speak) narrSub('history/t' + (i + 1));
     nodes.forEach(function(n, ni){ n.setAttribute('aria-selected', ni === i ? 'true' : 'false'); n.classList.toggle('past', ni < i); n.tabIndex = ni === i ? 0 : -1; });
     if(fill) fill.style.width = (i / (TL.length - 1) * 100) + '%';
-    card.innerHTML = '<span class="v-label">' + esc(t.era) + '</span><div class="tl-body"><b class="tl-yr">' + esc(t.y) + '</b><div><h3>' + esc(t.h) + '</h3><p>' + esc(t.p) + '</p></div></div>';
+    card.innerHTML = '<span class="v-label">' + esc(t.era) + subBtn('history/t' + (i + 1)) + '</span><div class="tl-body"><b class="tl-yr">' + esc(t.y) + '</b><div><h3>' + esc(t.h) + '</h3><p>' + esc(t.p) + '</p></div></div>';
     card.classList.remove('in'); void card.offsetWidth; card.classList.add('in');
     if(count) count.textContent = (i + 1) + ' / ' + TL.length;
     var tr = box.querySelector('.tl-track'); if(tr && tr.scrollWidth > tr.clientWidth){ var n = nodes[i]; tr.scrollTo({ left:Math.max(0, n.offsetLeft - (tr.clientWidth - n.offsetWidth) / 2), behavior:reduce ? 'auto' : 'smooth' }); }
@@ -439,48 +444,21 @@ var TL = [
     playBtn.setAttribute('aria-pressed', 'true'); playBtn.querySelector('span').textContent = 'Pause';
     timer = window.setInterval(function(){ if(cur >= TL.length - 1){ stop(); return; } show(cur + 1); }, 3800);
   }
-  box.addEventListener('click', function(e){ var n = e.target.closest('.tl-node'); if(n){ stop(); show(+n.getAttribute('data-t')); } });
+  box.addEventListener('click', function(e){ var n = e.target.closest('.tl-node'); if(n){ stop(); show(+n.getAttribute('data-t'), false, true); } });
   box.addEventListener('keydown', function(e){
     if(!e.target.closest('.tl-node')) return;
     if(e.key !== 'ArrowRight' && e.key !== 'ArrowLeft' && e.key !== 'Home' && e.key !== 'End') return;
     e.preventDefault(); e.stopPropagation(); stop();
     var n = e.key === 'Home' ? 0 : e.key === 'End' ? TL.length - 1 : Math.min(Math.max(cur + (e.key === 'ArrowRight' ? 1 : -1), 0), TL.length - 1);
-    show(n, true);
+    show(n, true, true);
   });
   playBtn.addEventListener('click', play);
   document.addEventListener('chart:page', function(ev){
     stop();
-    if(ev.detail && ev.detail.key === 'timeline'){ box.classList.remove('drawn'); void box.offsetWidth; box.classList.add('drawn'); }
+    if(ev.detail && ev.detail.key === 'history'){ box.classList.remove('drawn'); void box.offsetWidth; box.classList.add('drawn'); }
   });
   show(0);
   box.classList.add('drawn');
-})();
-
-/* ══════════ lesson 2: four years ══════════ */
-var YEARS = [
-  { b:'The founding', p:'Cornelius Vanderbilt gives $1 million to found a university in Nashville, hoping to strengthen the ties between all parts of the country.' },
-  { b:'The first classes', p:'Vanderbilt opens its doors. More than 177,000 degrees have followed.' },
-  { b:'A new chancellor', p:'Daniel Diermeier takes the helm and leads the safe return to campus through the COVID-19 pandemic.' },
-  { b:'Growing boldly', p:'Research passes $1 billion, a capital campaign succeeds, and Vanderbilt now works from five cities.' }
-];
-(function(){
-  var box = $('#years'), out = $('#yearOut'); if(!box) return;
-  var tabs = $$('button[data-y]', box), seen = {};
-  tabs.forEach(function(b, i){ if(NARR['history/g' + (i + 1)]) b.setAttribute('data-nk', 'history/g' + (i + 1)); });
-  function show(i, silent){
-    seen[i] = 1;
-    tabs.forEach(function(t, ti){ t.setAttribute('aria-selected', ti === i ? 'true' : 'false'); t.classList.toggle('seen', !!seen[ti]); t.tabIndex = ti === i ? 0 : -1; });
-    out.innerHTML = '<b>' + esc(YEARS[i].b) + subBtn('history/g' + (i + 1)) + '</b><p>' + esc(YEARS[i].p) + '</p>';
-    if(!silent) narrSub('history/g' + (i + 1));
-    if(Object.keys(seen).length === YEARS.length) progDone('history');
-  }
-  box.addEventListener('click', function(e){ var b = e.target.closest('button[data-y]'); if(b) show(+b.getAttribute('data-y')); });
-  box.addEventListener('keydown', function(e){
-    if(e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
-    e.preventDefault(); e.stopPropagation();
-    var cur = tabs.findIndex(function(t){ return t.getAttribute('aria-selected') === 'true'; });
-    var n = (Math.max(cur, 0) + (e.key === 'ArrowRight' ? 1 : tabs.length - 1)) % tabs.length; tabs[n].focus(); show(n);
-  });
 })();
 
 /* ══════════ your call: one scenario, three responses, consequences ══════════ */
