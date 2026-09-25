@@ -12,12 +12,14 @@ window.VVO_CONFIG = {
   },
   /* Course videos. Each slot shows its placeholder image until a file is
      set here. To swap one in: add the MP4 (under 100 MB) to assets/video/,
-     put its path in src, and a WebVTT captions file in captions. Keep the
+     put its path in src, and a WebVTT captions file in captions. A Vimeo or
+     YouTube player URL goes in embed instead (with ratio, e.g. '4 / 3', if the
+     video is not 16:9); captions then come from the video host. Keep the
      files in assets/video/ (relative paths) so the course can later be
      packaged as SCORM without changes. */
   videos: {
     chancellor: { src: '', captions: '' },   /* e.g. './assets/video/chancellor-message.mp4', './assets/video/chancellor-message.vtt' */
-    history:    { src: '', captions: '' },   /* e.g. './assets/video/our-history.mp4', './assets/video/our-history.vtt' */
+    history:    { embed: 'https://player.vimeo.com/video/1230258345?h=edbcc5d465&badge=0&autopause=0&player_id=0&app_id=58479', ratio: '4 / 3', title: 'Vanderbilt Voyage: our history' },
     grow:       { src: '', captions: '' }    /* e.g. './assets/video/dare-to-grow.mp4', './assets/video/dare-to-grow.vtt' */
   },
   /* where Exit goes; empty closes the tab (inside an LMS) or returns to the start */

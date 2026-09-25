@@ -68,6 +68,11 @@ To swap one in:
 1. Upload the MP4 to `assets/video/` (GitHub rejects files over 100 MB; compress to about 80 MB at 1080p if needed) and a WebVTT captions file beside it.
 2. In `config.js`, set `videos.<slot>.src` and `videos.<slot>.captions`, for example `'./assets/video/our-history.mp4'`.
 
+A hosted video (Vimeo, YouTube) goes in `videos.<slot>.embed` instead: the
+player URL from the embed code's `src`, plus `ratio` if it is not 16:9. The
+still shows with a play button, and the player loads when it is tapped.
+Our History is on Vimeo this way.
+
 Keep the files in `assets/video/` with relative paths so the course can be
 packaged as SCORM later without changes.
 

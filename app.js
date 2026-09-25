@@ -172,6 +172,31 @@ if(narr.auto) window.setTimeout(narrPlay, 600);
 $$('[data-video]').forEach(function(f){
   var key = f.getAttribute('data-video'), cfg = (C.videos || {})[key] || {}, cap = f.getAttribute('data-caption') || 'Video';
   var ph = f.querySelector('.v-ph');
+  if(cfg.ratio) f.style.aspectRatio = cfg.ratio;
+  /* a hosted player (Vimeo, YouTube): the still stays until the learner taps play, then the player loads in place */
+  if(cfg.embed){
+    f.classList.add('facade');
+    var play = document.createElement('button');
+    play.type = 'button'; play.className = 'v-play';
+    play.setAttribute('aria-label', 'Play video: ' + cap);
+    play.innerHTML = '<span class="v-ph-play" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13l11-6.5z"/></svg></span>';
+    f.appendChild(play);
+    var frame = null;
+    play.addEventListener('click', function(){
+      narrStop();
+      frame = document.createElement('iframe');
+      frame.src = cfg.embed + (cfg.embed.indexOf('?') > -1 ? '&' : '?') + 'autoplay=1';
+      frame.title = cfg.title || cap;
+      frame.allow = 'autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share';
+      frame.setAttribute('allowfullscreen', '');
+      frame.referrerPolicy = 'strict-origin-when-cross-origin';
+      f.appendChild(frame); f.classList.add('playing');
+      frame.focus();
+    });
+    /* turning the page stops the video: the player goes, the still comes back */
+    document.addEventListener('chart:page', function(){ if(frame){ frame.remove(); frame = null; f.classList.remove('playing'); } });
+    return;
+  }
   if(!cfg.src){ f.classList.add('nomedia'); f.setAttribute('role', 'img'); f.setAttribute('aria-label', cap + '. Video coming soon.'); return; }
   var v = document.createElement('video');
   v.controls = true; v.setAttribute('playsinline', ''); v.preload = 'metadata';
