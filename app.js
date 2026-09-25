@@ -802,6 +802,30 @@ var COMPASS = [
   { q:'A year from now, what would make you proudest?', o:[
     ['growth', 'How much I have grown'], ['collab', 'What my team accomplished together'], ['selfdir', 'That I found my path here and went for it'], ['belonging', 'That this place feels like mine'] ]}
 ];
+/* the compass coach: a short read-back of the learner's plan, and one tip.
+   Runs in the browser from simple checks (an action, a person, a time); nothing is sent anywhere. */
+var COACH_TIPS = {
+  belonging:{ who:'Name one person: a teammate you have not met yet, or someone else who is new.', when:'Put a time on it: a coffee this week, or the first five minutes of your next team meeting.', done:'Belonging runs both ways: when you talk, ask what helped them feel at home here.' },
+  selfdir:  { who:'Say who will hear about it. Telling your manager makes it real, and they can clear the path.', when:'Give it a date. Choosing is the first step; a date is how you go all in.', done:'Pick the first small step and take it before Friday. Momentum beats a perfect plan.' },
+  collab:   { who:'Name who you will work with: a teammate, another office, or your manager.', when:'Put a time on it: your next team meeting, or a fifteen-minute call this week.', done:'Ask one question before you offer an answer. Collaboration starts with listening.' },
+  growth:   { who:'Say who will help: a manager, a mentor, or a colleague who already does this well.', when:'Put it on your calendar this week, even thirty minutes. Growth happens in small, regular steps.', done:'Tell your manager the skill you picked. It can be the first line of your development plan.' }
+};
+function coachRead(text, k){
+  var t = ' ' + text.toLowerCase().replace(/[^a-z0-9’' ]+/g, ' ') + ' ';
+  var has = {
+    what: text.trim().split(/\s+/).length >= 4,
+    who: /\b(manager|supervisor|boss|team|teammates?|colleagues?|co ?workers?|peers?|mentor|staff|people|someone|group|department|office|lab|students?|faculty|partners?|everyone|others|new hires?|him|her|them)\b/.test(t),
+    when: /\b(today|tomorrow|tonight|this week|next week|this month|monday|tuesday|wednesday|thursday|friday|daily|every day|each day|weekly|every week|morning|afternoon|lunch|coffee|meeting|one on one|1 ?on ?1|huddle|standup|stand up|by \w+|before \w+|first \w+|calendar)\b/.test(t)
+  };
+  var tips = COACH_TIPS[k] || COACH_TIPS.growth, tip;
+  if(!has.what) tip = 'Make it one concrete action someone could see you do, like “I will ask…” or “I will set up…”.';
+  else if(!has.who) tip = tips.who;
+  else if(!has.when) tip = tips.when;
+  else tip = tips.done;
+  var n = (has.what ? 1 : 0) + (has.who ? 1 : 0) + (has.when ? 1 : 0);
+  var head = n === 3 ? 'A clear plan: an action, a person, and a time.' : n === 2 ? 'A good start. One thing would make it stick.' : 'A start. Make it a little more concrete.';
+  return { has:has, tip:tip, head:head };
+}
 (function(){
   var box = $('#compassBox'), status = $('#compassStatus'), nr = $('#needleRose'); if(!box) return;
   if(nr) nr.innerHTML = roseSVG(true) + BELIEFS.map(function(b){ return '<span class="pt ' + b.pt + '" data-k="' + b.k + '">' + b.name + '</span>'; }).join('');
@@ -834,9 +858,28 @@ var COMPASS = [
     set('belief', w.name); box.classList.add('result'); point(w.k); if(chip) chip.classList.add('done');
     result.innerHTML = '<span class="v-label">Your compass points to</span><h3>' + esc(w.name) + subBtn('compass/' + w.k) + '</h3><p class="cp-line">' + esc(w.line) + '</p>' +
       '<div class="field"><label for="cpReflect">How will you show it at work this week?</label><textarea id="cpReflect" rows="3" placeholder="One sentence is plenty."></textarea><p class="hinttxt">Goes into your message to your manager. Saved in this browser only.</p></div>' +
-      '<button type="button" class="cp-redo">Answer again</button>';
-    var ta = $('#cpReflect'); ta.value = get('reflect') || '';
-    ta.addEventListener('input', function(){ set('reflect', ta.value); tellPaint(); });
+      '<div class="cp-actions"><button type="button" class="btn btn-primary btn-sm cp-save">Save to my takeaway</button><button type="button" class="cp-redo">Answer again</button></div>' +
+      '<div class="cp-coach" id="cpCoach" aria-live="polite" hidden></div>';
+    var ta = $('#cpReflect'), save = result.querySelector('.cp-save'), coachBox = $('#cpCoach');
+    ta.value = get('reflect-draft') || get('reflect') || '';
+    function paintCoach(){
+      var r = (get('reflect') || '').trim(); if(!r){ coachBox.hidden = true; return; }
+      var c = coachRead(r, w.k), ck = function(on, label){ return '<li class="' + (on ? 'on' : '') + '"><span aria-hidden="true">' + (on ? '&#10003;' : '&middot;') + '</span>' + label + '<span class="sr-only">' + (on ? ': yes' : ': not yet') + '</span></li>'; };
+      coachBox.innerHTML = '<p class="cp-saved"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Saved to your takeaway and your message to your manager.</p>' +
+        '<p class="cp-head">' + esc(c.head) + '</p><p class="cp-plan">Your plan: &ldquo;' + esc(r) + '&rdquo;</p>' +
+        '<ul class="cp-checks" aria-label="Your plan has">' + ck(c.has.what, 'An action') + ck(c.has.who, 'A person') + ck(c.has.when, 'A time') + '</ul>' +
+        '<p class="cp-tip"><b>Tip.</b> ' + esc(c.tip) + '</p>';
+      coachBox.hidden = false; set('reflect-tip', c.tip);
+    }
+    function dirty(){ var d = ta.value.trim() !== (get('reflect') || '').trim(); save.textContent = d || !get('reflect') ? 'Save to my takeaway' : 'Saved'; save.classList.toggle('is-saved', !d && !!get('reflect')); }
+    ta.addEventListener('input', function(){ set('reflect-draft', ta.value); dirty(); });
+    save.addEventListener('click', function(){
+      var v = ta.value.trim();
+      if(!v){ toast('Write one sentence first.'); ta.focus(); return; }
+      set('reflect', v); set('reflect-draft', null); tellPaint(); paintCoach(); dirty();
+      if(typeof buildPrint === 'function') try{ buildPrint(); }catch(e){}
+    });
+    paintCoach(); dirty();
     if(status) status.textContent = 'Your compass points to ' + w.name + '. Activity complete.';
     progDone('compass'); tellPaint();
     if(announce){ narrSub('compass/' + w.k); var h = result.querySelector('h3'); if(h){ h.tabIndex = -1; h.focus({ preventScroll:true }); } }
@@ -963,7 +1006,7 @@ function buildPrint(){
     '<div class="ps-survey">' + (qr ? '<div class="ps-qr">' + qr + '</div>' : '') + '<div><b>Vanderbilt Voyage Day One Survey</b><p>Two minutes. Scan the code, or open the link from the course.</p><p class="ps-fine">Questions about your Voyage: pcb@vanderbilt.edu</p></div></div></section>';
   html += '<section class="ps-row"><div class="ps-stat"><b>' + done + '/' + SECTIONS.length + '</b><span>activities complete</span></div><div class="ps-stat"><b>' + (score === null ? '&ndash;' : esc(score) + '/5') + '</b><span>quick check score</span></div><div class="ps-stat"><b>' + (belief ? esc(belief) : '&ndash;') + '</b><span>my belief compass</span></div></section>';
   html += '<section><h2>My belief</h2>' + (b ? '<p class="ps-big">' + esc(b.line) + '</p><p class="ps-sub">Behaviors to start with: ' + esc(b.behaviors[0]) + '; ' + esc(b.behaviors[1]) + '.</p>' : '<p class="ps-empty">Not answered yet. Lesson 4, the belief compass.</p>') +
-    '<h3>How I will show it at work</h3><p class="ps-write">' + (reflect ? esc(reflect) : '<span class="ps-empty">Not written yet.</span>') + '</p></section>';
+    '<h3>How I will show it at work</h3><p class="ps-write">' + (reflect ? esc(reflect) : '<span class="ps-empty">Not written yet.</span>') + '</p>' + (reflect && val('reflect-tip') ? '<p class="ps-sub"><b>Tip:</b> ' + esc(val('reflect-tip')) + '</p>' : '') + '</section>';
   html += '<section><h2>Message to my manager</h2><p class="ps-quote">' + esc(tell) + '</p></section>';
   html += '<section><h2>My Quick Facts hunt</h2><table class="ps-table"><tbody>' + HUNT.map(function(q, i){ var a = (hunt[i] || '').trim(); return '<tr><th>' + esc(q.q) + '</th><td>' + (a ? esc(a) : '<span class="ps-empty">&ndash;</span>') + (q.open ? '' : '<small>Quick Facts: ' + esc(q.big) + '</small>') + '</td></tr>'; }).join('') + '</tbody></table><p class="ps-foot">Crescere aude. Dare to grow.</p></section>';
   sheet.innerHTML = html;
