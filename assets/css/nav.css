@@ -1,0 +1,54 @@
+/* =====================================================================
+   MANAGER VOYAGE - global header
+   The same four places on every page (My voyage, Foundation course, Who
+   to call, About the program) plus the Manager Portal button, so a
+   manager always has the same way back. Self-contained: no dependency on
+   the page's own stylesheet. Pages set aria-current="page" on their link.
+   ===================================================================== */
+:root { --nav-h: 72px; }
+html.paged { --nav-h: 72px; }
+@media (max-width: 960px) { html.paged { --nav-h: 64px; } }
+@media (max-width: 960px) { :root { --nav-h: 64px; } }
+
+.gnav { position: fixed; inset: 0 0 auto 0; height: var(--nav-h); z-index: 200;
+  display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+  padding: 0 clamp(16px, 3vw, 32px); background: rgba(20,20,20,.97);
+  border-bottom: 1px solid rgba(207,174,112,.18); font-family: 'Inter', Arial, sans-serif; box-sizing: border-box; }
+.gnav * { box-sizing: border-box; }
+.gnav__brand { display: inline-flex; align-items: center; text-decoration: none; flex-shrink: 0; }
+.gnav__brand img { height: 38px; width: auto; display: block; }
+@media (max-width: 400px) { .gnav__brand img { height: 30px; } }
+.gnav__right { display: flex; align-items: center; gap: .75rem; min-width: 0; }
+.gnav__links { display: flex; align-items: center; gap: clamp(.4rem, 1.5vw, 1.3rem); }
+.gnav__links a { color: rgba(255,255,255,.85); text-decoration: none; font-size: .9rem; font-weight: 500;
+  padding: .35rem .1rem; border-bottom: 2px solid transparent; white-space: nowrap; line-height: 1.2;
+  transition: color .2s ease, border-color .2s ease; }
+.gnav__links a:hover { color: #CFAE70; }
+.gnav__links a[aria-current="page"] { color: #fff; border-bottom-color: #CFAE70; }
+.gnav__links a.gnav__btn { background: #CFAE70; color: #1C1C1C; border: 1px solid #CFAE70; border-radius: 4px;
+  padding: .5rem .9rem; font-size: .82rem; font-weight: 600; margin-left: .3rem; }
+.gnav__links a.gnav__btn:hover { background: transparent; color: #CFAE70; }
+.gnav__links a:focus-visible, .gnav__burger:focus-visible, .gnav__extra button:focus-visible { outline: 2px solid #ECB748; outline-offset: 2px; }
+.gnav__extra { display: flex; align-items: center; gap: .6rem; }
+
+/* a thin gold line along the bottom edge: the foundation course uses it for pages turned */
+.gnav__line { position: absolute; left: 0; right: 0; bottom: -1px; height: 2px; pointer-events: none; }
+.gnav__line > span { display: block; height: 100%; width: 0; background: #CFAE70; transition: width .38s ease-out; }
+
+/* burger and dropdown for narrow screens */
+.gnav__burger { display: none; background: none; border: 1px solid rgba(255,255,255,.25); border-radius: 4px; cursor: pointer;
+  width: 44px; height: 44px; padding: 0; flex-direction: column; align-items: center; justify-content: center; gap: 5px; }
+.gnav__burger span { display: block; width: 20px; height: 2px; background: #fff; transition: transform .2s ease, opacity .2s ease; }
+@media (max-width: 900px) {
+  .gnav__burger { display: flex; }
+  .gnav__links { position: absolute; top: var(--nav-h); left: 0; right: 0; display: none; flex-direction: column; align-items: stretch;
+    gap: 0; background: rgba(20,20,20,.98); border-bottom: 1px solid rgba(207,174,112,.3); padding: .4rem 0 1rem; }
+  .gnav.is-open .gnav__links { display: flex; }
+  .gnav__links a { padding: .85rem clamp(16px, 3vw, 32px); font-size: 1rem; border-bottom: 0; border-left: 3px solid transparent; }
+  .gnav__links a[aria-current="page"] { border-left-color: #CFAE70; }
+  .gnav__links a.gnav__btn { align-self: flex-start; margin: .6rem clamp(16px, 3vw, 32px) 0; padding: .7rem 1.3rem; }
+  .gnav.is-open .gnav__burger span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .gnav.is-open .gnav__burger span:nth-child(2) { opacity: 0; }
+  .gnav.is-open .gnav__burger span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+}
+@media print { .gnav { display: none; } }

@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Vanderbilt Voyage Online · People, Culture and Belonging</title>
+<meta name="description" content="Vanderbilt Voyage Online: the self-paced start of your Vanderbilt journey. The mission and our five cities, our history and leadership, Vanderbilt by the numbers, the four beliefs, Dare to Grow, and your next steps. Six lessons, about thirty minutes, narrated." />
+<meta name="theme-color" content="#1C1C1C" />
+<meta name="robots" content="noindex" />
+<link rel="icon" href="./assets/img/favicon.svg" type="image/svg+xml" />
+<link rel="alternate icon" href="./assets/img/favicon-96.png" />
+<link rel="preload" href="./assets/fonts/libre-caslon-display-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin />
+<link rel="preload" href="./assets/fonts/inter-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin />
+
+<!--
+  ══════════════════════════════════════════════════════════════════════════
+  VANDERBILT VOYAGE ONLINE · new staff onboarding, self-paced
+  Six lessons, about thirty minutes, one idea per page. Rebuilt from the
+  Vanderbilt Voyage Online course (Rise) on the Manager Foundations engine
+  (me5231979/Manager-Voyage, foundation/): the pager (pager.js), the
+  narration layer (narration-scripts.js, assets/audio/voyage/<key>.mp3 with
+  a speech-synthesis fallback), and the FLH brand (assets/css/course.css,
+  assets/css/foundation.css). The mission page and the five-city map come
+  from Manager Foundations; everything after it is the Voyage content.
+  Progress: localStorage vvo-* in this browser only. Nothing is sent
+  anywhere. Links the program owner should confirm live in config.js.
+  No em or en dashes anywhere in this file.
+-->
+<script>document.documentElement.classList.add('js','paged');</script>
+<link rel="stylesheet" href="./assets/css/course.css?v=20260925a" />
+<link rel="stylesheet" href="./assets/css/foundation.css?v=20260925a" />
+<link rel="stylesheet" href="./assets/css/voyage.css?v=20260925a" />
+<link rel="stylesheet" href="./assets/css/nav.css?v=20260925a" />
+</head>
+<body>
+<a href="#main" class="skip">Skip to content</a>
+
+<header class="gnav" id="nav">
+  <a class="gnav__brand" href="./#p/home/1" aria-label="Vanderbilt Voyage Online, start of the course">
+    <img src="./assets/img/vu-lockup-white.png" alt="Vanderbilt University" width="166" height="43" decoding="async" />
+  </a>
+  <div class="gnav__right">
+    <nav class="gnav__links" id="gnavLinks" aria-label="Vanderbilt Voyage">
+      <a href="./" aria-current="page">Voyage Online</a>
+      <a href="#p/mission/1">The mission</a>
+      <a href="#p/beliefs/1">The four beliefs</a>
+      <a href="#p/nextstep/1">Next steps</a>
+      <a class="gnav__btn" id="navPcb" href="mailto:pcb@vanderbilt.edu">Contact PCB</a>
+    </nav>
+    <div class="gnav__extra">
+      <button type="button" class="prog-btn" id="progBtn" aria-expanded="false" aria-controls="progPanel"><span class="pw">Progress</span> <b id="progCount">0/9</b></button>
+    </div>
+    <button type="button" class="gnav__burger" aria-label="Menu" aria-expanded="false" aria-controls="gnavLinks"><span></span><span></span><span></span></button>
+  </div>
+  <span class="gnav__line" aria-hidden="true"><span class="prog-fill" id="progFill"></span></span>
+</header>
+
+<div class="prog-panel" id="progPanel" role="region" aria-label="Your progress" hidden>
+  <div class="pp-h">Your progress</div>
+  <p class="prog-sum" id="progSum">Each activity you finish is counted here.</p>
+  <ol class="prog-list" id="progList"></ol>
+  <p class="prog-fine">Progress is saved in this browser only. Nothing is sent anywhere. Reset it anytime in the footer.</p>
+  <p class="prog-fine prog-warn" id="progStorageNote" hidden>Heads up: your browser is blocking saved progress (this happens in private browsing). Marks work during this visit but reset when you close the tab.</p>
+</div>
+<p class="sr" id="progStatus" role="status" aria-live="polite"></p>
+
+
+<main id="main"><span id="top"></span>
+
+<!-- ═══ WELCOME ═══ -->
+<section class="hero th-dark" aria-label="Welcome">
+  <div class="hero-media" aria-hidden="true">
+    <video class="hero-video" id="heroVideo" autoplay muted loop playsinline preload="metadata" poster="./assets/img/hero-poster.jpg" aria-hidden="true"><source src="./assets/video/hero-montage.mp4" type="video/mp4" /></video>
+    <div class="hero-scrim"></div>
+  </div>
+  <div class="wrap hero-grid">
+    <div class="hero-copy">
+      <span class="mono">Vanderbilt University &middot; People, Culture and Belonging &middot; Vanderbilt Voyage Online</span>
+      <h1 class="metal">Welcome to the Vanderbilt <em>Voyage</em>.</h1>
+      <p class="hello" id="heroHello">Welcome aboard.</p>
+      <p class="lead">Today is day one of your Vanderbilt Voyage, and we are glad you are here. This course is the start of a new chapter in your career: where Vanderbilt is headed, where it came from, what it believes, and how you fit in. We can&rsquo;t wait to get to know you and to see the work you will do here. Let&rsquo;s set sail.</p>
+      <p class="listen-line"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M19 5a9 9 0 0 1 0 14"/></svg><span><b>Narration is on.</b> Every page is read as it turns. Tap <b>Auto</b> to turn it off, or <b>Listen</b> to replay a page.</span></p>
+    </div>
+    <aside class="hero-panel" aria-label="Course at a glance">
+      <span class="mono panel-h">By the end, you will be able to</span>
+      <ul class="outcomes">
+        <li><b>Name</b> the four beliefs that guide Vanderbilt&rsquo;s mission</li>
+        <li><b>Explain</b> how each core belief contributes to Vanderbilt&rsquo;s culture and the employee experience</li>
+        <li><b>Apply</b> the beliefs to real moments in your daily work</li>
+        <li><b>Explore</b> ways to partner with colleagues to build strong working relationships and identify opportunities for collaboration</li>
+        <li><b>Identify</b> the resources available to Vanderbilt employees that support connection, professional growth, collaboration, and career development</li>
+        <li><b>Plan</b> the onboarding conversation with your manager that starts your development plan</li>
+      </ul>
+      <p class="meta-line">About 30 minutes &middot; Six lessons &middot; Self-paced and narrated</p>
+    </aside>
+    <ol class="hw-mini" aria-label="How this course works">
+      <li>Turn pages with the arrows, your keyboard, or a swipe</li>
+      <li>Each page: a short read, then one activity</li>
+      <li>Progress, top right, tracks each activity you finish</li>
+    </ol>
+  </div>
+</section>
+
+<!-- ═══ THE MISSION (from Manager Foundations: the vision, how we operate, the five cities) ═══ -->
+<section id="mission" class="th-dark" aria-label="The mission">
+  <div class="wrap">
+    <div class="sec-head tight reveal">
+      <p class="you-are"><b>The mission</b> <i>&middot; Next: lesson 1, welcome to the Voyage</i></p>
+      <span class="eyebrow"><span class="tick" aria-hidden="true"></span><span class="mono">The mission</span></span>
+      <h2>Define the great university of the 21st century, and <em class="s">be</em> it.</h2>
+    </div>
+    <div class="ask"><p><b>What you will learn</b>The vision, how we operate, where we work, and your part in it.</p><p><b>Why it matters</b>Every role at Vanderbilt connects to this mission, including yours, starting today.</p></div>
+    <div class="operate reveal">
+      <span class="mono">How we operate</span>
+      <p class="op-lead">Vanderbilt operates at <em>uncommon speed, agility, and scale</em>. Three areas of focus.</p>
+      <span class="mono op-sub">Areas of focus</span>
+      <div class="op-grid">
+        <div><i class="op-no" aria-hidden="true">1</i><b>Exceptional Core Operations</b><p>With speed, agility and scale, Vanderbilt will distinguish itself with innovative and impactful capabilities to ensure that we have the talent, resources and reputation necessary to deliver on our vision.</p></div>
+        <div><i class="op-no" aria-hidden="true">2</i><b>Bold Strategic Initiatives</b><p>With &ldquo;exceptional core operations&rdquo; as our fuel, Vanderbilt will pursue increasingly bold initiatives that enable and enhance the reach and impact of our education and research mission.</p></div>
+        <div><i class="op-no" aria-hidden="true">3</i><b>Values Leadership</b><p>Through strategic advocacy efforts and modeling the role of an essential research university, Vanderbilt will stimulate industry change and combat existential threats to our education and research mission.</p></div>
+      </div>
+      <p class="op-link"><a id="missionLink" href="https://news.vanderbilt.edu/2022/07/01/daring-to-grow-together-we-are-building-the-great-university-of-the-21st-century/" target="_blank" rel="noopener">Read the Chancellor&rsquo;s vision, &ldquo;Daring to Grow,&rdquo; at vanderbilt.edu</a></p>
+    </div>
+    <div class="ov-grid two map-row">
+      <div class="ov-card map-card"><b>As we grow</b><svg class="us-map" viewBox="0 0 600 331" role="img" aria-label="Map of the United States with Vanderbilt locations in Nashville, Chattanooga, New York City, West Palm Beach, and San Francisco"><path class="land" d="M3.1 15.9 L17.6 9.3 L308.8 7.9 L309.3 2.6 L313.4 10.6 L341.4 13.2 L367.2 21.2 L378.6 17.2 L414.8 35.8 L419.0 41.0 L429.3 47.7 L439.7 56.9 L440.7 87.4 L434.5 96.7 L437.6 104.6 L475.9 88.7 L473.8 80.8 L498.6 79.4 L504.8 72.8 L519.3 60.9 L553.4 60.9 L569.0 38.4 L577.2 29.1 L591.7 33.1 L600.0 58.3 L601.0 63.6 L584.5 70.2 L566.9 78.1 L562.8 92.7 L569.0 103.3 L554.5 107.3 L539.0 111.2 L527.6 119.2 L526.6 131.1 L517.2 141.7 L511.0 160.2 L506.9 168.2 L510.0 186.7 L487.2 207.9 L473.8 217.2 L456.2 233.0 L451.0 250.3 L459.3 278.1 L464.5 303.2 L461.4 323.1 L454.1 324.4 L446.9 312.5 L437.6 291.3 L436.6 272.8 L424.1 258.2 L409.7 263.5 L398.3 254.2 L382.8 255.6 L368.3 256.9 L370.3 270.1 L356.9 268.8 L342.4 263.5 L322.8 263.5 L310.3 268.8 L289.7 286.0 L285.5 312.5 L267.9 307.2 L263.8 292.6 L244.1 262.2 L227.6 272.8 L212.1 264.8 L191.4 235.7 L173.8 235.7 L173.8 242.3 L143.8 242.3 L105.5 226.4 L81.7 226.4 L67.2 206.6 L45.5 199.9 L32.1 172.1 L25.9 156.2 L13.4 141.7 L6.2 121.8 L9.3 100.6 L10.3 66.2 L11.4 45.0 Z"/><g class="pin home" transform="translate(395.2 177.4)"><circle class="ring" r="6"/><circle class="ring r2" r="6"/><polygon class="star" points="0.0,-9.0 2.2,-3.1 8.6,-2.8 3.6,1.2 5.3,7.3 0.0,3.8 -5.3,7.3 -3.6,1.2 -8.6,-2.8 -2.2,-3.1"/><text x="-6" y="-14" text-anchor="start">Nashville</text></g><g class="pin" transform="translate(410.7 193.3)"><circle class="ring" r="6"/><circle class="ring r2" r="6"/><circle class="dot" r="4.5"/><text x="10" y="16" text-anchor="start">Chattanooga</text></g><g class="pin" transform="translate(26.9 156.2)"><circle class="ring" r="6"/><circle class="ring r2" r="6"/><circle class="dot" r="4.5"/><text x="12" y="4" text-anchor="start">San Francisco</text></g><g class="pin" transform="translate(465.0 303.2)"><circle class="ring" r="6"/><circle class="ring r2" r="6"/><circle class="dot" r="4.5"/><text x="-12" y="4" text-anchor="end">West Palm Beach</text></g><g class="pin" transform="translate(527.6 117.8)"><circle class="ring" r="6"/><circle class="ring r2" r="6"/><circle class="dot" r="4.5"/><text x="-11" y="-7" text-anchor="end">New York City</text></g></svg></div>
+      <div class="ov-card"><b>One Vanderbilt, five cities</b><p>Vanderbilt now works from five cities, with Nashville as home. As we grow, the same mission, beliefs, and ways of working travel with us, wherever you sit.</p><ul class="city-list" aria-label="Vanderbilt locations"><li><a href="https://www.vanderbilt.edu/" target="_blank" rel="noopener">Nashville</a></li><li><a href="https://www.vanderbilt.edu/chancellor/initiatives-and-outreach/growth/quantum-innovation/" target="_blank" rel="noopener">Chattanooga</a></li><li><a href="https://www.vanderbilt.edu/nyc/" target="_blank" rel="noopener">New York City</a></li><li><a href="https://www.vanderbilt.edu/chancellor/initiatives-and-outreach/growth/west-palm-beach/" target="_blank" rel="noopener">West Palm Beach</a></li><li><a href="https://www.vanderbilt.edu/chancellor/initiatives-and-outreach/growth/san-francisco/" target="_blank" rel="noopener">San Francisco</a></li></ul><p class="op-link"><a href="https://www.vanderbilt.edu/campuses/" target="_blank" rel="noopener">Read about all five campuses at vanderbilt.edu</a></p></div>
+    </div>
+    <div class="mission-charge reveal">
+      <span class="mono">Your part</span>
+      <p>Whatever your role, the mission is achieved through the work you do. From today, you help Vanderbilt <em>be</em> it.</p>
+      <ul class="mission-list three">
+        <li><b>Know it.</b> Learn the vision and what it asks of your team.</li>
+        <li><b>Connect your work to it.</b> Ask how what you do this week moves it forward.</li>
+        <li><b>Stay in touch with your manager.</b> Priorities, projects, and how you are settling in.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ LESSON 1 · WELCOME TO THE VANDERBILT VOYAGE ═══ -->
+<section id="welcome" class="th-dark" aria-label="Lesson 1: Welcome to the Vanderbilt Voyage">
+  <div class="wrap">
+    <div class="sec-head tight reveal">
+      <p class="you-are"><b>Lesson 1 of 6</b> Welcome to the Vanderbilt Voyage <i>&middot; Next: lesson 2, our history</i></p>
+      <span class="eyebrow"><span class="tick" aria-hidden="true"></span><span class="mono">Lesson 1 &middot; What we cover</span></span>
+      <h2>Six lessons, one <em class="s">voyage</em>.</h2>
+    </div>
+    <div class="ask"><p><b>What you will learn</b>The route for this course, and what you will be able to do at the end of it.</p><p><b>Why it matters</b>Knowing the core beliefs, and who can help, makes your first weeks easier and your work more your own.</p></div>
+    <div class="fw three-up" id="voyageMap" data-map="voyage">
+      <button type="button" class="fw-card" aria-expanded="false"><b>Lesson 1</b><strong>Welcome to the Voyage.</strong><p>The route, and a message to start.</p><ul><li>What this course covers</li><li>The Chancellor&rsquo;s vision for Vanderbilt</li><li>How to get the most from your first weeks</li></ul><span class="hint">Tap to open</span></button>
+      <button type="button" class="fw-card" aria-expanded="false"><b>Lesson 2</b><strong>Our history and leadership.</strong><p>More than 150 years of daring to grow.</p><ul><li>A timeline of how we got here</li><li>Chancellor Daniel Diermeier</li><li>The vice chancellors who lead with him</li></ul><span class="hint">Tap to open</span></button>
+      <button type="button" class="fw-card" aria-expanded="false"><b>Lesson 3</b><strong>Our mission, our students, and you.</strong><p>Vanderbilt by the numbers.</p><ul><li>Six numbers that put the mission in perspective</li><li>A campus fun fact</li><li>Where to find the quick facts</li></ul><span class="hint">Tap to open</span></button>
+      <button type="button" class="fw-card" aria-expanded="false"><b>Lesson 4</b><strong>The four beliefs.</strong><p>Belonging, self-direction, collaboration, growth.</p><ul><li>Each belief and its behaviors</li><li>One moment to apply each</li><li>The belief compass: which one is most you</li></ul><span class="hint">Tap to open</span></button>
+      <button type="button" class="fw-card" aria-expanded="false"><b>Lesson 5</b><strong>Dare to grow.</strong><p>Our motto, as a mindset.</p><ul><li>What <i>Crescere aude</i> means</li><li>Growth as something we do together</li><li>Three situations to try it</li></ul><span class="hint">Tap to open</span></button>
+      <button type="button" class="fw-card" aria-expanded="false"><b>Lesson 6</b><strong>Next steps.</strong><p>What to do after today.</p><ul><li>A short check of what you learned</li><li>Four commitments, including a talk with your manager</li><li>An open invitation to visit us in Nashville</li></ul><span class="hint">Tap to open</span></button>
+    </div>
+    <p class="fw-status" id="voyageStatus" role="status" aria-live="polite">0 of 6 lessons opened.</p>
+    <div class="concept reveal chancellor-note">
+      <span class="c-label">A message to start</span>
+      <p>Your Voyage begins with a word from Chancellor Daniel Diermeier. His vision for Vanderbilt is the thread through every lesson that follows: a university that dares to grow, and a community where each person helps the people around them improve.</p>
+      <p class="op-link"><a id="chancellorLink" href="https://news.vanderbilt.edu/2022/07/01/daring-to-grow-together-we-are-building-the-great-university-of-the-21st-century/" target="_blank" rel="noopener">Read the Chancellor&rsquo;s message, &ldquo;Daring to Grow&rdquo;</a></p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ LESSON 2 · OUR HISTORY ═══ -->
+<section id="history" class="th-dark" aria-label="Lesson 2: Our history">
+  <div class="wrap">
+    <div class="sec-head tight reveal">
+      <p class="you-are"><b>Lesson 2 of 6</b> Our history <i>&middot; Next: our leadership</i></p>
+      <span class="eyebrow"><span class="tick" aria-hidden="true"></span><span class="mono">Lesson 2 &middot; Our history</span></span>
+      <h2>More than 150 years of daring to <em class="s">grow</em>.</h2>
+    </div>
+    <div class="ask"><p><b>What you will learn</b>The moments that shaped Vanderbilt, from its founding to today.</p><p><b>Why it matters</b>Our history shapes our present and our future. The future is unwritten, and the present deserves our attention.</p></div>
+    <div class="fw two" id="historyMap" data-map="history">
+      <button type="button" class="fw-card" aria-expanded="false"><b>1873</b><strong>The founding.</strong><p>A gift that started a university.</p><ul><li>Cornelius Vanderbilt gives $1 million to found a university in Nashville</li><li>His hope: to strengthen the ties between all parts of the country</li><li>The university still carries his name</li></ul><span class="hint">Tap to open</span></button>
+      <button type="button" class="fw-card" aria-expanded="false"><b>1875</b><strong>The first classes.</strong><p>Degrees begin, and never stop.</p><ul><li>Vanderbilt opens its doors to students</li><li>More than 177,000 degrees have been awarded since</li><li>That is nearly one for every person in Chattanooga</li></ul><span class="hint">Tap to open</span></button>
+      <button type="button" class="fw-card" aria-expanded="false"><b>2020</b><strong>A new chancellor.</strong><p>Daniel Diermeier takes the helm.</p><ul><li>He leads the safe return of students to campus during the COVID-19 pandemic</li><li>He puts the motto, <i>Crescere aude</i>, at the center of the vision</li><li>He reaffirms Vanderbilt&rsquo;s commitment to free expression and civil discourse</li></ul><span class="hint">Tap to open</span></button>
+      <button type="button" class="fw-card" aria-expanded="false"><b>Today</b><strong>Growing boldly.</strong><p>Bigger research, more cities.</p><ul><li>Research expenditures pass $1 billion</li><li>A successful capital campaign</li><li>Vanderbilt now works from five cities</li></ul><span class="hint">Tap to open</span></button>
+    </div>
+    <p class="fw-status" id="historyStatus" role="status" aria-live="polite">0 of 4 moments opened.</p>
+    <p class="op-link"><a id="historyLink" href="https://www.vanderbilt.edu/about/history/" target="_blank" rel="noopener">Explore the full history of Vanderbilt, with the video and the interactive timeline</a></p>
+  </div>
+</section>
+
+<!-- ═══ LESSON 2 · OUR LEADERSHIP ═══ -->
+<section id="leaders" class="th-dark" aria-label="Lesson 2: Our leadership">
+  <div class="wrap">
+    <div class="sec-head tight reveal">
+      <p class="you-are"><b>Lesson 2 of 6</b> Our leadership <i>&middot; Next: lesson 3, by the numbers</i></p>
+      <span class="eyebrow"><span class="tick" aria-hidden="true"></span><span class="mono">Lesson 2 &middot; Our leadership</span></span>
+      <h2>Visionary <em class="s">leadership</em>.</h2>
+    </div>
+    <div class="ask"><p><b>What you will learn</b>Who leads Vanderbilt, and what they are building.</p><p><b>Why it matters</b>Knowing where the university is headed helps you see where your work fits.</p></div>
+    <div class="split2">
+      <div>
+        <div class="leader-card reveal">
+          <span class="mono">Chancellor Daniel Diermeier</span>
+          <p>Born in Berlin, Germany, Daniel Diermeier is a first-generation college graduate who embodies Vanderbilt&rsquo;s commitment to making an elite education accessible to all. His leadership steered the safe return of students to campus during the COVID-19 pandemic.</p>
+          <p>Under his tenure, and in line with the motto <i>Crescere aude</i>, &ldquo;dare to grow,&rdquo; Vanderbilt has passed $1 billion in research expenditures, launched a successful capital campaign, and reaffirmed its commitment to free expression and civil discourse.</p>
+        </div>
+        <div class="leader-card reveal">
+          <span class="mono">The vice chancellors</span>
+          <p>The Chancellor&rsquo;s leadership team brings deep experience from across higher education. Each vice chancellor guides a part of the university toward the mission: academic affairs, financial operations, and the culture and belonging of our staff, among others. Together they keep Vanderbilt at the front of higher education, and make sure students have what they need to succeed.</p>
+          <p class="op-link"><a id="vcLink" href="https://www.vanderbilt.edu/leadership/" target="_blank" rel="noopener">Meet the vice chancellors</a></p>
+        </div>
+      </div>
+      <div>
+        <div class="module-head"><span class="mno">Fact or fiction</span><h3>What do you know about our leadership?</h3><p>Four statements. Tap fact or fiction.</p></div>
+        <div class="drill" id="leadersDrill" data-drill="leaders"></div>
+        <p class="drill-status" id="leadersStatus" role="status" aria-live="polite">0 of 4 decided.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ LESSON 3 · BY THE NUMBERS ═══ -->
+<section id="numbers" class="th-dark" aria-label="Lesson 3: Vanderbilt by the numbers">
+  <div class="wrap">
+    <div class="sec-head tight reveal">
+      <p class="you-are"><b>Lesson 3 of 6</b> Our mission, our students, and you <i>&middot; Next: lesson 4, the four beliefs</i></p>
+      <span class="eyebrow"><span class="tick" aria-hidden="true"></span><span class="mono">Lesson 3 &middot; By the numbers</span></span>
+      <h2>Our mission, our students, and <em class="s">you</em>.</h2>
+    </div>
+    <div class="ask"><p><b>What you will learn</b>Six numbers that put the mission in perspective, and a campus fun fact.</p><p><b>Why it matters</b>The rankings are important. These numbers show the community you just joined, and the work that keeps it running.</p></div>
+    <div class="split2">
+      <div>
+        <div class="module-head"><span class="mno">Guess the number</span><h3>How big is Vanderbilt, really?</h3><p>Six questions. Make your best guess, then read the story behind the number.</p></div>
+        <div class="drill" id="numbersDrill" data-drill="numbers"></div>
+        <p class="drill-status" id="numbersStatus" role="status" aria-live="polite">0 of 6 guessed.</p>
+      </div>
+      <div>
+        <div class="fun-fact reveal">
+          <span class="mono">Fun fact</span>
+          <h3>Meet the <em>squirrels</em>.</h3>
+          <p>You may not know it, but squirrels are a bit of an inside joke at Vanderbilt. So many live on campus that they have become an unofficial mascot. A squirrel named Corny has even appeared in Vanderbilt videos on YouTube. The squirrels are used to people and are generally quite friendly.</p>
+        </div>
+        <div class="leader-card reveal">
+          <span class="mono">Quick facts</span>
+          <p>For more than 150 years, Vanderbilt has built a tradition of academic excellence along with a unique spirit of collaboration. The quick facts page has the rest of the numbers, from enrollment to research.</p>
+          <p class="op-link"><a id="factsLink" href="https://www.vanderbilt.edu/about/facts/" target="_blank" rel="noopener">Open Vanderbilt quick facts</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ LESSON 4 · THE FOUR BELIEFS ═══ -->
+<section id="beliefs" class="th-dark" aria-label="Lesson 4: The four beliefs">
+  <div class="wrap">
+    <div class="sec-head tight reveal">
+      <p class="you-are"><b>Lesson 4 of 6</b> The four beliefs and the Vanderbilt Way <i>&middot; Next: your belief compass</i></p>
+      <span class="eyebrow"><span class="tick" aria-hidden="true"></span><span class="mono">Lesson 4 &middot; The four beliefs</span></span>
+      <h2>Four beliefs, one Vanderbilt <em class="s">Way</em>.</h2>
+    </div>
+    <div class="ask"><p><b>What you will learn</b>Belonging, self-direction, collaboration, and growth: what each means, the behaviors that show it, and one moment to apply it.</p><p><b>Why it matters</b>The beliefs guide how we learn, serve, and work together. They steer each person&rsquo;s mission, and ours, toward success.</p></div>
+    <div class="ideas" id="beliefsBox" data-beliefs></div>
+    <p class="drill-status" id="beliefsStatus" role="status" aria-live="polite">0 of 4 beliefs. 0 of 4 moments.</p>
+  </div>
+</section>
+
+<!-- ═══ LESSON 4 · THE BELIEF COMPASS ═══ -->
+<section id="compass" class="th-dark" aria-label="Lesson 4: Your belief compass">
+  <div class="wrap">
+    <div class="sec-head tight reveal">
+      <p class="you-are"><b>Lesson 4 of 6</b> Your belief compass <i>&middot; Next: lesson 5, dare to grow</i></p>
+      <span class="eyebrow"><span class="tick" aria-hidden="true"></span><span class="mono">Lesson 4 &middot; The belief compass</span></span>
+      <h2>Which belief points your <em class="s">way</em>?</h2>
+    </div>
+    <div class="ask"><p><b>What you will learn</b>Which of the four beliefs you align with most, and how you will show it at work.</p><p><b>Why it matters</b>Knowing what you value makes your work more fulfilling and more your own. You will bring your answer to your manager in lesson 6.</p></div>
+    <div class="compass" id="compassBox"></div>
+    <p class="drill-status" id="compassStatus" role="status" aria-live="polite">0 of 4 answered.</p>
+  </div>
+</section>
+
+<!-- ═══ LESSON 5 · DARE TO GROW ═══ -->
+<section id="grow" class="th-dark" aria-label="Lesson 5: Dare to grow">
+  <div class="wrap">
+    <div class="sec-head tight reveal">
+      <p class="you-are"><b>Lesson 5 of 6</b> Dare to grow <i>&middot; Next: lesson 6, a quick check</i></p>
+      <span class="eyebrow"><span class="tick" aria-hidden="true"></span><span class="mono">Lesson 5 &middot; <i>Crescere aude</i></span></span>
+      <h2>A motto, and a <em class="s">mindset</em>.</h2>
+    </div>
+    <div class="ask"><p><b>What you will learn</b>What <i>Crescere aude</i> means, and how daring to grow fits your first year here.</p><p><b>Why it matters</b>Growth is how we reach our full potential, and at Vanderbilt nobody is expected to grow alone.</p></div>
+    <div class="split2">
+      <div>
+        <div class="concept reveal" style="margin-top:0">
+          <span class="c-label">The motto</span>
+          <p style="font-family:var(--serif);font-size:1.35rem;line-height:1.3"><i>Crescere aude.</i> Latin for &ldquo;dare to grow.&rdquo;</p>
+          <p>It is more than a motto on a seal. It is a mindset: the choice to keep learning, to take on the stretch, and to help the people around you do the same.</p>
+        </div>
+        <div class="recap-row three" role="list" aria-label="Three ways to dare to grow">
+          <div role="listitem"><b>1</b><strong>Adopt a growth mindset.</strong><p>Ability grows with effort. A mistake is information, not a verdict.</p></div>
+          <div role="listitem"><b>2</b><strong>Use what is here.</strong><p>Mentors, programs, courses, and your manager. Ask for them.</p></div>
+          <div role="listitem"><b>3</b><strong>Grow together.</strong><p>Work with your teammates. Growth is a team sport here.</p></div>
+        </div>
+      </div>
+      <div>
+        <div class="module-head"><span class="mno">Your call</span><h3>Three moments to dare to grow.</h3><p>Try all three responses in each. The consequences teach more than the right answer.</p></div>
+        <div class="calls" id="growCalls" data-calls="grow"></div>
+        <p class="drill-status" id="growStatus" role="status" aria-live="polite">0 of 3 situations.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ LESSON 6 · QUICK CHECK ═══ -->
+<section id="quiz" class="th-dark" aria-label="Knowledge check">
+  <div class="wrap">
+    <div class="sec-head tight reveal">
+      <p class="you-are"><b>Lesson 6 of 6</b> A quick check <i>&middot; Five questions, one at a time &middot; Next: your next steps</i></p>
+      <span class="eyebrow"><span class="tick" aria-hidden="true"></span><span class="mono">Lesson 6 &middot; Quick check</span></span>
+      <h2>Five <em class="s">questions</em>.</h2>
+    </div>
+    <div id="quizBox"></div>
+    <p class="drill-status" id="quizStatus" role="status" aria-live="polite">0 of 5 answered.</p>
+    <div class="kq-done" id="quizDone" role="status" aria-live="polite"></div>
+  </div>
+</section>
+
+<!-- ═══ LESSON 6 · NEXT STEPS ═══ -->
+<section id="nextstep" class="th-dark" aria-label="Lesson 6: Next steps">
+  <div class="wrap">
+    <div class="sec-head tight reveal" style="margin-bottom:0">
+      <p class="you-are"><b>Lesson 6 of 6</b> Next steps <i>&middot; Next: keep going</i></p>
+      <span class="eyebrow"><span class="tick" aria-hidden="true"></span><span class="mono">Lesson 6 &middot; Next steps</span></span>
+      <h2>What to do after <em class="s">today</em>.</h2>
+    </div>
+    <div class="ask"><p><b>What you will learn</b>The four tasks that finish your onboarding, and how to start the conversation with your manager.</p><p><b>Why it matters</b>We covered a lot, and there is more to do. These tasks lock in what you learned and set up your next steps.</p></div>
+    <div class="habit-box reveal commit-box"><span class="mono">Review and agree to each task</span>
+      <div class="commit-list" id="commitList" role="group" aria-label="Your four commitments"></div>
+      <p class="drill-status" id="commitStatus" role="status" aria-live="polite">0 of 4 agreed.</p>
+    </div>
+    <a class="pdf-card survey-card reveal" data-survey href="https://forms.cloud.microsoft/Pages/ResponsePage.aspx?id=OX9aur7js0q0UGf6gPrsreq8b35schZOi4vqfFyoXutUOThNNDdNUzhXRTRQU1IzSThPRFlWUzA1QiQlQCN0PWcu" target="_blank" rel="noopener"><span class="pdf-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12l2 2 4-4M9 17h6"/></svg></span><span><b>Vanderbilt Voyage Day One Survey</b><span class="pdf-sub">Tell us how your first day went. A few minutes, and it shapes the Voyage for the people who start after you.</span></span><span class="pdf-go">Take the survey</span></a>
+    <div class="evidence reveal" id="tell-leader">
+      <span class="e-label">Tell your manager</span>
+      <p>Commitments kept in private fade. Copy this, add a date, and send it today. <em id="tellText">&ldquo;I just finished Vanderbilt Voyage Online. The belief I align with most is [belief], and I want it to guide how I show up to work. Can we talk about it, and about my development plan, in our next one-on-one?&rdquo;</em></p>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:12px;align-items:center">
+        <button type="button" class="btn btn-ghost btn-sm" id="copyTell" data-copytext="I just finished Vanderbilt Voyage Online. The belief I align with most is [belief], and I want it to guide how I show up to work. Can we talk about it, and about my development plan, in our next one-on-one?">Copy the message</button>
+      </div>
+    </div>
+    <div class="visit reveal">
+      <span class="mono">Come see us in Nashville</span>
+      <p>If you are ever in Nashville, join us for the full in-person Voyage, a campus tour, or just lunch. If you want to join, or have any questions, email People, Culture and Belonging at <a href="mailto:pcb@vanderbilt.edu">pcb@vanderbilt.edu</a>.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ THE END ═══ -->
+<section id="learn" class="th-dark" aria-label="Keep going: resources and the end of the course">
+  <div class="wrap">
+    <div class="sec-head tight reveal">
+      <p class="you-are"><b>Keep going</b> <i>&middot; The last page</i></p>
+      <span class="eyebrow"><span class="tick" aria-hidden="true"></span><span class="mono">Keep going</span></span>
+      <h2>Keep these <em class="s">close</em>.</h2>
+    </div>
+    <div class="ask"><p><b>What you will find</b>The links from this course in one place, to come back to in your first weeks.</p><p><b>Why it matters</b>Your Voyage does not end with this course. These are the places to keep learning about Vanderbilt.</p></div>
+    <div class="learn-grid">
+      <div><h4>The mission</h4><ul>
+        <li><a href="https://news.vanderbilt.edu/2022/07/01/daring-to-grow-together-we-are-building-the-great-university-of-the-21st-century/" target="_blank" rel="noopener">Daring to Grow</a><span>The Chancellor&rsquo;s vision for Vanderbilt</span></li>
+        <li><a href="https://www.vanderbilt.edu/campuses/" target="_blank" rel="noopener">Our five campuses</a><span>Nashville, Chattanooga, New York City, West Palm Beach, San Francisco</span></li>
+      </ul></div>
+      <div><h4>Our story</h4><ul>
+        <li><a class="lk-history" href="https://www.vanderbilt.edu/about/history/" target="_blank" rel="noopener">History of Vanderbilt</a><span>The video and the interactive timeline</span></li>
+        <li><a class="lk-vc" href="https://www.vanderbilt.edu/leadership/" target="_blank" rel="noopener">University leadership</a><span>The Chancellor and the vice chancellors</span></li>
+        <li><a class="lk-facts" href="https://www.vanderbilt.edu/about/facts/" target="_blank" rel="noopener">Quick facts</a><span>Vanderbilt by the numbers</span></li>
+      </ul></div>
+      <div><h4>People, Culture and Belonging</h4><ul>
+        <li><a href="https://www.vanderbilt.edu/pcb/" target="_blank" rel="noopener">PCB home</a><span>Benefits, learning, and support for staff</span></li>
+        <li><a href="https://hr.vanderbilt.edu/policies/" target="_blank" rel="noopener">Staff policies</a><span>The policies that apply to your role</span></li>
+        <li><a href="mailto:pcb@vanderbilt.edu">pcb@vanderbilt.edu</a><span>Questions about your Voyage</span></li>
+      </ul></div>
+    </div>
+    <a class="pdf-card survey-card reveal" data-survey href="https://forms.cloud.microsoft/Pages/ResponsePage.aspx?id=OX9aur7js0q0UGf6gPrsreq8b35schZOi4vqfFyoXutUOThNNDdNUzhXRTRQU1IzSThPRFlWUzA1QiQlQCN0PWcu" target="_blank" rel="noopener"><span class="pdf-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12l2 2 4-4M9 17h6"/></svg></span><span><b>Vanderbilt Voyage Day One Survey</b><span class="pdf-sub">Tell us how your first day went. A few minutes, and it shapes the Voyage for the people who start after you.</span></span><span class="pdf-go">Take the survey</span></a>
+    <div class="wrapup reveal">
+      <h2 class="metal">Now set <em>sail</em>.</h2>
+      <p>Remember, daring to grow is a powerful step toward your full potential. Thank you for your attention during this course, and welcome to Vanderbilt.</p>
+      <button type="button" class="btn btn-gold" id="exitBtn">Exit the course</button>
+      <p class="send-sign">Crescere aude. Dare to grow.</p>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="fcenter">
+      <img src="./assets/img/vu-centered-white.png" alt="Vanderbilt University" width="100" height="105" loading="lazy" decoding="async" />
+      <p class="fprogram">Vanderbilt Voyage Online &middot; People, Culture and Belonging</p>
+      <p class="flegal">&copy; <span id="yr">2026</span> Vanderbilt University &middot; Futures Learning Hub &middot; People, Culture and Belonging. Progress and your answers are saved in this browser only; nothing is sent anywhere. Accessibility: this course is built to WCAG 2.2 AA. If anything is hard to use, email <a href="mailto:pcb@vanderbilt.edu">pcb@vanderbilt.edu</a>.</p>
+      <button type="button" class="preset" id="progReset">Reset progress<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-3-6.7M21 3v6h-6"/></svg></button>
+    </div>
+  </div>
+</footer>
+
+<div class="book-bar" id="bookBar" role="navigation" aria-label="Book controls">
+  <div class="bb-left">
+    <span class="bb-sec" id="bbSec" aria-hidden="true">Welcome</span>
+    <button type="button" class="bb-aud" id="bbListen" aria-pressed="false" aria-label="Listen to this page" title="Listen to this page"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M19 5a9 9 0 0 1 0 14"/></svg><span class="wave" aria-hidden="true"><i></i><i></i><i></i></span><span class="bb-aud-t" id="bbListenT">Listen</span></button>
+    <button type="button" class="bb-aud" id="bbAuto" aria-pressed="false" aria-label="Auto-narrate every page" title="Auto-narrate every page"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h10"/><path d="M18 15l3 3-3 3"/></svg><span class="bb-aud-t">Auto</span></button>
+    <button type="button" class="bb-done" id="bbDone" aria-pressed="false" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg><span class="bb-done-t">Mark done</span></button>
+  </div>
+  <nav class="bb-dots" id="bbDots" aria-label="Course pages"></nav>
+  <div class="bb-ctl">
+    <span class="bb-count" id="bbCount" aria-live="polite">1 / 1</span>
+    <button type="button" class="bb-btn" id="pgPrev" aria-label="Previous page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg></button>
+    <button type="button" class="bb-btn" id="pgNext" aria-label="Next page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
+  </div>
+</div>
+<p class="narr-toast" id="narrToast" role="status" aria-live="polite"></p>
+
+<div class="oracle-overlay" id="oracleModal" role="dialog" aria-modal="true" aria-labelledby="oracleTitle" hidden>
+  <div class="oracle-modal">
+    <span class="mono">Voyage complete</span>
+    <h2 id="oracleTitle">You have finished Vanderbilt Voyage Online.</h2>
+    <p id="oracleBody">Every activity is done. Send the message to your manager, finish your compliance courses and the Benefits Information Course, and take the Vanderbilt Voyage Day One Survey. Welcome to Vanderbilt.</p>
+    <div class="oracle-actions">
+      <a class="btn btn-gold" data-survey href="https://forms.cloud.microsoft/Pages/ResponsePage.aspx?id=OX9aur7js0q0UGf6gPrsreq8b35schZOi4vqfFyoXutUOThNNDdNUzhXRTRQU1IzSThPRFlWUzA1QiQlQCN0PWcu" target="_blank" rel="noopener">Vanderbilt Voyage Day One Survey</a>
+      <button type="button" class="btn btn-ghost btn-sm" id="oracleGo">Done</button>
+    </div>
+    <p class="oracle-fine" id="oracleFine">Your progress stays in this browser.</p>
+  </div>
+</div>
+
+<script src="config.js?v=20260925a"></script>
+<script src="narration-scripts.js?v=20260925a"></script>
+<script src="./assets/js/nav.js?v=20260925a"></script>
+<script src="pager.js?v=20260925a"></script>
+<script src="app.js?v=20260925a"></script>
+</body>
+</html>

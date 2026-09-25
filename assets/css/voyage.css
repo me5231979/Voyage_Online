@@ -1,0 +1,73 @@
+/* ══════════ VANDERBILT VOYAGE ONLINE · components on top of the Foundations styles ══════════
+   Reads theme-scope variables only (--tx, --eyebrow, --field, ...), never
+   the raw palette, so every component survives a light section. Motion
+   stays under 400ms and stops for prefers-reduced-motion. */
+
+/* six lesson cards: three across */
+.fw.three-up{ grid-template-columns:repeat(3,1fr); }
+@media (max-width:900px){ .fw.three-up{ grid-template-columns:1fr 1fr; } }
+@media (max-width:560px){ .fw.three-up, #historyMap.fw.two{ grid-template-columns:1fr; } }
+
+.chancellor-note{ margin-top:16px; }
+.op-link a{ color:var(--link); }
+
+/* leadership and quick facts cards */
+.leader-card, .fun-fact, .visit{ border:1px solid var(--bd); border-left:3px solid var(--eyebrow); border-radius:var(--r); background:var(--card); padding:14px 16px; margin-bottom:12px; }
+.leader-card .mono, .fun-fact .mono, .visit .mono{ display:block; color:var(--eyebrow); margin-bottom:6px; }
+.leader-card p, .fun-fact p, .visit p{ color:var(--tx2); line-height:1.55; font-size:.95rem; }
+.leader-card p + p{ margin-top:8px; }
+.fun-fact h3{ font-family:var(--serif); font-weight:400; font-size:1.4rem; color:var(--tx); margin-bottom:6px; }
+.fun-fact h3 em{ font-family:var(--serif-i); font-style:italic; color:var(--eyebrow); }
+.visit{ margin-top:14px; }
+.visit a{ color:var(--link); }
+
+/* the behaviors under each belief */
+.behaviors{ list-style:none; display:flex; flex-wrap:wrap; gap:6px; margin-top:6px; }
+.behaviors li{ border:1px solid var(--bdg); border-radius:999px; padding:4px 11px; font-size:.86rem; color:var(--tx); background:var(--field); }
+.idea .blk > b{ display:block; }
+
+/* the belief compass */
+.compass{ margin-top:14px; }
+.cp-steps{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.cp-q{ border:1px solid var(--bd); border-radius:var(--r); background:var(--card); padding:12px 14px; }
+.cp-q.answered{ border-color:var(--bdg); }
+.cp-h{ color:var(--tx); font-size:1rem; line-height:1.4; margin-bottom:8px; }
+.cp-h .mono{ display:block; color:var(--eyebrow); font-size:.72rem; margin-bottom:2px; }
+.cp-opts{ display:grid; gap:6px; }
+.cp-opts button{ text-align:left; border:1px solid var(--field-bd); background:var(--field); color:var(--tx2); border-radius:var(--r); padding:9px 12px; font:inherit; font-size:.92rem; cursor:pointer; min-height:44px; transition:border-color .2s ease, color .2s ease, background .2s ease; }
+.cp-opts button:hover{ border-color:var(--bdg); color:var(--tx); }
+.cp-opts button[aria-pressed="true"]{ border-color:var(--strong); color:var(--tx); background:rgba(207,174,112,.14); }
+.cp-opts button:focus-visible, .commit-list button:focus-visible{ outline:2px solid var(--focus); outline-offset:2px; }
+.cp-result{ display:none; margin-top:14px; border:1px solid var(--bdg); border-left:4px solid var(--eyebrow); border-radius:var(--r); background:var(--card2); padding:16px 18px; }
+.cp-result.show{ display:block; }
+.cp-result .mono{ color:var(--eyebrow); }
+.cp-result h3{ font-family:var(--serif); font-weight:400; font-size:2rem; color:var(--tx); margin:2px 0 4px; display:flex; align-items:center; gap:8px; }
+.cp-result .cp-line{ font-family:var(--serif-i); font-style:italic; color:var(--eyebrow); font-size:1.1rem; margin-bottom:8px; }
+.cp-result p{ color:var(--tx2); line-height:1.55; }
+.cp-result p b{ color:var(--tx); font-weight:600; }
+.cp-result .field{ margin-top:12px; }
+@media (max-width:760px){ .cp-steps{ grid-template-columns:1fr; } }
+
+/* the four commitments */
+.commit-box{ margin-top:12px; }
+.commit-list{ display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:10px; }
+.commit-list button{ display:grid; grid-template-columns:auto 1fr; gap:12px; align-items:start; text-align:left; border:1px solid var(--field-bd); background:var(--field); color:var(--tx2); border-radius:var(--r); padding:12px 14px; font:inherit; font-size:.93rem; line-height:1.45; cursor:pointer; transition:border-color .2s ease, color .2s ease; }
+.commit-list button:hover{ border-color:var(--bdg); color:var(--tx); }
+.commit-list .cb{ width:22px; height:22px; border:2px solid var(--field-bd); border-radius:3px; display:grid; place-items:center; color:transparent; margin-top:1px; }
+.commit-list .cb svg{ width:14px; height:14px; }
+.commit-list button[aria-checked="true"]{ border-color:var(--strong); color:var(--tx); }
+.commit-list button[aria-checked="true"] .cb{ background:var(--eyebrow); border-color:var(--eyebrow); color:var(--btn-tx); }
+@media (max-width:760px){ .commit-list{ grid-template-columns:1fr; } }
+
+/* the Day One survey card */
+.survey-card{ text-decoration:none; color:var(--tx); }
+
+/* the completion dialog carries the survey link and a done button */
+.oracle-actions a.btn{ text-decoration:none; }
+
+@media (prefers-reduced-motion: reduce){
+  .cp-opts button, .commit-list button{ transition:none; }
+}
+
+/* phones: twelve dots do not fit beside the controls; the page count and arrows carry navigation */
+@media (max-width:480px){ .bb-dots{ display:none; } .book-bar .bb-ctl{ margin-left:auto; } }

@@ -1,0 +1,33 @@
+name: Record narration with ElevenLabs
+# Records every clip in narration-scripts.js with the voice in .github/tts.json
+# (the Manager Foundations narrator) and commits the MP3s to the branch that
+# ran it. Needs the ELEVENLABS_API_KEY repository secret. Until the clips
+# exist, the course reads the same words with the browser's own voice.
+on:
+  push:
+    paths: ['.github/tts.json', 'narration-scripts.js', 'scripts/build-tts.py']
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: tts-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  record:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install ffmpeg
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
+      - name: Record
+        env:
+          ELEVENLABS_API_KEY: ${{ secrets.ELEVENLABS_API_KEY }}
+        run: |
+          if [ -z "$ELEVENLABS_API_KEY" ]; then echo "::warning::ELEVENLABS_API_KEY is not set; the course uses the browser voice until it is."; exit 0; fi
+          python3 scripts/build-tts.py
+      - name: Commit the clips
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add assets/audio .github/tts-cache.json 2>/dev/null || true
+          if git diff --cached --quiet; then echo "No changes"; else git commit -m "Record narration with ElevenLabs"; git pull --rebase -X theirs origin "${GITHUB_REF_NAME}"; git push origin HEAD:"${GITHUB_REF_NAME}"; fi
