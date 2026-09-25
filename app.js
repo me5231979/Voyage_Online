@@ -166,14 +166,20 @@ document.addEventListener('visibilitychange', function(){ if(document.hidden && 
 narrUI();
 if(narr.auto) window.setTimeout(narrPlay, 600);
 
-/* ══════════ course videos: poster first, "coming soon" until the file exists; nothing talks over them ══════════ */
+/* ══════════ course videos: a placeholder image until config.js names the file ══════════
+   Swapping in a video is one line in config.js (videos.<slot>.src, plus
+   captions). Until then the slot shows its still with "Video coming soon". */
 $$('[data-video]').forEach(function(f){
-  var v = f.querySelector('video'); if(!v) return;
-  var src = v.getAttribute('src');
-  function none(){ f.classList.add('nomedia'); }
-  v.addEventListener('error', none);
-  /* preload is none, so ask quietly whether the file is there */
-  if(src && window.fetch){ try{ fetch(src, { method:'HEAD' }).then(function(r){ if(!r.ok) none(); }, none); }catch(e){} }
+  var key = f.getAttribute('data-video'), cfg = (C.videos || {})[key] || {}, cap = f.getAttribute('data-caption') || 'Video';
+  var ph = f.querySelector('.v-ph');
+  if(!cfg.src){ f.classList.add('nomedia'); f.setAttribute('role', 'img'); f.setAttribute('aria-label', cap + '. Video coming soon.'); return; }
+  var v = document.createElement('video');
+  v.controls = true; v.setAttribute('playsinline', ''); v.preload = 'metadata';
+  if(ph) v.poster = ph.getAttribute('src');
+  v.src = cfg.src; v.setAttribute('aria-label', cap + '. Video' + (cfg.captions ? ', with captions.' : '.'));
+  if(cfg.captions){ var t = document.createElement('track'); t.kind = 'captions'; t.src = cfg.captions; t.srclang = 'en'; t.label = 'English'; t.default = true; v.appendChild(t); }
+  f.insertBefore(v, f.firstChild);
+  v.addEventListener('error', function(){ f.classList.add('nomedia'); });
   v.addEventListener('play', function(){ f.classList.add('playing'); narrStop(); });
   v.addEventListener('pause', function(){ f.classList.remove('playing'); });
   document.addEventListener('chart:page', function(){ if(!v.paused) v.pause(); });

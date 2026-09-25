@@ -58,13 +58,18 @@ Until the clips exist, each Listen button reads the same words with the
 browser's built-in voice, so the course is never silent. After re-recording,
 bump `mediaVersion` in `config.js`.
 
-## Video
+## Videos
 
-GitHub rejects any file over 100 MB, and GitHub Pages does not serve Git LFS
-files. For a 199 MB video, either compress it under ~90 MB (H.264, 1080p,
-about 2.5 Mbps is plenty for a talking-head or montage) and commit it to
-`assets/video/`, or host it on Vanderbilt's video platform or YouTube
-(unlisted) and embed it. Either way it needs captions (`.vtt`).
+Three slots: the Chancellor's message (lesson 1), Our History (lesson 2),
+and Dare to Grow (lesson 5). Each shows a placeholder still from the Rise
+course (`assets/img/course/`) with "Video coming soon" until its file is set.
+
+To swap one in:
+1. Upload the MP4 to `assets/video/` (GitHub rejects files over 100 MB; compress to about 80 MB at 1080p if needed) and a WebVTT captions file beside it.
+2. In `config.js`, set `videos.<slot>.src` and `videos.<slot>.captions`, for example `'./assets/video/our-history.mp4'`.
+
+Keep the files in `assets/video/` with relative paths so the course can be
+packaged as SCORM later without changes.
 
 ## Check before launch
 

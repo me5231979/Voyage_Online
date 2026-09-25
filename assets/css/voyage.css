@@ -105,15 +105,19 @@ html.paged .v-hero{ padding:0 0 clamp(28px,6vh,72px); }
 .v-port li{ font-size:.84rem; color:var(--tx); background:var(--field); border:1px solid var(--bd); border-radius:999px; padding:5px 11px; }
 @media (max-width:560px){ .v-route{ grid-template-columns:repeat(3,1fr); row-gap:14px; } .v-route::before{ display:none; } }
 
-/* videos: poster first; "coming soon" until the file exists */
+/* videos: a placeholder still until config.js names the file */
 .v-video{ position:relative; margin-top:18px; border-radius:var(--r); overflow:hidden; border:1px solid var(--bdg); background:#000; aspect-ratio:16/9; max-width:100%; }
 .v-act > .v-video{ margin-top:0; }
-.v-video video{ display:block; width:100%; height:100%; object-fit:cover; background:#000; }
-.v-video figcaption{ position:absolute; left:0; right:0; bottom:0; padding:28px 14px 10px; background:linear-gradient(180deg, transparent, rgba(0,0,0,.78)); color:#fff; font-size:.88rem; pointer-events:none; transition:opacity .2s ease; }
-.v-video.playing figcaption{ opacity:0; }
-.v-video .v-soon{ display:none; position:absolute; top:10px; right:10px; font-family:var(--cond); font-weight:700; font-size:.68rem; letter-spacing:.08em; text-transform:uppercase; background:var(--vu-black); color:var(--vu-gold); border:1px solid var(--vu-gold); border-radius:999px; padding:4px 10px; }
+.v-video video{ position:absolute; inset:0; z-index:2; display:block; width:100%; height:100%; object-fit:cover; background:#000; }
+.v-video .v-ph{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
+.v-video.nomedia .v-ph{ filter:saturate(.8) brightness(.62); }
+.v-video .v-ph-play{ display:none; position:absolute; left:50%; top:46%; transform:translate(-50%,-50%); width:64px; height:64px; border-radius:50%; border:2px solid var(--vu-gold); background:rgba(28,28,28,.55); color:var(--vu-gold); place-items:center; }
+.v-video .v-ph-play svg{ width:24px; height:24px; margin-left:3px; }
+.v-video.nomedia .v-ph-play{ display:grid; }
+.v-video figcaption{ position:absolute; z-index:3; left:0; right:0; bottom:0; padding:28px 14px 10px; background:linear-gradient(180deg, transparent, rgba(0,0,0,.78)); color:#fff; font-size:.88rem; pointer-events:none; transition:opacity .2s ease; }
+.v-video:not(.nomedia) figcaption{ display:none; }
+.v-video .v-soon{ display:none; position:absolute; z-index:3; top:10px; right:10px; font-family:var(--cond); font-weight:700; font-size:.68rem; letter-spacing:.08em; text-transform:uppercase; background:var(--vu-black); color:var(--vu-gold); border:1px solid var(--vu-gold); border-radius:999px; padding:4px 10px; }
 .v-video.nomedia .v-soon{ display:block; }
-.v-video.nomedia video{ pointer-events:none; }
 
 /* ── lesson 2: the years ── */
 .v-years{ display:grid; grid-template-columns:repeat(4,1fr); gap:6px; border-bottom:1px solid var(--bd); }
