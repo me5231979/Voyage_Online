@@ -18,7 +18,7 @@ window.VVO_CONFIG = {
      files in assets/video/ (relative paths) so the course can later be
      packaged as SCORM without changes. */
   videos: {
-    chancellor: { src: '', captions: '' },   /* e.g. './assets/video/chancellor-message.mp4', './assets/video/chancellor-message.vtt' */
+    chancellor: { embed: 'https://player.vimeo.com/video/1230259772?badge=0&autopause=0&player_id=0&app_id=58479', title: 'Welcome to Vanderbilt: a message from Chancellor Diermeier' },
     history:    { embed: 'https://player.vimeo.com/video/1230258345?h=edbcc5d465&badge=0&autopause=0&player_id=0&app_id=58479', ratio: '4 / 3', title: 'Vanderbilt Voyage: our history' },
     grow:       { src: '', captions: '' }    /* e.g. './assets/video/dare-to-grow.mp4', './assets/video/dare-to-grow.vtt' */
   },
