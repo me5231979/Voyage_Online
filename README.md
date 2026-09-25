@@ -27,6 +27,10 @@ staff member. The belief compass replaces the chat agent in the original
 course; the belief it lands on, and the learner's reflection, fill in the
 message to their manager on the next steps page.
 
+## Live site
+
+https://me5231979.github.io/Voyage_Online/ (GitHub Pages, served from the `gh-pages` branch, a mirror of the course branch).
+
 ## Files
 
 - `index.html`: the course. `pager.js` turns it into a book (`#p/<key>/<n>`).
