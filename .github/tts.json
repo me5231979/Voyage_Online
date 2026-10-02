@@ -1,10 +1,10 @@
 {
-  "_note": "ElevenLabs narration, the same voice as Manager Foundations. The build workflow reads this file, generates every clip in narration-scripts.js, keeps the raw files in assets/audio/voyage/source, and writes loudness-matched clips to assets/audio/voyage. Only clips whose text or settings changed are regenerated.",
-  "voice_id": "i4CzbCVWoqvD0P1QJCUL",
+  "_note": "ElevenLabs narration, Brian, a strong, professional male narrator (ElevenLabs premade voice). The build workflow reads this file, generates every clip in narration-scripts.js, keeps the raw files in assets/audio/voyage/source, and writes loudness-matched clips to assets/audio/voyage. Only clips whose text or settings changed are regenerated.",
+  "voice_id": "nPczCjzI2devNBz1zQrb",
   "model_id": "eleven_multilingual_v2",
   "output_format": "mp3_44100_128",
   "voice_settings": {
-    "stability": 0.55,
+    "stability": 0.6,
     "similarity_boost": 0.8,
     "style": 0.0,
     "use_speaker_boost": true

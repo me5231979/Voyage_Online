@@ -48,8 +48,8 @@ https://me5231979.github.io/Voyage_Online/ (GitHub Pages, served from the `gh-pa
 
 ## Narration
 
-The same narrator as Manager Foundations: ElevenLabs voice
-`i4CzbCVWoqvD0P1QJCUL`, settings in `.github/tts.json`, levelled to -16 LUFS.
+A strong, professional male narrator: ElevenLabs voice Brian
+(`nPczCjzI2devNBz1zQrb`), settings in `.github/tts.json`, levelled to -16 LUFS.
 
 1. Add the `ELEVENLABS_API_KEY` repository secret (Settings > Secrets and variables > Actions).
 2. Run **Record narration with ElevenLabs** from the Actions tab (it also runs on any push that changes `narration-scripts.js`).

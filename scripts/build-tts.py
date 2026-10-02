@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Record the course narration with ElevenLabs (the Manager Foundations voice).
+"""Record the course narration with ElevenLabs (Brian, a professional male narrator).
 
 Reads every script in narration-scripts.js (window.VVO_NARR), the voice and
 settings in .github/tts.json, and the ELEVENLABS_API_KEY environment variable.
