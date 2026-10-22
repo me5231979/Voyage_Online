@@ -41,7 +41,8 @@ https://me5231979.github.io/Voyage_Online/ (GitHub Pages, served from the `gh-pa
 ## Files
 
 - `index.html`: the course. `pager.js` turns it into a book (`#p/<key>/<n>`).
-- `app.js`: narration, progress (localStorage `vvo-*`, nothing sent anywhere), and every activity.
+- `app.js`: narration, progress (localStorage `vvo2-*`; inside an LMS, also the LMS), and every activity.
+- `assets/js/scorm.js`: the LMS bridge (SCORM 1.2 and 2004). `scripts/build-scorm.py` builds the packages.
 - `narration-scripts.js`: the words for every clip (`window.VVO_NARR`).
 - `config.js`: links to confirm before launch, the Day One Survey URL, the contact address, and the exit URL.
 - `assets/css/course.css`, `foundation.css`: the Foundations styles (off-brand `#8C6822` and `#A94438` swapped for Oak `#946E24` and gray); `voyage.css`: this course's components.
@@ -75,8 +76,28 @@ player URL from the embed code's `src`, plus `ratio` if it is not 16:9. The
 still shows with a play button, and the player loads when it is tapped.
 Our History is on Vimeo this way.
 
-Keep the files in `assets/video/` with relative paths so the course can be
-packaged as SCORM later without changes.
+Keep the files in `assets/video/` with relative paths; the SCORM build picks them up.
+
+## SCORM package (LMS)
+
+Two ready-to-upload packages in `dist/`, the same course as the live site:
+
+- `Vanderbilt-Voyage-Online-SCORM12.zip`: SCORM 1.2, the safest choice for most LMSs.
+- `Vanderbilt-Voyage-Online-SCORM2004.zip`: SCORM 2004 4th edition, if your LMS prefers it.
+
+Download links (served from the live site):
+https://me5231979.github.io/Voyage_Online/dist/Vanderbilt-Voyage-Online-SCORM12.zip
+https://me5231979.github.io/Voyage_Online/dist/Vanderbilt-Voyage-Online-SCORM2004.zip
+
+What the LMS receives (`assets/js/scorm.js`):
+
+- **Completion:** completed once all nine activities are done (2004 also reports progress as a fraction).
+- **Score:** the quick check, as a percentage (4 of 5 = 80). In 2004, passed at 4 of 5. No mastery score is set, so the score never overrides completion.
+- **Resume:** answers, progress, the belief compass, commitments, and the Quick Facts hunt are kept in suspend_data, and the page is the bookmark, so a learner picks up where they left off on any computer.
+- **Learner name:** the welcome and the printed takeaway use the name from the LMS.
+- **Time and exit:** session time is reported; Exit (and closing the window) suspends the attempt.
+
+Outside an LMS the script finds no API and does nothing. Videos (Vimeo) and the outside links need internet access; everything else, narration included, is in the package. Rebuild after any change to the course or the narration: `python3 scripts/build-scorm.py`.
 
 ## Check before launch
 

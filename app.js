@@ -20,7 +20,10 @@ try{ Object.keys(window.localStorage).forEach(function(k){ if(/^vvo-/.test(k)) w
 var mem = {};
 var store = (function(){ try{ var t = KEY + 'test'; window.localStorage.setItem(t, '1'); window.localStorage.removeItem(t); return window.localStorage; }catch(e){ return null; } })();
 function get(k){ if(store){ try{ var v = store.getItem(KEY + k); if(v !== null) return v; }catch(e){} } return mem[k] === undefined ? null : mem[k]; }
-function set(k, v){ mem[k] = v; if(store){ try{ v === null ? store.removeItem(KEY + k) : store.setItem(KEY + k, v); }catch(e){} } }
+function set(k, v){ mem[k] = v; if(store){ try{ v === null ? store.removeItem(KEY + k) : store.setItem(KEY + k, v); }catch(e){} } if(LMS) LMS.save(k, v); }
+/* inside an LMS (assets/js/scorm.js), the learner's saved state comes from the LMS, even where the browser blocks storage */
+var LMS = window.VVO_LMS && window.VVO_LMS.active ? window.VVO_LMS : null;
+if(LMS) Object.keys(LMS.data).forEach(function(k){ mem[k] = LMS.data[k]; });
 
 /* ── links the program owner confirms in config.js ── */
 (function(){
@@ -46,6 +49,7 @@ if(vid){
 (function(){
   var name = '';
   try{ var q = new URLSearchParams(location.search); if(q.get('name')) name = String(q.get('name')).trim().split(/\s+/)[0]; }catch(e){}
+  if(!name && window.VVO_LMS && window.VVO_LMS.learner) name = window.VVO_LMS.learner;
   var h = $('#heroHello'); if(h && name) h.textContent = 'Welcome aboard, ' + name + '.';
 })();
 
@@ -271,6 +275,7 @@ function progRender(changedKey, nowDone){
   });
   if(changedKey && progStatus){ var sec = SECTIONS.filter(function(s){ return s.k === changedKey; })[0]; if(sec) progStatus.textContent = (nowDone ? 'Activity complete: ' : 'Activity reopened: ') + sec.name + '. ' + doneN + ' of ' + total + ' complete.'; }
   bbDoneSync();
+  if(LMS) LMS.progress(doneN, total);
   if(doneN === total) allDone();
 }
 var bbDoneBtn = $('#bbDone');
@@ -302,7 +307,7 @@ document.addEventListener('keydown', function(e){ if(e.key === 'Escape') progOpe
 var progReset = $('#progReset');
 if(progReset) progReset.addEventListener('click', function(){
   /* everything this course saved: progress, answers, compass, commitments, hunt, narration spots */
-  mem = {};
+  mem = {}; if(LMS) LMS.reset();
   if(store){ try{ Object.keys(store).forEach(function(k){ if(k.indexOf(KEY) === 0 && k !== KEY + 'auto') store.removeItem(k); }); store.removeItem('vvo2-page'); }catch(e){} }
   doneSeen = false;
   if(progStatus) progStatus.textContent = 'Progress reset. 0 of ' + SECTIONS.length + ' activities complete.';
@@ -952,7 +957,7 @@ var QUIZ = [
     done.innerHTML = '<div class="big-score">' + score + ' / ' + QUIZ.length + '</div><h3>' + t[0] + '</h3><p>' + t[1] + '</p><button type="button" class="btn btn-ghost btn-sm" id="quizRetake">Retake the check</button>';
     done.classList.add('show');
     $$('.kq', box).forEach(function(q){ q.classList.remove('cur'); });
-    set('quiz-score', String(score));
+    set('quiz-score', String(score)); if(LMS) LMS.score(score, 5);
     if(score >= PASS) progDone('quiz');
     $('#quizRetake').addEventListener('click', render);
     if(window.chartPager) window.chartPager.goToEl(done);
@@ -988,7 +993,7 @@ function buildPrint(){
   var b = null; BELIEFS.forEach(function(x){ if(x.name === belief) b = x; });
   var tell = $('#tellText') ? $('#tellText').textContent : '';
   var today = new Date().toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' });
-  var nm = ''; try{ var q = new URLSearchParams(location.search); nm = q.get('name') || ''; }catch(e){}
+  var nm = ''; try{ var q = new URLSearchParams(location.search); nm = q.get('name') || ''; }catch(e){} if(!nm && LMS && LMS.fullName) nm = LMS.fullName;
   var survey = C.surveyUrl || '', qr = '';
   try{ if(window.qrcode && survey){ var q2 = qrcode(0, 'M'); q2.addData(survey); q2.make(); qr = q2.createSvgTag({ cellSize:2, margin:0, scalable:true }); } }catch(e){}
   var html = '<header class="ps-head"><img src="./assets/img/vu-lockup-black.png" alt="Vanderbilt University" width="166" height="43" /><div><span class="ps-k">Vanderbilt Voyage Online</span><h1>My Vanderbilt <em>Voyage</em>.</h1><p>' + (nm ? esc(nm) + ' &middot; ' : '') + esc(today) + '</p></div></header>';
@@ -1033,6 +1038,7 @@ $$('[data-copytext]').forEach(function(b){
   var b = $('#exitBtn'); if(!b) return;
   b.addEventListener('click', function(){
     narrStop();
+    if(LMS) LMS.finish();
     if(C.exitUrl){ location.href = C.exitUrl; return; }
     try{ window.close(); }catch(e){}
     window.setTimeout(function(){ if(window.chartPager) window.chartPager.go(0, { focus:true }); toast('You can close this tab. Welcome to Vanderbilt.'); }, 200);
