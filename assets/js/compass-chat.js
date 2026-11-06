@@ -19,7 +19,9 @@
   var btn = document.createElement('button');
   btn.type = 'button'; btn.className = 'cmp-fab'; btn.id = 'compassFab';
   btn.setAttribute('aria-expanded', 'false'); btn.setAttribute('aria-controls', 'compassPanel');
-  btn.innerHTML = ICON + '<span>Ask Compass</span>';
+  var CHAT = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.5c4.97 0 9 3.36 9 7.5s-4.03 7.5-9 7.5c-1.06 0-2.08-.15-3.03-.43L4 20l1.2-3.6C3.84 15.05 3 13.1 3 11c0-4.14 4.03-7.5 9-7.5z"/><path d="M8.5 10h7M8.5 13h4.5"/></svg>';
+  btn.innerHTML = CHAT + '<span>Ask Compass</span>';
+  document.documentElement.classList.add('has-compass');
   var panel = document.createElement('div');
   panel.className = 'cmp-panel'; panel.id = 'compassPanel'; panel.hidden = true;
   panel.setAttribute('role', 'dialog'); panel.setAttribute('aria-modal', 'false'); panel.setAttribute('aria-labelledby', 'compassTitle');
