@@ -1,0 +1,9 @@
+{
+  "name": "vanderbilt-voyage-compass",
+  "private": true,
+  "type": "module",
+  "description": "Compass, the question helper for Vanderbilt Voyage Online (a Vercel function).",
+  "dependencies": {
+    "@anthropic-ai/sdk": "^1.6.0"
+  }
+}

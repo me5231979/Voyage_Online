@@ -23,6 +23,9 @@ window.VVO_CONFIG = {
     history:    { embed: 'https://player.vimeo.com/video/1230258345?h=edbcc5d465&badge=0&autopause=0&player_id=0&app_id=58479', title: 'Vanderbilt Voyage: our history' },
     grow:       { embed: 'https://player.vimeo.com/video/1230276044?h=09923a6f21&badge=0&autopause=0&player_id=0&app_id=58479', title: 'Dare to Grow' }
   },
+  /* Compass, the question helper: the deployed compass-api URL (ends in /api/compass).
+     Empty hides the Ask Compass button. */
+  compassApi: '',
   /* where Exit goes; empty closes the tab (inside an LMS) or returns to the start */
   exitUrl: '',
   /* bump after re-recording narration so browsers fetch the new clips */
