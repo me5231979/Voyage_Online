@@ -78,6 +78,18 @@ Our History is on Vimeo this way.
 
 Keep the files in `assets/video/` with relative paths; the SCORM build picks them up.
 
+## Compass, the question helper
+
+**Ask Compass** opens a chat panel in the corner of every page. Compass answers questions about the course and about Vanderbilt, using the course narration and vanderbilt.edu pages it searches and reads live (Claude, with web search and web fetch limited to vanderbilt.edu). Each answer links the pages it used.
+
+It does not answer benefits, pay, leave, personnel, medical, legal, immigration, or account questions. `compass-api/lib/guard.js` catches these before any AI call and points the learner to Human Resources (and to 988 if someone appears to be in crisis); the system prompt repeats the rule for anything the patterns miss.
+
+- **Server:** `compass-api/`, a Vercel function (project `voyage-compass`). It needs one environment variable, `ANTHROPIC_API_KEY`, set in Vercel (Project, Settings, Environment Variables, type Sensitive). Optional: `COMPASS_ALLOWED_ORIGINS` (comma-separated sites allowed to call it; default all), `COMPASS_RATE_LIMIT` (questions per person per 10 minutes; default 20), `COMPASS_MODEL`.
+- **Switch it on:** put the function URL in `config.js` as `compassApi` (it ends in `/api/compass`). Empty hides the button; nothing is sent anywhere.
+- **Cost:** each question is one Claude call with up to four searches; set a monthly spend limit on the Anthropic account.
+- **After changing the narration:** run `node scripts/build-compass-notes.mjs` so Compass knows the new wording, then push.
+- The conversation is kept in the browser tab only. Inside an LMS, Compass needs internet access to the function's host.
+
 ## SCORM package (LMS)
 
 Two ready-to-upload packages in `dist/`, the same course as the live site:
