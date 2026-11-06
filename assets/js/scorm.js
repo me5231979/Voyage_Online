@@ -59,14 +59,17 @@
     }
     return s;
   }
-  function flush(){ timer = null; setv('cmi.suspend_data', 'cmi.suspend_data', pack()); commit(); }
+  /* once the attempt is closed (Exit, or the window going away), nothing more is sent */
+  function flush(){ timer = null; if(finished) return; setv('cmi.suspend_data', 'cmi.suspend_data', pack()); commit(); }
   LMS.save = function(k, v){
+    if(finished) return;
     if(SKIP[k]) return;
     if(v === null || v === undefined) delete LMS.data[k]; else LMS.data[k] = String(v);
     if(!timer) timer = window.setTimeout(flush, 800);
   };
-  LMS.page = function(key, n){ if(!key) return; setv('cmi.core.lesson_location', 'cmi.location', key + '/' + (n || 1)); if(!timer) timer = window.setTimeout(flush, 800); };
+  LMS.page = function(key, n){ if(!key || finished) return; setv('cmi.core.lesson_location', 'cmi.location', key + '/' + (n || 1)); if(!timer) timer = window.setTimeout(flush, 800); };
   LMS.progress = function(done, total){
+    if(finished) return;
     if(v4) setv('', 'cmi.progress_measure', (total ? Math.min(1, done / total) : 0).toFixed(2));
     if(done >= total && !complete){
       complete = true;
@@ -75,12 +78,13 @@
     }
   };
   LMS.score = function(raw, max){
+    if(finished) return;
     var pct = Math.round(100 * raw / (max || 1));
     setv('cmi.core.score.min', 'cmi.score.min', 0); setv('cmi.core.score.max', 'cmi.score.max', 100); setv('cmi.core.score.raw', 'cmi.score.raw', pct);
     if(v4){ setv('', 'cmi.score.scaled', (pct / 100).toFixed(2)); setv('', 'cmi.success_status', raw >= 4 ? 'passed' : 'failed'); }
     flush();
   };
-  LMS.reset = function(){ LMS.data = {}; setv('cmi.suspend_data', 'cmi.suspend_data', ''); setv('cmi.core.lesson_location', 'cmi.location', ''); commit(); };
+  LMS.reset = function(){ if(finished) return; LMS.data = {}; setv('cmi.suspend_data', 'cmi.suspend_data', ''); setv('cmi.core.lesson_location', 'cmi.location', ''); commit(); };
   function stamp(){
     var s = Math.max(0, Math.round((Date.now() - started) / 1000));
     if(v4) return 'PT' + s + 'S';
