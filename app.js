@@ -2,7 +2,7 @@
    Built on the Manager Foundations engine (me5231979/Manager-Voyage,
    foundation/app.js): the same narration layer, progress rail, tap-to-open
    maps, one-at-a-time drills, your-call scenarios, and knowledge check,
-   with the Voyage content. Nine tracked activities. State: localStorage
+   with the Voyage content, in six modules. Ten tracked activities. State: localStorage
    vvo-* in this browser. Nothing is sent anywhere. No em or en dashes. */
 (function(){
 'use strict';
@@ -237,18 +237,19 @@ $$('[data-video]').forEach(function(f){
 
 /* ══════════ PROGRESS ══════════ */
 var SECTIONS = [
-  { k:'welcome',  no:'01', name:'Welcome to the Voyage', how:'Visit all six stops' },
-  { k:'history',  no:'02', name:'Our history',           how:'Visit every moment on the timeline' },
-  { k:'leaders',  no:'03', name:'Our leadership',        how:'Fact or fiction, four statements' },
-  { k:'numbers',  no:'04', name:'By the numbers',        how:'Guess all seven numbers' },
-  { k:'beliefs',  no:'05', name:'The four beliefs',      how:'Find the best response in each belief’s moment' },
-  { k:'compass',  no:'06', name:'Your belief compass',   how:'Answer four questions and see your belief' },
-  { k:'grow',     no:'07', name:'Dare to grow',          how:'Find the growth response in three situations' },
-  { k:'quiz',     no:'08', name:'A quick check',         how:'Score 4 of 5' },
-  { k:'nextstep', no:'09', name:'Next steps',            how:'Commit to all four moves' }
+  { k:'mission',  no:'01', name:'The mission',           how:'Open all three areas of focus' },
+  { k:'cities',   no:'02', name:'Five cities',           how:'Tap all five campuses' },
+  { k:'history',  no:'03', name:'Our history',           how:'Visit every moment on the timeline' },
+  { k:'leaders',  no:'04', name:'Fact or fiction',       how:'Four statements about our leadership' },
+  { k:'numbers',  no:'05', name:'By the numbers',        how:'Guess all seven numbers' },
+  { k:'beliefs',  no:'06', name:'The four beliefs',      how:'Find the best response in each belief’s moment' },
+  { k:'compass',  no:'07', name:'Your belief compass',   how:'Answer four questions and see your belief' },
+  { k:'grow',     no:'08', name:'Dare to grow',          how:'Find the growth response in three situations' },
+  { k:'quiz',     no:'09', name:'A quick check',         how:'Score 4 of 5' },
+  { k:'nextstep', no:'10', name:'Next steps',            how:'Commit to all four moves' }
 ];
 function progIs(k){ return get('p-' + k) === '1'; }
-function progWrite(k, v){ set('p-' + k, v ? '1' : null); }
+function progWrite(k, v){ set('p-' + k, v ? '1' : null); try{ document.dispatchEvent(new CustomEvent('vvo:prog', { detail:{ k:k, done:!!v } })); }catch(e){} }
 var progList = $('#progList'), progCount = $('#progCount'), progSum = $('#progSum'), progStatus = $('#progStatus'),
     progBtn = $('#progBtn'), progPanel = $('#progPanel');
 if(progList) progList.innerHTML = SECTIONS.map(function(s){
@@ -315,7 +316,7 @@ if(progReset) progReset.addEventListener('click', function(){
 });
 if(!store){ var pw = $('#progStorageNote'); if(pw) pw.hidden = false; }
 
-/* ── completion modal (fires once when all nine are done) ── */
+/* ── completion modal (fires once when every activity is done) ── */
 var doneSeen = get('done-seen') === '1';
 var modalReturn = null;
 function allDone(){
@@ -358,7 +359,7 @@ function turnDone(k){ $$('.v-task[data-task="' + k + '"]').forEach(function(t){ 
 (function(){
   var list = $('#focusList'); if(!list) return;
   var chip = list.parentNode.querySelector('.v-task'), seen = {};
-  $$('button', list).forEach(function(b, i){ b.addEventListener('click', function(){ var o = b.getAttribute('aria-expanded') !== 'true'; b.setAttribute('aria-expanded', o ? 'true' : 'false'); if(o){ seen[i] = 1; if(Object.keys(seen).length === 3 && chip) chip.classList.add('done'); narrSub('mission/f' + (i + 1), true); } else if(narr.key === 'mission/f' + (i + 1) && narr.playing) narrStop(); }); });
+  $$('button', list).forEach(function(b, i){ b.addEventListener('click', function(){ var o = b.getAttribute('aria-expanded') !== 'true'; b.setAttribute('aria-expanded', o ? 'true' : 'false'); if(o){ seen[i] = 1; if(Object.keys(seen).length === 3) progDone('mission'); if(Object.keys(seen).length === 3 && chip) chip.classList.add('done'); narrSub('mission/f' + (i + 1), true); } else if(narr.key === 'mission/f' + (i + 1) && narr.playing) narrStop(); }); });
 })();
 
 /* ══════════ mission: five cities, each for its own field ══════════
@@ -374,7 +375,7 @@ var CITIES = {
   var map = $('#cities .us-map'), chips = $('#cities .v-cities'), card = $('#cityCard'), cchip = $('#cities .v-task'), cseen = {}; if(!map || !chips || !card) return;
   function show(k){
     var c = CITIES[k]; if(!c) return;
-    cseen[k] = 1; if(cchip && Object.keys(cseen).length === 5) cchip.classList.add('done');
+    cseen[k] = 1; if(Object.keys(cseen).length === 5) progDone('cities');
     $$('.pin, .lbl', map).forEach(function(p){ p.classList.toggle('on', p.getAttribute('data-city') === k); });
     $$('button[data-city]', chips).forEach(function(b){ b.setAttribute('aria-pressed', b.getAttribute('data-city') === k ? 'true' : 'false'); });
     var ic = map.querySelector('.pin[data-city="' + k + '"] .ic');
@@ -384,54 +385,20 @@ var CITIES = {
   map.addEventListener('click', function(e){ var p = e.target.closest('.pin, .lbl'); if(p) show(p.getAttribute('data-city')); });
 })();
 
-/* ══════════ lesson 1: our growth, in the news ══════════
-   Press coverage of the campus network, filterable by campus. Headlines are
+/* ══════════ module 1: our growth, in the news ══════════
+   Five stories: one per new campus, and the case for the network. Headlines are
    the outlets' own; the one-line takeaways summarize the reporting. */
 var PRESS = [
   { c:'nyc', src:'Vanderbilt News', d:'Aug 27, 2026', h:'Start spreading the news… Vanderbilt University New York City is open!', t:'The first campus beyond Nashville opens in Chelsea, and the Chancellor rings the Nasdaq opening bell to welcome its first students.', u:'https://news.vanderbilt.edu/2026/08/27/start-spreading-the-news-vanderbilt-university-new-york-city-is-open/' },
-  { c:'nyc', src:'Chelsea Community News', d:'Aug 26, 2026', h:'If You ‘VanderBuild’ It, They Will Come', t:'The neighborhood view of a campus spanning nearly a full city block: 13 buildings on 2.7 acres.', u:'https://chelseacommunitynews.com/2026/08/26/if-you-vanderbuild-it-they-will-come-tn-based-university-launches-satellite-in-chelsea/' },
   { c:'sf', src:'SF.gov', d:'Jan 2026', h:'Mayor Lurie Announces Vanderbilt University Will Establish a Full-Time Presence in San Francisco', t:'San Francisco’s mayor welcomes a full-time Vanderbilt campus, starting in the 2027 to 2028 academic year.', u:'https://www.sf.gov/news-mayor-lurie-announces-vanderbilt-university-will-establish-a-full-time-presence-in-san-francisco' },
-  { c:'sf', src:'ABC7 San Francisco', d:'Jan 2026', h:'Vanderbilt University to open new campus in San Francisco in 2027', t:'Vanderbilt will take over the California College of the Arts campus after the 2026 to 2027 school year.', u:'https://abc7news.com/post/vanderbilt-university-open-new-campus-san-francisco-2027-acquiring-california-college-arts-building/18398105/' },
   { c:'wpb', src:'Vanderbilt News', d:'Jan 12, 2026', h:'Vanderbilt surges forward with West Palm Beach campus, launches broader fundraising effort', t:'A $250 million fundraising phase for a graduate campus in business, engineering, data science, and AI.', u:'https://news.vanderbilt.edu/2026/01/12/vanderbilt-surges-forward-with-west-palm-beach-campus-launches-broader-fundraising-effort/' },
-  { c:'wpb', src:'Higher Ed Dive', d:'2024', h:'Vanderbilt University gets approval for $520M Florida graduate campus', t:'West Palm Beach approves the plan for a $520 million graduate campus.', u:'https://www.highereddive.com/news/vanderbilt-university-approval-520m-florida-west-palm-beach-graduate-campus/730825/' },
   { c:'chattanooga', src:'Vanderbilt News', d:'Jul 22, 2026', h:'Vanderbilt University, EPB of Chattanooga launch Institute for Quantum Innovation', t:'The official launch of a quantum campus of about 250 researchers, faculty, and staff, working with EPB’s trapped-ion quantum computer and quantum network.', u:'https://news.vanderbilt.edu/2026/07/22/vanderbilt-university-epb-of-chattanooga-launch-institute-for-quantum-innovation/' },
-  { c:'strategy', src:'Forbes', d:'Aug 1, 2026', h:'Is Vanderbilt’s Campus Expansion The Next Big Thing For Universities?', t:'A national look at Vanderbilt’s network of campuses and what it could mean for higher education.', u:'https://www.forbes.com/sites/michaeltnietzel/2026/08/01/is-vanderbilts-campus-expansion-the-next-big-thing-for-universities/' },
-  { c:'strategy', src:'Vanderbilt News', d:'Jul 31, 2026', h:'Why Vanderbilt is building campuses beyond Nashville', t:'The case, in Vanderbilt’s own words, for placing campuses in the country’s innovation hubs.', u:'https://news.vanderbilt.edu/2026/07/31/why-vanderbilt-is-building-campuses-beyond-nashville-opinion/' },
-  { c:'strategy', src:'WSMV', d:'Mar 6, 2026', h:'Chancellor reveals details behind Vanderbilt’s expansion to NYC, San Francisco, West Palm Beach', t:'Chancellor Diermeier explains the thinking behind the new campuses.', u:'https://www.wsmv.com/2026/03/06/chancellor-reveals-details-behind-vanderbilts-expansion-nyc-san-francisco-west-palm-beach/' }
+  { c:'strategy', src:'Vanderbilt News', d:'Jul 31, 2026', h:'Why Vanderbilt is building campuses beyond Nashville', t:'The case, in Vanderbilt’s own words, for placing campuses in the country’s innovation hubs.', u:'https://news.vanderbilt.edu/2026/07/31/why-vanderbilt-is-building-campuses-beyond-nashville-opinion/' }
 ];
 var PRESS_TAG = { nyc:'New York City', sf:'San Francisco', wpb:'West Palm Beach', chattanooga:'Chattanooga', strategy:'The strategy' };
 (function(){
-  var box = $('#pressList'), filt = $('.v-press-filter'); if(!box || !filt) return;
+  var box = $('#pressList'); if(!box) return;
   box.innerHTML = PRESS.map(function(p){ return '<a class="pc" data-c="' + p.c + '" href="' + esc(p.u) + '" target="_blank" rel="noopener"><span class="pc-top"><span class="pc-tag" data-c="' + p.c + '">' + esc(PRESS_TAG[p.c]) + '</span><span class="pc-src">' + esc(p.src) + ' &middot; ' + esc(p.d) + '</span></span><b>' + esc(p.h) + '</b><span class="pc-t">' + esc(p.t) + '</span><span class="pc-go">Read the story<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></span></a>'; }).join('');
-  filt.addEventListener('click', function(e){
-    var b = e.target.closest('button[data-pf]'); if(!b) return;
-    var f = b.getAttribute('data-pf');
-    $$('button', filt).forEach(function(x){ x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); });
-    $$('.pc', box).forEach(function(c){ c.hidden = f !== 'all' && c.getAttribute('data-c') !== f; });
-  });
-})();
-
-/* ══════════ lesson 1: the route, six stops ══════════ */
-var STOPS = [
-  { h:'Welcome to the <em>Voyage</em>', p:'Where you are now: a welcome from the Chancellor, then the mission and our five cities.', tags:['The Chancellor’s welcome', 'The mission', 'Five cities'] },
-  { h:'Our history and <em>leadership</em>', p:'150 years of daring to grow, and who leads today.', tags:['A video', 'A living timeline', 'Fact or fiction'] },
-  { h:'Our mission, our students, and <em>you</em>', p:'Seven numbers that put the mission in perspective.', tags:['Guess the number', 'Quick facts', 'A campus fun fact'] },
-  { h:'The four <em>beliefs</em>', p:'The heart of the course, and how you live them.', tags:['The compass', 'Four moments', 'Your belief compass'] },
-  { h:'Dare to <em>grow</em>', p:'Our motto, as a mindset.', tags:['A video', 'Three situations'] },
-  { h:'Next <em>steps</em>', p:'Check what you learned, and plan what comes after today.', tags:['Five questions', 'Four commitments', 'Day One Survey'] }
-];
-(function(){
-  var route = $('#route'), port = $('#port'); if(!route) return;
-  var btns = $$('button[data-stop]', route), seen = {};
-  btns.forEach(function(b, i){ if(NARR['welcome/g' + (i + 1)]) b.setAttribute('data-nk', 'welcome/g' + (i + 1)); });
-  route.addEventListener('click', function(e){
-    var b = e.target.closest('button[data-stop]'); if(!b) return;
-    var i = +b.getAttribute('data-stop'), s = STOPS[i]; seen[i] = 1;
-    btns.forEach(function(x){ x.setAttribute('aria-expanded', x === b ? 'true' : 'false'); x.classList.toggle('seen', !!seen[+x.getAttribute('data-stop')]); });
-    port.innerHTML = '<span class="v-label">Stop ' + (i + 1) + ' of 6</span><h3>' + s.h + subBtn('welcome/g' + (i + 1)) + '</h3><p>' + esc(s.p) + '</p><ul>' + s.tags.map(function(t){ return '<li>' + esc(t) + '</li>'; }).join('') + '</ul>';
-    narrSub('welcome/g' + (i + 1));
-    if(Object.keys(seen).length === STOPS.length) progDone('welcome');
-  });
 })();
 
 /* ══════════ lesson 2: the history of Vanderbilt, as a living timeline ══════════
@@ -1010,7 +977,7 @@ function buildPrint(){
       return '<li class="' + (commits[i] ? 'on' : '') + '"><span class="ps-box" aria-hidden="true">' + (commits[i] ? '&#10003;' : '') + '</span><span class="ps-t"><b>' + esc(c[0]) + '.</b> ' + esc(c[1]) + (commits[i] ? ' <i class="ps-cm">Committed in the course.</i>' : '') + '</span><span class="ps-by">Done by <i></i></span></li>'; }).join('') + '</ol>' +
     '<div class="ps-survey">' + (qr ? '<div class="ps-qr">' + qr + '</div>' : '') + '<div><b>Vanderbilt Voyage Day One Survey</b><p>Two minutes. Scan the code, or open the link from the course.</p><p class="ps-fine">Questions about your Voyage: pcb@vanderbilt.edu</p></div></div></section>';
   html += '<section class="ps-row"><div class="ps-stat"><b>' + done + '/' + SECTIONS.length + '</b><span>activities complete</span></div><div class="ps-stat"><b>' + (score === null ? '&ndash;' : esc(score) + '/5') + '</b><span>quick check score</span></div><div class="ps-stat"><b>' + (belief ? esc(belief) : '&ndash;') + '</b><span>my belief compass</span></div></section>';
-  html += '<section><h2>My belief</h2>' + (b ? '<p class="ps-big">' + esc(b.line) + '</p><p class="ps-sub">Behaviors to start with: ' + esc(b.behaviors[0]) + '; ' + esc(b.behaviors[1]) + '.</p>' : '<p class="ps-empty">Not answered yet. Lesson 4, the belief compass.</p>') +
+  html += '<section><h2>My belief</h2>' + (b ? '<p class="ps-big">' + esc(b.line) + '</p><p class="ps-sub">Behaviors to start with: ' + esc(b.behaviors[0]) + '; ' + esc(b.behaviors[1]) + '.</p>' : '<p class="ps-empty">Not answered yet. Module 4, the belief compass.</p>') +
     '<h3>How I will show it at work</h3><p class="ps-write">' + (reflect ? esc(reflect) : '<span class="ps-empty">Not written yet.</span>') + '</p>' + (reflect && val('reflect-tip') ? '<p class="ps-sub"><b>Tip:</b> ' + esc(val('reflect-tip')) + '</p>' : '') + '</section>';
   html += '<section><h2>Message to my manager</h2><p class="ps-quote">' + esc(tell) + '</p></section>';
   html += '<section><h2>My Quick Facts hunt</h2><table class="ps-table"><tbody>' + HUNT.map(function(q, i){ var a = (hunt[i] || '').trim(); return '<tr><th>' + esc(q.q) + '</th><td>' + (a ? esc(a) : '<span class="ps-empty">&ndash;</span>') + (q.open ? '' : '<small>Quick Facts: ' + esc(q.big) + '</small>') + '</td></tr>'; }).join('') + '</tbody></table><p class="ps-foot">Crescere aude. Dare to grow.</p></section>';
@@ -1043,6 +1010,138 @@ $$('[data-copytext]').forEach(function(b){
     try{ window.close(); }catch(e){}
     window.setTimeout(function(){ if(window.chartPager) window.chartPager.go(0, { focus:true }); toast('You can close this tab. Welcome to Vanderbilt.'); }, 200);
   });
+})();
+
+/* ══════════ up next: one button at the end of every page, so the way forward is never a hunt ══════════
+   The Manager Voyage simplified pattern. */
+(function(){
+  var pages = $$('.page'); if(pages.length < 2) return;
+  function titleOf(pg){
+    var end = pg.querySelector('.mod-end'); if(end) return end.getAttribute('data-pg');
+    var rail = pg.querySelector('.v-rail span'); if(rail){ var t = rail.textContent.split('·'); return (t[t.length - 1] || '').trim(); }
+    var h = pg.querySelector('h2, h1'); return h ? h.textContent.replace(/\s+/g, ' ').trim() : 'Next page';
+  }
+  pages.forEach(function(pg, i){
+    if(i === pages.length - 1) return;
+    var sec = pg.querySelector('section.v-sec') || pg.querySelector('section'); if(!sec || sec.classList.contains('v-hero')) return;
+    var wrap = sec.querySelector('.wrap') || sec;
+    var d = document.createElement('div'); d.className = 'v-next';
+    d.innerHTML = '<span class="v-label">Up next</span><button type="button" class="btn btn-gold btn-sm" data-go-page="' + (i + 1) + '">' + esc(titleOf(pages[i + 1])) + '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>';
+    wrap.appendChild(d);
+  });
+  document.addEventListener('click', function(e){ var b = e.target.closest('button[data-go-page]'); if(b && window.chartPager) chartPager.go(parseInt(b.getAttribute('data-go-page'), 10), { focus:true }); });
+})();
+
+/* ══════════ modules: six, one at a time; finish one and the next opens ══════════
+   A module is complete when every page in it has been opened and its
+   activities are done. Reviewers: ?unlock=all opens every module for this tab. */
+(function(){
+  if(!window.chartPager) return;
+  var MODULES = [
+    { title:'Welcome and the mission', secs:['welcome', 'mission', 'cities', 'press'], acts:['mission', 'cities'], mins:8, forYou:'A welcome from the Chancellor, the mission and its three areas of focus, and five cities, each where a field leads.' },
+    { title:'Our history and leadership', secs:['history', 'leaders'], acts:['history', 'leaders'], mins:8, forYou:'150 years in two minutes, twelve moments on the timeline, your Chancellor, and who leads what.' },
+    { title:'Vanderbilt by the numbers', secs:['numbers', 'facts'], acts:['numbers'], mins:5, forYou:'Seven numbers about the community you just joined, and an optional Quick Facts hunt.' },
+    { title:'The four beliefs', secs:['beliefs', 'compass'], acts:['beliefs', 'compass'], mins:8, forYou:'Belonging, self-direction, collaboration, and growth, and the one that points your way.' },
+    { title:'Dare to grow', secs:['grow'], acts:['grow'], mins:5, forYou:'Crescere aude: the motto, the mindset, and three moments to practice it.' },
+    { title:'Quick check and next steps', secs:['quiz', 'nextstep', 'learn'], acts:['quiz', 'nextstep'], mins:6, forYou:'Five questions, your next four moves, and the message that starts the talk with your manager.' }
+  ];
+  var N = MODULES.length, WORD = 'six';
+  var ACT = { mission:'The mission: open all three areas of focus', cities:'Five cities: tap all five campuses', history:'Our history: visit every moment on the timeline', leaders:'Fact or fiction: all four statements', numbers:'By the numbers: guess all seven', beliefs:'The four beliefs: try each belief’s moment', compass:'Your belief compass: answer all four questions', grow:'Dare to grow: all three moments', quiz:'Quick check: four of five', nextstep:'Next steps: commit to all four moves' };
+  var dots = $$('#bbDots .bb-dot'), keys = dots.map(function(d){ return d.getAttribute('href').replace(/^#p\//, ''); });
+  var secOf = function(i){ return (keys[i] || '').split('/')[0]; };
+  var modOf = function(i){ var sec = secOf(i); for(var m = 0; m < N; m++){ if(MODULES[m].secs.indexOf(sec) >= 0) return m; } return -1; };
+  var landing = keys.indexOf('modules/1'); if(landing < 0) return;
+  MODULES.forEach(function(M){ M.pages = []; keys.forEach(function(k, i){ if(M.secs.indexOf(k.split('/')[0]) >= 0) M.pages.push(i); }); });
+  var seen = {}, told = {};
+  try{ seen = JSON.parse(get('mod-seen') || '{}') || {}; }catch(e){ seen = {}; }
+  try{ told = JSON.parse(get('mod-done') || '{}') || {}; }catch(e){ told = {}; }
+  try{ var u = new URLSearchParams(location.search).get('unlock'); if(u === 'all') sessionStorage.setItem('vvo-unlock', 'all'); else if(u === 'off') sessionStorage.removeItem('vvo-unlock'); }catch(e){}
+  function bypass(){ try{ return sessionStorage.getItem('vvo-unlock') === 'all'; }catch(e){ return false; } }
+  function seenCount(m){ return MODULES[m].pages.filter(function(i){ return seen[keys[i]]; }).length; }
+  function actsLeft(m){ return MODULES[m].acts.filter(function(a){ return !progIs(a); }); }
+  function isDone(m){ return seenCount(m) === MODULES[m].pages.length && actsLeft(m).length === 0; }
+  function isOpen(m){ return bypass() || m === 0 || isDone(m - 1); }
+  function save(){ set('mod-seen', JSON.stringify(seen)); set('mod-done', JSON.stringify(told)); }
+  function firstOpen(){ for(var m = 0; m < N; m++){ if(!isDone(m)) return m; } return N - 1; }
+  var LOCK = '<svg class="mod-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>';
+  function render(){
+    var grid = $('#modGrid'), st = $('#modStatus'); if(!grid) return;
+    grid.innerHTML = MODULES.map(function(M, m){
+      var open = isOpen(m), dn = isDone(m), n = seenCount(m), total = M.pages.length, left = actsLeft(m).length;
+      var cls = dn ? 'done' : !open ? 'locked' : n > 0 ? 'now' : 'open';
+      var pill = dn ? 'Complete' : !open ? 'Locked' : (n === total && left) ? (left === 1 ? '1 activity left' : left + ' activities left') : n > 0 ? n + ' of ' + total + ' pages' : 'Start';
+      return '<li><button type="button" class="mod-card ' + cls + '" data-mod="' + m + '"' + (open ? '' : ' aria-disabled="true"') + '>' +
+        '<span class="mod-no"><span>Module ' + (m + 1) + '</span><span class="pill">' + pill + '</span></span>' +
+        '<h3>' + esc(M.title) + '</h3><p>' + esc(M.forYou) + '</p>' +
+        '<span class="mod-meta">About ' + M.mins + ' minutes &middot; ' + total + ' pages' + (M.acts.length ? ' &middot; ' + M.acts.length + (M.acts.length === 1 ? ' activity' : ' activities') : '') + '</span>' +
+        '<span class="mod-bar" aria-hidden="true"><i style="width:' + Math.round((dn ? total : n) / total * 100) + '%"></i></span>' +
+        (!open ? LOCK : '') + '</button></li>';
+    }).join('');
+    if(st){
+      var nd = MODULES.filter(function(M, m){ return isDone(m); }).length, f = firstOpen();
+      st.textContent = nd === N ? 'All ' + WORD + ' modules complete.' : nd + ' of ' + N + ' complete. ' + (seenCount(f) > 0 ? 'Module ' + (f + 1) + ' is in progress: ' + seenCount(f) + ' of ' + MODULES[f].pages.length + ' pages.' : 'Module ' + (f + 1) + ' is ready.') + (bypass() ? ' Reviewer view: every module is open.' : '');
+    }
+  }
+  /* say so once when a module completes; forget it if an activity is unmarked, so it can be said again */
+  function checkDone(m){
+    if(m < 0) return;
+    if(isDone(m)){ if(!told[m]){ told[m] = 1; save(); toast(m < N - 1 ? 'Module ' + (m + 1) + ' complete. Module ' + (m + 2) + ' is open.' : 'All ' + WORD + ' modules complete.'); } }
+    else if(told[m]){ told[m] = 0; save(); }
+    render(); todo();
+  }
+  /* each completion page lists anything still to do before the next module opens */
+  function todo(){
+    $$('.mod-end').forEach(function(el){
+      var m = parseInt(el.getAttribute('data-mod'), 10), left = actsLeft(m), box = el.querySelector('.mod-end-todo');
+      if(!box){ box = document.createElement('div'); box.className = 'mod-end-todo'; var ctl = el.querySelector('.mod-end-ctl'); ctl.parentNode.insertBefore(box, ctl); }
+      box.innerHTML = !left.length ? '<p class="ok">Every activity in this module is done.' + (m < N - 1 ? ' Module ' + (m + 2) + ' is open.' : '') + '</p>'
+        : '<p>To open module ' + (m + 2) + ', finish:</p><ul>' + left.map(function(a){ return '<li>' + esc(ACT[a] || a) + '</li>'; }).join('') + '</ul>';
+    });
+  }
+  /* the gate: a page in a locked module turns back to the module page */
+  function onPage(i){
+    var m = modOf(i);
+    if(m >= 0 && !isOpen(m)){ var f = firstOpen(); window.setTimeout(function(){ chartPager.go(landing); toast('Finish module ' + (f + 1) + ' first.'); }, 0); return; }
+    if(m >= 0 && !seen[keys[i]]){ seen[keys[i]] = 1; save(); }
+    if(m >= 0) checkDone(m);
+    if(i === landing) render();
+    paintCount(i, m);
+  }
+  document.addEventListener('chart:page', function(ev){ onPage(ev.detail ? ev.detail.index : chartPager.current().index); });
+  /* the bottom bar counts pages within the module */
+  var bbCount = $('#bbCount'), bbSec = $('#bbSec');
+  function paintCount(i, m){
+    if(!bbCount) return;
+    if(m < 0){ bbCount.textContent = i === landing ? N + ' modules' : ''; return; }
+    bbCount.textContent = 'Page ' + (MODULES[m].pages.indexOf(i) + 1) + ' of ' + MODULES[m].pages.length;
+    if(bbSec) bbSec.textContent = 'Module ' + (m + 1) + ' · ' + MODULES[m].title;
+  }
+  document.addEventListener('vvo:prog', function(){ MODULES.forEach(function(M, m){ checkDone(m); }); });
+  var grid = $('#modGrid');
+  if(grid) grid.addEventListener('click', function(e){
+    var b = e.target.closest('.mod-card'); if(!b) return;
+    var m = parseInt(b.getAttribute('data-mod'), 10);
+    if(!isOpen(m)){ toast('Finish module ' + m + ' first.'); return; }
+    var go = MODULES[m].pages[0];
+    if(!isDone(m)){ for(var j = 0; j < MODULES[m].pages.length; j++){ if(!seen[keys[MODULES[m].pages[j]]]){ go = MODULES[m].pages[j]; break; } } }
+    chartPager.go(go, { focus:true });
+  });
+  /* no Up next on the module page or a completion page (those carry their own buttons) */
+  $$('.page').forEach(function(pg, i){ if(i === landing || pg.querySelector('.mod-end')){ var nx = pg.querySelector('.v-next'); if(nx) nx.parentNode.removeChild(nx); } });
+  document.addEventListener('click', function(e){
+    var b = e.target.closest('button[data-go-mod]'); if(!b) return;
+    var m = parseInt(b.getAttribute('data-go-mod'), 10);
+    if(!isOpen(m)){ var left = actsLeft(m - 1); toast(left.length ? 'Module ' + m + ' first: ' + (ACT[left[0]] || left[0]).split(':')[0].toLowerCase() + (left.length > 1 ? ' and ' + (left.length - 1) + ' more' : '') + '.' : 'Finish module ' + m + ' first.'); return; }
+    chartPager.go(MODULES[m].pages[0], { focus:true });
+  });
+  /* the home page's Begin and the end of a module lead back to the module page */
+  $$('.v-next button[data-go-page]').forEach(function(b){
+    var to = parseInt(b.getAttribute('data-go-page'), 10), from = to - 1;
+    if(modOf(from) >= 0 && modOf(to) !== modOf(from) && modOf(to) >= 0){ b.setAttribute('data-go-page', landing); b.classList.add('back-mods'); b.innerHTML = 'Back to your modules' + b.innerHTML.slice(b.innerHTML.indexOf('<svg')); }
+  });
+  render(); todo();
+  onPage(chartPager.current().index);
+  window.VVO_MODULES = { MODULES: MODULES, isOpen: isOpen, isDone: isDone, render: render };
 })();
 
 progRender();

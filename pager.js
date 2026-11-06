@@ -10,25 +10,26 @@ try{
   var main = document.getElementById('main');
   if(!main) throw new Error('no main');
   var PLAN = [
-    { sel:'section.hero',     key:'home',      label:'Welcome',                    mode:'whole' },
-    { sel:'#welcome',         key:'welcome',   label:'Lesson 1: Welcome',          mode:'whole' },
-    { sel:'#mission',         key:'mission',   label:'Lesson 1: The mission',      mode:'whole' },
-    { sel:'#cities',          key:'cities',    label:'Lesson 1: Five cities',      mode:'whole' },
-    { sel:'#press',           key:'press',     label:'Lesson 1: In the news',      mode:'whole' },
-    { sel:'#history',         key:'history',   label:'Lesson 2: Our history',      mode:'whole' },
-    { sel:'#leaders',         key:'leaders',   label:'Lesson 2: Our leadership',   mode:'whole' },
-    { sel:'#numbers',         key:'numbers',   label:'Lesson 3: By the numbers',   mode:'whole' },
-    { sel:'#facts',           key:'facts',     label:'Lesson 3: Quick facts',      mode:'whole' },
-    { sel:'#beliefs',         key:'beliefs',   label:'Lesson 4: The four beliefs', mode:'whole' },
-    { sel:'#compass',         key:'compass',   label:'Lesson 4: Belief compass',   mode:'whole' },
-    { sel:'#grow',            key:'grow',      label:'Lesson 5: Dare to grow',     mode:'whole' },
-    { sel:'#quiz',            key:'quiz',      label:'Lesson 6: Quick check',      mode:'whole' },
-    { sel:'#nextstep',        key:'nextstep',  label:'Lesson 6: Next steps',       mode:'whole' },
-    { sel:'#learn',           key:'learn',     label:'Keep going',                 mode:'whole', extras:['footer'] }
+    { sel:'section.hero',     key:'home',      label:'Welcome',                       mode:'whole' },
+    { sel:'#modules',         key:'modules',   label:'Your modules',                  mode:'whole' },
+    { sel:'#welcome',         key:'welcome',   label:'A welcome from the Chancellor', mode:'split' },
+    { sel:'#mission',         key:'mission',   label:'The mission',                   mode:'split' },
+    { sel:'#cities',          key:'cities',    label:'Five cities',                   mode:'split' },
+    { sel:'#press',           key:'press',     label:'In the news',                   mode:'split' },
+    { sel:'#history',         key:'history',   label:'Our history',                   mode:'split' },
+    { sel:'#leaders',         key:'leaders',   label:'Our Chancellor',                mode:'split' },
+    { sel:'#numbers',         key:'numbers',   label:'By the numbers',                mode:'split' },
+    { sel:'#facts',           key:'facts',     label:'Quick facts',                   mode:'split' },
+    { sel:'#beliefs',         key:'beliefs',   label:'The four beliefs',              mode:'split' },
+    { sel:'#compass',         key:'compass',   label:'Your belief compass',           mode:'split' },
+    { sel:'#grow',            key:'grow',      label:'Dare to grow',                  mode:'split' },
+    { sel:'#quiz',            key:'quiz',      label:'Quick check',                   mode:'split' },
+    { sel:'#nextstep',        key:'nextstep',  label:'Your next four moves',          mode:'split' },
+    { sel:'#learn',           key:'learn',     label:'Keep going',                    mode:'whole', extras:['footer'] }
   ];
   var TRACKED = [
-    ['welcome','01','Welcome'], ['history','02','Our history'], ['leaders','03','Our leadership'], ['numbers','04','By the numbers'],
-    ['beliefs','05','The four beliefs'], ['compass','06','Belief compass'], ['grow','07','Dare to grow'], ['quiz','08','Quick check'], ['nextstep','09','Next steps']
+    ['mission','01','The mission'], ['cities','02','Five cities'], ['history','03','Our history'], ['leaders','04','Fact or fiction'], ['numbers','05','By the numbers'],
+    ['beliefs','06','The four beliefs'], ['compass','07','Belief compass'], ['grow','08','Dare to grow'], ['quiz','09','Quick check'], ['nextstep','10','Next steps']
   ];
   var pages = [], secFirst = {};
   var topSpan = document.getElementById('top');

@@ -2,33 +2,27 @@
 
 The self-paced start of a new Vanderbilt staff member's journey, rebuilt
 from the Rise course on the **Manager Foundations** engine
-(`me5231979/Manager-Voyage`, `foundation/`) in the Vanderbilt brand. Six lessons,
-about thirty minutes, one idea per page, every page narrated.
+(`me5231979/Manager-Voyage`, `foundation/`) in the Vanderbilt brand. Six
+modules, about forty minutes, one idea per page, every page narrated. The
+structure follows the Manager Voyage simplified model (`foundation/simple/`):
+a module page, modules that open one at a time, one activity per page, an Up
+next button on every page, and a completion page at the end of each module.
 
-| Page | Key | Activity (tracked) |
+| Module | Pages (`key/n`) | Activities (tracked) |
 | --- | --- | --- |
-| Welcome | `home` | |
-| The mission and the three areas of focus | `mission` | |
-| Five cities: the campus network map | `cities` | |
-| Our growth, in the news (press coverage) | `press` | |
-| Lesson 1 · Welcome to the Voyage | `welcome` | Visit all six stops on the route |
-| Lesson 2 · Our history | `history` | The video, then a twelve-moment timeline |
-| Lesson 2 · Our leadership | `leaders` | Fact or fiction, four statements |
-| Lesson 3 · By the numbers | `numbers` | Guess seven numbers |
-| Lesson 3 · Quick facts | `facts` | Scavenger hunt on the real Quick Facts page |
-| Lesson 4 · The four beliefs | `beliefs` | Compass rose; one moment per belief |
-| Lesson 4 · Belief compass | `compass` | Four questions, one belief, a reflection |
-| Lesson 5 · Dare to grow | `grow` | Three situations |
-| Lesson 6 · Quick check | `quiz` | Four of five |
-| Lesson 6 · Next steps | `nextstep` | Commit to four moves |
-| Keep going | `learn` | Links, the Day One Survey, exit |
+| | Welcome (`home/1`), Your modules (`modules/1`) | |
+| 1 · Welcome and the mission | The Chancellor's welcome (`welcome/1`), the mission (`mission/1`), five cities (`cities/1`), in the news (`press/1`), module complete (`press/2`) | Open all three areas of focus; tap all five campuses |
+| 2 · Our history and leadership | The video (`history/1`), the timeline (`history/2`), meet your Chancellor (`leaders/1`), fact or fiction (`leaders/2`), the leadership team (`leaders/3`), module complete (`leaders/4`) | Visit every moment; four statements |
+| 3 · Vanderbilt by the numbers | Guess the numbers (`numbers/1`), Quick Facts hunt, optional (`facts/1`), module complete (`facts/2`) | Guess all seven |
+| 4 · The four beliefs | The compass rose (`beliefs/1`), your belief compass (`compass/1`), module complete (`compass/2`) | Each belief's moment; your compass |
+| 5 · Dare to grow | Motto and video (`grow/1`), three moments (`grow/2`), module complete (`grow/3`) | All three moments |
+| 6 · Quick check and next steps | Quick check (`quiz/1`), your next four moves (`nextstep/1`), tell your manager (`nextstep/2`), the end (`learn/1`) | Four of five; commit to all four moves |
 
-The mission page (vision, how we operate, the three areas of focus, and the
-map of Nashville, Chattanooga, New York City, West Palm Beach, and San
-Francisco) is carried over from Manager Foundations and reworded for every
-staff member. The belief compass replaces the chat agent in the original
-course; the belief it lands on, and the learner's reflection, fill in the
-message to their manager on the next steps page.
+A module is complete when every page in it has been opened and its activities
+are done; then the next opens. Reviewers: add `?unlock=all` to the course URL
+to open every module in that tab (`?unlock=off` to go back). The belief
+compass replaces the chat agent in the original course; the belief it lands
+on, and the learner's saved sentence, fill in the message to their manager.
 
 ## Design
 
@@ -63,8 +57,8 @@ bump `mediaVersion` in `config.js`.
 
 ## Videos
 
-Three slots: the Chancellor's message (lesson 1), Our History (lesson 2),
-and Dare to Grow (lesson 5). Each shows a placeholder still from the Rise
+Three slots: the Chancellor's message (module 1), Our History (module 2),
+and Dare to Grow (module 5). Each shows a placeholder still from the Rise
 course (`assets/img/course/`) with "Video coming soon" until its file is set.
 
 To swap one in:
@@ -103,7 +97,7 @@ https://me5231979.github.io/Voyage_Online/dist/Vanderbilt-Voyage-Online-SCORM200
 
 What the LMS receives (`assets/js/scorm.js`):
 
-- **Completion:** completed once all nine activities are done (2004 also reports progress as a fraction).
+- **Completion:** completed once all ten activities are done (2004 also reports progress as a fraction).
 - **Score:** the quick check, as a percentage (4 of 5 = 80). In 2004, passed at 4 of 5. No mastery score is set, so the score never overrides completion.
 - **Resume:** answers, progress, the belief compass, commitments, and the Quick Facts hunt are kept in suspend_data, and the page is the bookmark, so a learner picks up where they left off on any computer.
 - **Learner name:** the welcome and the printed takeaway use the name from the LMS.
@@ -119,7 +113,7 @@ Outside an LMS the script finds no API and does nothing. Videos (Vimeo) and the 
 
 Last run 2026-09-25, Playwright in Chromium at 1440x900, 390px, and 320px:
 every page renders with no horizontal scroll and no console errors apart
-from the not-yet-recorded MP3s (the speech fallback covers them). All nine
+from the not-yet-recorded MP3s (the speech fallback covers them). All ten
 activities complete, the completion dialog opens, the compass result and
 reflection carry into the manager message, and the survey link appears on
 next steps, the last page, and the completion dialog. Zero em or en dashes
