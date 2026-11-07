@@ -1,0 +1,8 @@
+# The course site only: what a learner's browser loads, plus the SCORM downloads.
+.github
+scripts
+compass-api
+assets/audio/voyage/source
+assets/img/Daniel_Diermeier_1323(1).png
+AUDIT.md
+README.md
