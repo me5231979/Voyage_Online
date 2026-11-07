@@ -238,7 +238,7 @@ $$('[data-video]').forEach(function(f){
 /* ══════════ PROGRESS ══════════ */
 var SECTIONS = [
   { k:'mission',  no:'01', name:'The mission',           how:'Open all three areas of focus' },
-  { k:'cities',   no:'02', name:'Five cities',           how:'Tap all five campuses' },
+  { k:'cities',   no:'02', name:'Five cities',           how:'Drag to 2026 and open the four new sites' },
   { k:'history',  no:'03', name:'Our history',           how:'Visit every moment on the timeline' },
   { k:'leaders',  no:'04', name:'Fact or fiction',       how:'Four statements about our leadership' },
   { k:'numbers',  no:'05', name:'By the numbers',        how:'Guess all seven numbers' },
@@ -362,27 +362,52 @@ function turnDone(k){ $$('.v-task[data-task="' + k + '"]').forEach(function(t){ 
   $$('button', list).forEach(function(b, i){ b.addEventListener('click', function(){ var o = b.getAttribute('aria-expanded') !== 'true'; b.setAttribute('aria-expanded', o ? 'true' : 'false'); if(o){ seen[i] = 1; if(Object.keys(seen).length === 3) progDone('mission'); if(Object.keys(seen).length === 3 && chip) chip.classList.add('done'); narrSub('mission/f' + (i + 1), true); } else if(narr.key === 'mission/f' + (i + 1) && narr.playing) narrStop(); }); });
 })();
 
-/* ══════════ mission: five cities, each for its own field ══════════
-   Growth is not a copy of Nashville: each city puts Vanderbilt where a field leads. */
+/* ══════════ five cities: one frame, two maps (the Leadership Redefined and Manager Voyage
+   footprint compare); drag to 2026, tap a site for its card and clip ══════════ */
 var CITIES = {
-  nashville:   { name:'Nashville', focus:'Home', line:'Our home since 1873: the residential campus and the heart of the university. It is where the Voyage begins.', url:'https://www.vanderbilt.edu/' },
-  chattanooga: { name:'Chattanooga', focus:'Quantum', line:'The Institute for Quantum Innovation, launched with EPB in July 2026: about 250 researchers, faculty, and staff, working with the EPB Quantum Center, the first U.S. site with commercial access to both a trapped-ion quantum computer and a quantum network.', url:'https://www.vanderbilt.edu/chancellor/initiatives-and-outreach/growth/quantum-innovation/' },
-  nyc:         { name:'New York City', focus:'Business and technology', line:'Our first campus beyond Nashville, open since August 2026: 13 buildings on 2.7 acres in Chelsea, with an undergraduate semester program and a Master of Science in Business and Technology.', url:'https://www.vanderbilt.edu/nyc/' },
-  wpb:         { name:'West Palm Beach', focus:'Business, engineering, and AI', line:'A graduate campus for business, engineering, data science, and AI, with programs planned in finance and in space and defense technology: about 1,000 graduate students and 100 faculty.', url:'https://www.vanderbilt.edu/chancellor/initiatives-and-outreach/growth/west-palm-beach/' },
-  sf:          { name:'San Francisco', focus:'Art, design, and technology', line:'Opens for the 2027 to 2028 school year on the California College of the Arts campus, home to the Huang College of Art, Architecture and Design, which blends art and design with engineering and AI: about 1,000 students.', url:'https://www.vanderbilt.edu/chancellor/initiatives-and-outreach/growth/san-francisco/' }
+  nyc:{ name:'Vanderbilt New York City', focus:'New York City, NY', narr:'cities/g1', why:'It takes Vanderbilt to students and employers in New York, a center of business, finance, technology, and media.', line:'Our first campus beyond Nashville, open since August 2026: 13 buildings on 2.7 acres in Chelsea, with an undergraduate semester program and a Master of Science in Business and Technology.', url:'https://www.vanderbilt.edu/nyc/' },
+  wpb:{ name:'Vanderbilt West Palm Beach', focus:'West Palm Beach, FL', narr:'cities/g2', why:'It grows graduate education in business, engineering, data science, and AI.', line:'A graduate campus with programs planned in finance and in space and defense technology: about 1,000 graduate students and 100 faculty.', url:'https://www.vanderbilt.edu/chancellor/initiatives-and-outreach/growth/west-palm-beach/' },
+  sf:{ name:'Vanderbilt San Francisco', focus:'San Francisco, CA', narr:'cities/g3', why:'It joins art and design with engineering and AI, alongside the technology and creative sectors.', line:'Opens for the 2027 to 2028 school year on the California College of the Arts campus, home to the Huang College of Art, Architecture and Design: about 1,000 students.', url:'https://www.vanderbilt.edu/chancellor/initiatives-and-outreach/growth/san-francisco/' },
+  chattanooga:{ name:'Quantum Innovation', focus:'Chattanooga, TN', narr:'cities/g4', why:'It puts Vanderbilt research at the front of quantum technology, with access no other U.S. site offers.', line:'The Institute for Quantum Innovation, launched with EPB in July 2026: about 250 researchers, faculty, and staff, working with the first U.S. site with commercial access to both a trapped-ion quantum computer and a quantum network.', url:'https://www.vanderbilt.edu/chancellor/initiatives-and-outreach/growth/quantum-innovation/' },
+  nashville:{ name:'Nashville', focus:'Home', narr:'cities/g5', why:'Every growth site runs on the systems and people built here.', line:'Home since 1873: the residential campus and the heart of the university. The work done in Nashville is what each new site needs on day one.', url:'https://www.vanderbilt.edu/' }
 };
 (function(){
-  var map = $('#cities .us-map'), chips = $('#cities .v-cities'), card = $('#cityCard'), cchip = $('#cities .v-task'), cseen = {}; if(!map || !chips || !card) return;
+  var sec = $('#growth'); if(!sec) return;
+  var f = $('.lr-compare', sec), fr = $('.cmp-frame', f), r = $('.cmp-range', f), chips = $('.v-cities', sec), card = $('#cityCard'), st = $('#growthStatus');
+  var seen = {}, sites = ['nyc', 'wpb', 'sf', 'chattanooga'];
+  try{ seen = JSON.parse(get('growth-seen') || '{}') || {}; }catch(e){ seen = {}; }
+  function setPos(v){
+    v = Math.max(0, Math.min(100, v)); fr.style.setProperty('--pos', v + '%'); r.value = v;
+    r.setAttribute('aria-valuetext', v < 15 ? f.getAttribute('data-b') : v > 85 ? f.getAttribute('data-a') : 'Both, divided at ' + Math.round(v) + ' percent');
+    $$('.cmp-pin', fr).forEach(function(p){ var off = parseFloat(p.getAttribute('data-x')) < v; p.classList.toggle('off', off); p.tabIndex = off ? -1 : 0; p.setAttribute('aria-hidden', off ? 'true' : 'false'); });
+    var ta = $('.cmp-tag.a', fr), tb = $('.cmp-tag.b', fr); if(ta) ta.style.opacity = v < 8 ? 0 : ''; if(tb) tb.style.opacity = v > 92 ? 0 : '';
+  }
+  r.addEventListener('input', function(){ setPos(parseFloat(r.value)); });
+  var drag = false;
+  function at(e){ var b = fr.getBoundingClientRect(); setPos((e.clientX - b.left) / b.width * 100); }
+  fr.addEventListener('pointerdown', function(e){ if(e.target.closest('.cmp-pin')) return; drag = true; try{ fr.setPointerCapture(e.pointerId); }catch(err){} at(e); });
+  fr.addEventListener('pointermove', function(e){ if(drag) at(e); });
+  fr.addEventListener('pointerup', function(){ drag = false; });
+  $$('[data-cmp]', f).forEach(function(b){ b.addEventListener('click', function(){ setPos(parseFloat(b.getAttribute('data-cmp'))); }); });
+  setPos(100);
+  function paint(){
+    var n = sites.filter(function(k){ return seen[k]; }).length;
+    if(st) st.textContent = n + ' of 4 growth sites seen.' + (n === 4 ? ' Activity complete.' : '');
+    if(n === 4) progDone('cities');
+  }
   function show(k){
     var c = CITIES[k]; if(!c) return;
-    cseen[k] = 1; if(Object.keys(cseen).length === 5) progDone('cities');
-    $$('.pin, .lbl', map).forEach(function(p){ p.classList.toggle('on', p.getAttribute('data-city') === k); });
+    if(parseFloat(r.value) > 0) setPos(0);
+    seen[k] = 1; set('growth-seen', JSON.stringify(seen));
+    $$('.cmp-pin', fr).forEach(function(p){ p.classList.toggle('on', p.getAttribute('data-city') === k); });
     $$('button[data-city]', chips).forEach(function(b){ b.setAttribute('aria-pressed', b.getAttribute('data-city') === k ? 'true' : 'false'); });
-    var ic = map.querySelector('.pin[data-city="' + k + '"] .ic');
-    card.innerHTML = '<span class="v-label">' + (ic ? '<svg viewBox="0 0 24 24" aria-hidden="true">' + ic.innerHTML + '</svg>' : '') + esc(c.focus) + '</span><b>' + esc(c.name) + '</b><p>' + esc(c.line) + '</p><a href="' + esc(c.url) + '" target="_blank" rel="noopener">Read more about ' + esc(c.name) + '</a>';
+    card.innerHTML = '<span class="v-label">' + esc(c.focus) + subBtn(c.narr) + '</span><b>' + esc(c.name) + '</b><p><b class="lr-meet">Why here.</b> ' + esc(c.why) + '</p><p>' + esc(c.line) + '</p><a href="' + esc(c.url) + '" target="_blank" rel="noopener">' + esc(c.name) + ' at vanderbilt.edu</a>';
+    narrSub(c.narr);
+    paint();
   }
   chips.addEventListener('click', function(e){ var b = e.target.closest('button[data-city]'); if(b) show(b.getAttribute('data-city')); });
-  map.addEventListener('click', function(e){ var p = e.target.closest('.pin, .lbl'); if(p) show(p.getAttribute('data-city')); });
+  fr.addEventListener('click', function(e){ var p = e.target.closest('.cmp-pin'); if(p) show(p.getAttribute('data-city')); });
+  paint();
 })();
 
 /* ══════════ module 1: our growth, in the news ══════════
@@ -1046,7 +1071,7 @@ $$('[data-copytext]').forEach(function(b){
     { title:'Quick check and next steps', secs:['quiz', 'nextstep', 'learn'], acts:['quiz', 'nextstep'], mins:6, forYou:'Five questions, your next four moves, and the message that starts the talk with your manager.' }
   ];
   var N = MODULES.length, WORD = 'six';
-  var ACT = { mission:'The mission: open all three areas of focus', cities:'Five cities: tap all five campuses', history:'Our history: visit every moment on the timeline', leaders:'Fact or fiction: all four statements', numbers:'By the numbers: guess all seven', beliefs:'The four beliefs: try each belief’s moment', compass:'Your belief compass: answer all four questions', grow:'Dare to grow: all three moments', quiz:'Quick check: four of five', nextstep:'Next steps: commit to all four moves' };
+  var ACT = { mission:'The mission: open all three areas of focus', cities:'Five cities: open the four new sites on the map', history:'Our history: visit every moment on the timeline', leaders:'Fact or fiction: all four statements', numbers:'By the numbers: guess all seven', beliefs:'The four beliefs: try each belief’s moment', compass:'Your belief compass: answer all four questions', grow:'Dare to grow: all three moments', quiz:'Quick check: four of five', nextstep:'Next steps: commit to all four moves' };
   var dots = $$('#bbDots .bb-dot'), keys = dots.map(function(d){ return d.getAttribute('href').replace(/^#p\//, ''); });
   var secOf = function(i){ return (keys[i] || '').split('/')[0]; };
   var modOf = function(i){ var sec = secOf(i); for(var m = 0; m < N; m++){ if(MODULES[m].secs.indexOf(sec) >= 0) return m; } return -1; };
